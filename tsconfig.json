@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "noEmitOnError": false,
+    "experimentalDecorators": true,
+    "allowUnreachableCode": true,
+    "strict": true,
+    "target": "es2015",
+    "lib": ["esnext","dom"],
+    "module": "es2015",
+    "pretty": true,
+    "moduleResolution": "node",
+    "jsx": "react",
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "paths": {
+    }
+  },
+  "types": [
+    "react",
+    "jest"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
