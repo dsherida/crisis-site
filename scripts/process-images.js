@@ -11,7 +11,7 @@ var readJson = (path, cb) => {
 }
 
 // options is optional
-glob("assets/**/*", {}, (er, files) => {
+glob("src/assets/**/*", {}, (er, files) => {
 
     let pieces = [];
     for (let i = 0; i < files.length; i++) {

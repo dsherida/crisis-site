@@ -1,5 +1,10 @@
+@font-face {
+  font-family: 'Righteous', cursive;
+  src: url('https://fonts.googleapis.com/css?family=Righteous')
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Righteous', sans-serif;
 }

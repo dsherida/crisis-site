@@ -1,22 +1,60 @@
 import * as React from 'react';
+import {Col, Container, Row} from 'reactstrap';
 import './App.css';
+import TopNavBar from './components/TopNavBar';
+import Text from './sfc/Text';
+import {CommonStyle} from './utils/CommonStyle';
+import {Colors} from './utils/Constants';
 
-import logo from './logo.svg';
+interface State {
+  initialWidth: number;
+  initialHeight: number;
+  width: number;
+  height: number;
+}
 
-class App extends React.Component {
+interface Props {}
+
+export default class App extends React.Component<Props, State> {
+  constructor() {
+    super(null);
+
+    this.state = {
+      width: 800,
+      height: 182,
+      initialWidth: 800,
+      initialHeight: 182,
+    };
+  }
+
+  componentDidMount() {
+    this.updateDimensions();
+    this.setInitialDimensions();
+    window.addEventListener('resize', this.updateDimensions);
+  }
+
+  updateDimensions = () => {
+    this.setState({width: window.innerWidth, height: window.innerHeight});
+  };
+
+  setInitialDimensions = () => {
+    this.setState({
+      initialHeight: window.innerHeight,
+      initialWidth: window.innerWidth,
+    });
+  };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+      <div style={styles.container}>
+        <TopNavBar />
       </div>
     );
   }
 }
 
-export default App;
+const styles = {
+  container: {
+    backgroundColor: Colors.Secondary,
+  },
+};

@@ -1,3 +1,5 @@
 export const Assets = {
-  allproducts: require('../assets/allproducts.png'),
+  src: {
+    crisis_logo: require('../src/assets/crisis_logo.png'),
+  },
 };
