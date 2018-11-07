@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "noEmitOnError": false,
+    "experimentalDecorators": true,
+    "allowUnreachableCode": true,
+    "strict": true,
+    "target": "es2015",
+    "lib": ["esnext","dom"],
+    "module": "es2015",
+    "pretty": true,
+    "moduleResolution": "node",
+    "jsx": "react-native",
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "paths": {
+    }
+  },
+  "types": [
+    "react",
+    "react-native",
+    "jest"
+  ],
+  "exclude": [
+    "android",
+    "ios",
+    "node_modules"
+  ]
+}
