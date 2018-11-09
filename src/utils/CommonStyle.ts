@@ -8,7 +8,6 @@ export const CommonStyle = {
     height: 200,
   },
   container: {
-    flex: 1,
     height: '100%',
     backgroundColor: Colors.Secondary,
   },

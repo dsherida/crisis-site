@@ -64,7 +64,7 @@ class Header extends React.Component<Props, State> {
               </Link>
             </Col>
             <Col className="d-flex" style={styles.imageRow}>
-              <img style={{position: 'absolute'}} src={Assets.src.crisis_logo} />
+              <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
             </Col>
             <Col className="d-flex justify-content-center align-items-center">
               <Link to={'/login-register'}>
@@ -95,6 +95,10 @@ const styles = {
   imageRow: {
     justifyContent: 'center',
     height: HeaderHeight,
+  },
+  crisisLogo: {
+    height: '110%',
+    zIndex: 1000,
   },
   main: {
     bottom: 0,

@@ -62,7 +62,7 @@ const headerStyles = {
 
 const styles = {
   default: {
-    fontFamily: 'Open sans',
+    fontFamily: 'sans-serif',
     color: Colors.White,
   },
 };

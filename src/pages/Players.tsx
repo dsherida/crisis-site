@@ -21,12 +21,8 @@ export default class Players extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.updateDimensions();
-  }
-
-  updateDimensions = () => {
     this.setState({width: window.innerWidth, height: window.innerHeight - HeaderHeight});
-  };
+  }
 
   render() {
     return (
