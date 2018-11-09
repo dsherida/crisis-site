@@ -1,6 +1,7 @@
 import {PositionProperty} from 'csstype';
 import * as React from 'react';
 import {CSSProperties} from 'react';
+import {Link} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
 import {Assets} from '../assets';
 import CrisisButton from '../sfc/CrisisButton';
@@ -30,17 +31,21 @@ export default class TopNavBar extends React.Component {
         <Container>
           <Row>
             <Col className="d-flex justify-content-center align-items-center">
-              <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.playersOnClick}>
-                PLAYERS
-              </CrisisButton>
+              <Link to={'/players'}>
+                <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.playersOnClick}>
+                  PLAYERS
+                </CrisisButton>
+              </Link>
             </Col>
             <Col className="d-flex" style={styles.imageRow}>
               <img style={{position: 'absolute'}} src={Assets.src.crisis_logo} />
             </Col>
             <Col className="d-flex justify-content-center align-items-center">
-              <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.loginRegisterOnClick}>
-                LOGIN/REGISTER
-              </CrisisButton>
+              <Link to={'/login-register'}>
+                <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.loginRegisterOnClick}>
+                  LOGIN/REGISTER
+                </CrisisButton>
+              </Link>
             </Col>
           </Row>
         </Container>

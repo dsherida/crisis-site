@@ -24,16 +24,16 @@ interface Props {
   style?: CSSProperties | undefined;
 }
 
-const getFontType = (type: FontType) => {
+export const getFontTypeStyle = (type: FontType) => {
   switch (type) {
     case FontType.Header:
-      break;
+      return headerStyles.default;
     case FontType.Paragraph:
-      break;
+      return styles.default;
   }
 };
 
-const getFontSize = (size: FontSize) => {
+export const getFontSize = (size: FontSize) => {
   switch (size) {
     default:
     case FontSize.S:
@@ -47,14 +47,22 @@ const getFontSize = (size: FontSize) => {
 
 const CrisisText: SFC<Props> = props => {
   return (
-    <a {...props} style={{...styles.default, ...props.style, fontSize: getFontSize(props.font.size)}}>
+    <h1 {...props} style={{...getFontTypeStyle(props.font.type), fontSize: getFontSize(props.font.size), ...props.style}}>
       {props.children}
-    </a>
+    </h1>
   );
+};
+
+const headerStyles = {
+  default: {
+    fontFamily: 'Righteous',
+    fontWeight: 400,
+  },
 };
 
 const styles = {
   default: {
+    fontFamily: 'Open sans',
     color: Colors.White,
   },
 };
