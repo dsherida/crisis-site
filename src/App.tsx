@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './App.css';
-import TopNavBar from './components/TopNavBar';
+import Header from './components/Header';
 import Main from './Main';
 
 const App = () => (
   <div>
-    <TopNavBar />
+    <Header />
     <Main />
   </div>
 );

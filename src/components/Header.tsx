@@ -1,20 +1,34 @@
-import {PositionProperty} from 'csstype';
 import * as React from 'react';
-import {CSSProperties} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, RouteComponentProps, RouteProps, withRouter} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
 import {Assets} from '../assets';
+import {RouteNames} from '../Main';
 import CrisisButton from '../sfc/CrisisButton';
-import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {Colors} from '../utils/Constants';
 
-interface Props {
-  id: string;
+interface Props extends RouteComponentProps<void> {}
+
+interface State {
+  currentRoute: string;
 }
 
-export default class TopNavBar extends React.Component {
+class Header extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
+    const {pathname} = props.location;
+
+    this.state = {
+      currentRoute: pathname,
+    };
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    const {pathname} = nextProps.location;
+
+    this.setState({
+      currentRoute: pathname,
+    });
   }
 
   playersOnClick = () => {
@@ -25,6 +39,14 @@ export default class TopNavBar extends React.Component {
     console.log('loginRegisterOnClick');
   };
 
+  isPlayersRoute = () => {
+    return this.state.currentRoute === RouteNames.Players || this.state.currentRoute === RouteNames.Home;
+  };
+
+  isLoginRegisterRoute = () => {
+    return this.state.currentRoute === RouteNames.LoginRegister;
+  };
+
   render() {
     return (
       <div style={styles.container}>
@@ -32,7 +54,11 @@ export default class TopNavBar extends React.Component {
           <Row>
             <Col className="d-flex justify-content-center align-items-center">
               <Link to={'/players'}>
-                <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.playersOnClick}>
+                <CrisisButton
+                  color={Colors.Primary}
+                  textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink}
+                  onClick={this.playersOnClick}
+                >
                   PLAYERS
                 </CrisisButton>
               </Link>
@@ -42,7 +68,11 @@ export default class TopNavBar extends React.Component {
             </Col>
             <Col className="d-flex justify-content-center align-items-center">
               <Link to={'/login-register'}>
-                <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.loginRegisterOnClick}>
+                <CrisisButton
+                  color={Colors.Primary}
+                  textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}
+                  onClick={this.loginRegisterOnClick}
+                >
                   LOGIN/REGISTER
                 </CrisisButton>
               </Link>
@@ -66,4 +96,9 @@ const styles = {
     bottom: 0,
   },
   navLink: {},
+  activeLink: {
+    color: Colors.Primary,
+  },
 };
+
+export default withRouter(props => <Header {...props} />) as React.ComponentClass<{}>;

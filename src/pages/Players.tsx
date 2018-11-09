@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TopNavBar from '../components/TopNavBar';
+import Header from '../components/Header';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {Colors} from '../utils/Constants';
 
