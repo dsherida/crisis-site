@@ -1,3 +1,4 @@
+import {OutlineStyleProperty} from 'csstype';
 import * as React from 'react';
 import {CSSProperties, ReactNode, SFC} from 'react';
 import {Button} from 'reactstrap';
@@ -14,7 +15,7 @@ interface Props {
 
 const CrisisButton: SFC<Props> = props => {
   return (
-    <Button outline color={'danger'} style={{...styles.dStyle, ...props.style}} onClick={props.onClick}>
+    <Button outline color={'primary'} style={{...styles.dStyle, ...props.style}} onClick={props.onClick}>
       <h1
         style={{...getFontTypeStyle(FontType.Header), fontSize: getFontSize(FontSize.M), ...styles.dTextStyle, ...props.textStyle}}
         children={props.children}
@@ -25,13 +26,10 @@ const CrisisButton: SFC<Props> = props => {
 
 const styles = {
   dStyle: {
+    backgroundColor: Colors.Transparent,
     cursor: 'pointer',
     borderWidth: 0,
-    highlight: Colors.Primary,
-    outlineColor: Colors.Primary,
-    borderColor: Colors.Primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    boxShadow: 'none',
   },
   dTextStyle: {
     color: Colors.Gray,

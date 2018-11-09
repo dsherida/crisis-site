@@ -84,13 +84,17 @@ class Header extends React.Component<Props, State> {
   }
 }
 
+export const HeaderHeight = 200;
+
 const styles = {
   container: {
-    backgroundColor: Colors.Secondary,
+    width: '100%',
+    height: '100%',
+    background: `linear-gradient(to bottom, ${Colors.SecondaryDark} 0%, ${Colors.PrimaryTransparent} 50%, ${Colors.SecondaryDark} 100%)`,
   },
   imageRow: {
     justifyContent: 'center',
-    height: 200,
+    height: HeaderHeight,
   },
   main: {
     bottom: 0,

@@ -1,11 +1,9 @@
 import * as React from 'react';
-import Header from '../components/Header';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
-import {Colors} from '../utils/Constants';
+import {CommonStyle} from '../utils/CommonStyle';
+import {HeaderHeight} from '../components/Header';
 
 interface State {
-  initialWidth: number;
-  initialHeight: number;
   width: number;
   height: number;
 }
@@ -17,40 +15,26 @@ export default class Players extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      width: 800,
-      height: 182,
-      initialWidth: 800,
-      initialHeight: 182,
+      width: 0,
+      height: 0,
     };
   }
 
   componentDidMount() {
     this.updateDimensions();
-    this.setInitialDimensions();
-    window.addEventListener('resize', this.updateDimensions);
   }
 
   updateDimensions = () => {
-    this.setState({width: window.innerWidth, height: window.innerHeight});
-  };
-
-  setInitialDimensions = () => {
-    this.setState({
-      initialHeight: window.innerHeight,
-      initialWidth: window.innerWidth,
-    });
+    this.setState({width: window.innerWidth, height: window.innerHeight - HeaderHeight});
   };
 
   render() {
     return (
-      <div style={styles.container}>
+      <div style={{...CommonStyle.container, width: this.state.width, height: this.state.height}}>
         <CrisisText font={{type: FontType.Header, size: FontSize.M}}>Players</CrisisText>
       </div>
     );
   }
 }
 
-const styles = {
-  container: {
-  },
-};
+const styles = {};
