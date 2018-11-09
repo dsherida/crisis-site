@@ -9,6 +9,7 @@ export const Colors = {
   Tan: '#fbba85',
   Gray: '#988080',
   Red: '#c01616',
+  Transparent: '#00000000',
 };
 
 /* Margins + Padding */

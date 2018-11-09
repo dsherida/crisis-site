@@ -3,7 +3,8 @@ import * as React from 'react';
 import {CSSProperties} from 'react';
 import {Col, Container, Row} from 'reactstrap';
 import {Assets} from '../assets';
-import Text, {FontSize, FontType} from '../sfc/Text';
+import CrisisButton from '../sfc/CrisisButton';
+import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {Colors} from '../utils/Constants';
 
 interface Props {
@@ -15,23 +16,31 @@ export default class TopNavBar extends React.Component {
     super(props);
   }
 
+  playersOnClick = () => {
+    console.log('playersOnClick');
+  };
+
+  loginRegisterOnClick = () => {
+    console.log('loginRegisterOnClick');
+  };
+
   render() {
     return (
       <div style={styles.container}>
         <Container>
           <Row>
             <Col className="d-flex justify-content-center align-items-center">
-              <Text font={{size: FontSize.M, type: FontType.Paragraph}} style={styles.navLink}>
+              <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.playersOnClick}>
                 PLAYERS
-              </Text>
+              </CrisisButton>
             </Col>
             <Col className="d-flex" style={styles.imageRow}>
               <img style={{position: 'absolute'}} src={Assets.src.crisis_logo} />
             </Col>
             <Col className="d-flex justify-content-center align-items-center">
-              <Text font={{size: FontSize.M, type: FontType.Paragraph}} style={styles.navLink}>
+              <CrisisButton color={Colors.Primary} style={styles.navLink} onClick={this.loginRegisterOnClick}>
                 LOGIN/REGISTER
-              </Text>
+              </CrisisButton>
             </Col>
           </Row>
         </Container>
@@ -51,7 +60,5 @@ const styles = {
   main: {
     bottom: 0,
   },
-  navLink: {
-    color: Colors.Gray,
-  },
+  navLink: {},
 };

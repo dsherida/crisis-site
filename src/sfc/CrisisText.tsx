@@ -45,7 +45,7 @@ const getFontSize = (size: FontSize) => {
   }
 };
 
-const Text: SFC<Props> = props => {
+const CrisisText: SFC<Props> = props => {
   return (
     <a {...props} style={{...styles.default, ...props.style, fontSize: getFontSize(props.font.size)}}>
       {props.children}
@@ -59,4 +59,4 @@ const styles = {
   },
 };
 
-export default Text;
+export default CrisisText;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Col, Container, Row} from 'reactstrap';
 import './App.css';
 import TopNavBar from './components/TopNavBar';
-import Text from './sfc/Text';
+import CrisisText from './sfc/CrisisText';
 import {CommonStyle} from './utils/CommonStyle';
 import {Colors} from './utils/Constants';
 
