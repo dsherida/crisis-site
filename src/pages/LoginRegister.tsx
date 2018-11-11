@@ -68,12 +68,12 @@ export default class LoginRegister extends React.Component<Props, State> {
                   <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
                     REGISTER
                   </CrisisText>
-                  <FloatingTextInput style={styles.inputGroup} labelText="FIRST" />
-                  <FloatingTextInput style={styles.inputGroup} labelText="LAST" />
+                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="FIRST" />
+                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="LAST" />
                   <FloatingTextInput style={styles.inputGroup} labelText="PHONE NUMBER" />
                   <FloatingTextInput style={styles.inputGroup} labelText="EMAIL" />
-                  <FloatingTextInput style={styles.inputGroup} labelText="PASSWORD" />
-                  <FloatingTextInput style={styles.inputGroup} labelText="RE-TYPE PASSWORD" />
+                  <FloatingTextInput secure style={styles.inputGroup} labelText="PASSWORD" />
+                  <FloatingTextInput secure style={styles.inputGroup} labelText="RE-TYPE PASSWORD" />
                 </FormGroup>
                 <Button style={styles.button} outline color="danger">
                   CREATE ACCOUNT

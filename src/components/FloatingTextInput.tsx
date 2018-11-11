@@ -4,11 +4,13 @@ import {Col, FormGroup, Input, Label, Row} from 'reactstrap';
 import CrisisText, {FontSize, FontType, getFontSize} from '../sfc/CrisisText';
 import {Colors, Padding} from '../utils/Constants';
 import {BorderRadius} from '../utils/StyleUtils';
+import {TextTransformProperty} from 'csstype';
 
 interface Props {
   style?: CSSProperties | undefined;
   labelText: string;
   secure?: boolean;
+  capitalize?: boolean;
 }
 
 interface State {
@@ -35,7 +37,13 @@ export default class FloatingTextInput extends Component<Props, State> {
             {this.props.labelText}
           </CrisisText>
         </Label>
-        <input id={`${this.props.labelText}`} style={styles.input} onFocus={this.handleFocus} onBlur={this.handleBlur} />
+        <input
+          type={this.props.secure ? 'password' : null}
+          id={`${this.props.labelText}`}
+          style={{...styles.input, textTransform: this.props.capitalize ? "capitalize" as TextTransformProperty : null}}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+        />
       </FormGroup>
     );
   }
