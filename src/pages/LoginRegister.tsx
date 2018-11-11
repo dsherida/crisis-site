@@ -1,3 +1,4 @@
+import {TextAlignProperty} from 'csstype';
 import * as React from 'react';
 import {Button, Col, Container, Form, FormGroup, Input, InputGroup, InputGroupAddon, Label, Row} from 'reactstrap';
 import FloatingTextInput from '../components/FloatingTextInput';
@@ -13,6 +14,8 @@ interface Props {
 interface State {
   width: number;
   height: number;
+  loginError: string;
+  registerError: string;
 }
 
 export default class LoginRegister extends React.Component<Props, State> {
@@ -22,6 +25,8 @@ export default class LoginRegister extends React.Component<Props, State> {
     this.state = {
       width: 0,
       height: 0,
+      loginError: null,
+      registerError: null,
     };
   }
 
@@ -38,6 +43,24 @@ export default class LoginRegister extends React.Component<Props, State> {
     this.setState({width: window.innerWidth, height: window.innerHeight});
   };
 
+  loginOnClick = () => {
+    this.setState({
+      loginError: 'Login not yet implemented',
+    });
+  };
+
+  forgotPasswordOnClick = () => {
+    this.setState({
+      loginError: 'Forgot password not yet implemented',
+    });
+  };
+
+  registerOnClick = () => {
+    this.setState({
+      registerError: 'Register not yet implemented',
+    });
+  };
+
   render() {
     return (
       <div style={{...CommonStyle.container, width: '100%'}}>
@@ -51,10 +74,15 @@ export default class LoginRegister extends React.Component<Props, State> {
                 </CrisisText>
                 <FloatingTextInput style={styles.inputGroup} labelText="EMAIL" />
                 <FloatingTextInput style={styles.inputGroup} labelText="PASSWORD" secure />
-                <Button style={styles.button} outline color="primary">
+                {this.state.loginError ? (
+                  <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+                    {this.state.loginError}
+                  </CrisisText>
+                ) : null}
+                <Button style={styles.button} outline color="primary" onClick={this.loginOnClick}>
                   LOGIN
                 </Button>
-                <Button style={styles.button} color="link">
+                <Button style={styles.button} color="link" onClick={this.forgotPasswordOnClick}>
                   FORGOT PASSWORD
                 </Button>
               </Form>
@@ -68,14 +96,19 @@ export default class LoginRegister extends React.Component<Props, State> {
                   <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
                     REGISTER
                   </CrisisText>
-                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="FIRST" />
-                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="LAST" />
-                  <FloatingTextInput style={styles.inputGroup} labelText="PHONE NUMBER" />
-                  <FloatingTextInput style={styles.inputGroup} labelText="EMAIL" />
-                  <FloatingTextInput secure style={styles.inputGroup} labelText="PASSWORD" />
-                  <FloatingTextInput secure style={styles.inputGroup} labelText="RE-TYPE PASSWORD" />
+                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="FIRST*" />
+                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="LAST*" />
+                  <FloatingTextInput style={styles.inputGroup} labelText="PHONE NUMBER*" />
+                  <FloatingTextInput style={styles.inputGroup} labelText="EMAIL*" />
+                  <FloatingTextInput secure style={styles.inputGroup} labelText="PASSWORD*" />
+                  <FloatingTextInput secure style={styles.inputGroup} labelText="RE-TYPE PASSWORD*" />
                 </FormGroup>
-                <Button style={styles.button} outline color="danger">
+                {this.state.registerError ? (
+                  <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+                    {this.state.registerError}
+                  </CrisisText>
+                ) : null}
+                <Button style={styles.button} outline color="danger" onClick={this.registerOnClick}>
                   CREATE ACCOUNT
                 </Button>
               </Form>
@@ -118,5 +151,8 @@ const styles = {
     paddingTop: Padding.H2,
     paddingBottom: Padding.H2,
     width: '100%',
+  },
+  error: {
+    textAlign: 'center' as TextAlignProperty,
   },
 };

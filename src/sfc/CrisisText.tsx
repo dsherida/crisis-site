@@ -19,6 +19,7 @@ export interface Font {
 }
 
 interface Props {
+  className?: string;
   font: Font;
   children?: ReactNode;
   style?: CSSProperties | undefined;
