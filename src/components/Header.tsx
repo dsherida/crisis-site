@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {Link, RouteComponentProps, RouteProps, withRouter} from 'react-router-dom';
+import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
 import {Assets} from '../assets';
-import {RouteNames} from '../Main';
+import {HOME, LOGIN_REGISTER, PLAYERS} from '../constants/routes';
 import CrisisButton from '../sfc/CrisisButton';
 import {Colors} from '../utils/Constants';
 
@@ -40,11 +40,11 @@ class Header extends React.Component<Props, State> {
   };
 
   isPlayersRoute = () => {
-    return this.state.currentRoute === RouteNames.Players || this.state.currentRoute === RouteNames.Home;
+    return this.state.currentRoute === PLAYERS || this.state.currentRoute === HOME;
   };
 
   isLoginRegisterRoute = () => {
-    return this.state.currentRoute === RouteNames.LoginRegister;
+    return this.state.currentRoute === LOGIN_REGISTER;
   };
 
   render() {
@@ -53,7 +53,7 @@ class Header extends React.Component<Props, State> {
         <Container>
           <Row>
             <Col className="d-flex justify-content-center align-items-center">
-              <Link to={'/players'}>
+              <Link to={PLAYERS}>
                 <CrisisButton
                   color={Colors.Primary}
                   textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink}
@@ -67,7 +67,7 @@ class Header extends React.Component<Props, State> {
               <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
             </Col>
             <Col className="d-flex justify-content-center align-items-center">
-              <Link to={'/login-register'}>
+              <Link to={LOGIN_REGISTER}>
                 <CrisisButton
                   color={Colors.Primary}
                   textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}

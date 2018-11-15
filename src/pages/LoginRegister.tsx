@@ -1,13 +1,17 @@
 import {TextAlignProperty} from 'csstype';
 import * as React from 'react';
-import {Button, Col, Container, Form, FormGroup, Input, InputGroup, InputGroupAddon, Label, Row} from 'reactstrap';
+import {ChangeEvent} from 'react';
+import {RouteComponentProps, withRouter} from 'react-router';
+import {Button, Col, Container, Form, FormGroup, Row} from 'reactstrap';
 import FloatingTextInput from '../components/FloatingTextInput';
-import {HeaderHeight} from '../components/Header';
+import {HOME} from '../constants/routes';
+import {auth} from '../firebase';
+import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 
-interface Props {
+interface Props extends RouteComponentProps {
   id: string;
 }
 
@@ -16,9 +20,13 @@ interface State {
   height: number;
   loginError: string;
   registerError: string;
+  user: IUser;
+  retypePassword: string;
+  loginEmail: string;
+  loginPassword: string;
 }
 
-export default class LoginRegister extends React.Component<Props, State> {
+class LoginRegister extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -27,6 +35,16 @@ export default class LoginRegister extends React.Component<Props, State> {
       height: 0,
       loginError: null,
       registerError: null,
+      user: {
+        first: '',
+        last: '',
+        email: '',
+        phone: '',
+        password: '',
+      },
+      retypePassword: '',
+      loginEmail: '',
+      loginPassword: '',
     };
   }
 
@@ -55,15 +73,73 @@ export default class LoginRegister extends React.Component<Props, State> {
     });
   };
 
-  registerOnClick = () => {
+  registerOnClick = async () => {
+    try {
+      await auth.doCreateUserWithEmailAndPassword(this.state.user);
+      this.props.history.push(HOME);
+    } catch (e) {
+      this.setState({
+        registerError: e.message,
+      });
+    }
+  };
+
+  onChangeLoginEmail = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      registerError: 'Register not yet implemented',
+      loginEmail: event.target.value,
+    });
+  };
+  onChangeLoginPassword = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      loginPassword: event.target.value,
+    });
+  };
+  onChangeFirst = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      user: {...this.state.user, first: event.target.value},
+    });
+  };
+  onChangeLast = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      user: {...this.state.user, last: event.target.value},
+    });
+  };
+  onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      user: {...this.state.user, email: event.target.value},
+    });
+  };
+  onChangePhone = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      user: {...this.state.user, phone: event.target.value},
+    });
+  };
+  onChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      user: {...this.state.user, password: event.target.value},
+    });
+  };
+  onChangeRetypePassword = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      retypePassword: event.target.value,
     });
   };
 
   render() {
+    const loginDisabled = this.state.user.email === '' || this.state.user.password === '';
+
+    const registerDisabled =
+      this.state.retypePassword === '' ||
+      this.state.user.password === '' ||
+      this.state.user.email === '' ||
+      this.state.user.phone === '' ||
+      this.state.user.first === '' ||
+      this.state.user.last === '';
+
+    const passwordMismatch = this.state.user.password !== this.state.retypePassword;
+
     return (
-      <div style={{...CommonStyle.container, width: '100%'}}>
+      <div style={{...CommonStyle.container, width: '100%', minHeight: this.state.height}}>
         <Container style={styles.container}>
           <Row className="no-gutters" style={styles.row}>
             <Col style={styles.loginCol}>
@@ -72,14 +148,20 @@ export default class LoginRegister extends React.Component<Props, State> {
                 <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.header}>
                   LOGIN
                 </CrisisText>
-                <FloatingTextInput style={styles.inputGroup} labelText="EMAIL" />
-                <FloatingTextInput style={styles.inputGroup} labelText="PASSWORD" secure />
+                <FloatingTextInput value={this.state.loginEmail} onChange={this.onChangeLoginEmail} style={styles.inputGroup} labelText="EMAIL" />
+                <FloatingTextInput
+                  value={this.state.loginPassword}
+                  onChange={this.onChangeLoginPassword}
+                  style={styles.inputGroup}
+                  labelText="PASSWORD"
+                  secure
+                />
                 {this.state.loginError ? (
                   <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
                     {this.state.loginError}
                   </CrisisText>
                 ) : null}
-                <Button style={styles.button} outline color="primary" onClick={this.loginOnClick}>
+                <Button style={styles.button} outline color="primary" onClick={this.loginOnClick} disabled={loginDisabled}>
                   LOGIN
                 </Button>
                 <Button style={styles.button} color="link" onClick={this.forgotPasswordOnClick}>
@@ -87,7 +169,7 @@ export default class LoginRegister extends React.Component<Props, State> {
                 </Button>
               </Form>
             </Col>
-            <Col style={styles.registerCol}>
+            <Col style={{...styles.registerCol, minHeight: this.state.height}}>
               <Form>
                 <FormGroup>
                   <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}} style={styles.description}>
@@ -96,19 +178,48 @@ export default class LoginRegister extends React.Component<Props, State> {
                   <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
                     REGISTER
                   </CrisisText>
-                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="FIRST*" />
-                  <FloatingTextInput capitalize style={styles.inputGroup} labelText="LAST*" />
-                  <FloatingTextInput style={styles.inputGroup} labelText="PHONE NUMBER*" />
-                  <FloatingTextInput style={styles.inputGroup} labelText="EMAIL*" />
-                  <FloatingTextInput secure style={styles.inputGroup} labelText="PASSWORD*" />
-                  <FloatingTextInput secure style={styles.inputGroup} labelText="RE-TYPE PASSWORD*" />
+                  <FloatingTextInput
+                    value={this.state.user.first}
+                    onChange={this.onChangeFirst}
+                    capitalize
+                    style={styles.inputGroup}
+                    labelText="FIRST*"
+                  />
+                  <FloatingTextInput
+                    value={this.state.user.last}
+                    onChange={this.onChangeLast}
+                    capitalize
+                    style={styles.inputGroup}
+                    labelText="LAST*"
+                  />
+                  <FloatingTextInput
+                    value={this.state.user.phone}
+                    onChange={this.onChangePhone}
+                    style={styles.inputGroup}
+                    labelText="PHONE NUMBER*"
+                  />
+                  <FloatingTextInput value={this.state.user.email} onChange={this.onChangeEmail} style={styles.inputGroup} labelText="EMAIL*" />
+                  <FloatingTextInput
+                    value={this.state.user.password}
+                    onChange={this.onChangePassword}
+                    secure
+                    style={styles.inputGroup}
+                    labelText="PASSWORD*"
+                  />
+                  <FloatingTextInput
+                    value={this.state.retypePassword}
+                    onChange={this.onChangeRetypePassword}
+                    secure
+                    style={styles.inputGroup}
+                    labelText="RE-TYPE PASSWORD*"
+                  />
                 </FormGroup>
                 {this.state.registerError ? (
                   <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
                     {this.state.registerError}
                   </CrisisText>
                 ) : null}
-                <Button style={styles.button} outline color="danger" onClick={this.registerOnClick}>
+                <Button style={styles.button} outline color="danger" onClick={this.registerOnClick} disabled={registerDisabled}>
                   CREATE ACCOUNT
                 </Button>
               </Form>
@@ -156,3 +267,5 @@ const styles = {
     textAlign: 'center' as TextAlignProperty,
   },
 };
+
+export default withRouter(LoginRegister);
