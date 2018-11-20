@@ -24,6 +24,8 @@ interface State {
   retypePassword: string;
   loginEmail: string;
   loginPassword: string;
+  loginLoading: boolean;
+  registerLoading: boolean;
 }
 
 class LoginRegister extends React.Component<Props, State> {
@@ -45,6 +47,8 @@ class LoginRegister extends React.Component<Props, State> {
       retypePassword: '',
       loginEmail: '',
       loginPassword: '',
+      loginLoading: false,
+      registerLoading: false,
     };
   }
 
@@ -61,10 +65,22 @@ class LoginRegister extends React.Component<Props, State> {
     this.setState({width: window.innerWidth, height: window.innerHeight});
   };
 
-  loginOnClick = () => {
-    this.setState({
-      loginError: 'Login not yet implemented',
-    });
+  loginOnClick = async (event: ChangeEvent<any>) => {
+    event.preventDefault();
+
+    this.setState({loginLoading: true});
+
+    try {
+      const loginResult = await auth.doSignInWithEmailAndPassword(this.state.loginEmail, this.state.loginPassword);
+      console.log(JSON.stringify(loginResult));
+      // TODO: clear the state if needed
+      // this.setState({...INITIAL_STATE});
+      this.props.history.push(HOME);
+    } catch (e) {
+      this.setState({loginError: e.message});
+    }
+
+    this.setState({loginLoading: false});
   };
 
   forgotPasswordOnClick = () => {
@@ -74,6 +90,8 @@ class LoginRegister extends React.Component<Props, State> {
   };
 
   registerOnClick = async () => {
+    this.setState({registerLoading: true});
+
     try {
       await auth.doCreateUserWithEmailAndPassword(this.state.user);
       this.props.history.push(HOME);
@@ -82,6 +100,8 @@ class LoginRegister extends React.Component<Props, State> {
         registerError: e.message,
       });
     }
+
+    this.setState({registerLoading: false});
   };
 
   onChangeLoginEmail = (event: ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +146,7 @@ class LoginRegister extends React.Component<Props, State> {
   };
 
   render() {
-    const loginDisabled = this.state.user.email === '' || this.state.user.password === '';
+    const loginDisabled = this.state.loginEmail === '' || this.state.loginPassword === '';
 
     const registerDisabled =
       this.state.retypePassword === '' ||
@@ -143,7 +163,7 @@ class LoginRegister extends React.Component<Props, State> {
         <Container style={styles.container}>
           <Row className="no-gutters" style={styles.row}>
             <Col style={styles.loginCol}>
-              <Form>
+              <Form onSubmit={(e: ChangeEvent<any>) => this.loginOnClick(e)}>
                 <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}}>Returning members.</CrisisText>
                 <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.header}>
                   LOGIN
@@ -161,7 +181,14 @@ class LoginRegister extends React.Component<Props, State> {
                     {this.state.loginError}
                   </CrisisText>
                 ) : null}
-                <Button style={styles.button} outline color="primary" onClick={this.loginOnClick} disabled={loginDisabled}>
+                <Button
+                  type="submit"
+                  style={styles.button}
+                  outline
+                  color="primary"
+                  onClick={(e: ChangeEvent<any>) => this.loginOnClick(e)}
+                  disabled={loginDisabled}
+                >
                   LOGIN
                 </Button>
                 <Button style={styles.button} color="link" onClick={this.forgotPasswordOnClick}>
