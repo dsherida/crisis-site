@@ -1,6 +1,7 @@
 import {TextAlignProperty} from 'csstype';
-import * as React from 'react';
 import {ChangeEvent} from 'react';
+import * as React from 'react';
+import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, FormGroup, Row} from 'reactstrap';
 import FloatingTextInput from '../components/FloatingTextInput';
@@ -89,7 +90,9 @@ class LoginRegister extends React.Component<Props, State> {
     });
   };
 
-  registerOnClick = async () => {
+  registerOnClick = async (event: ChangeEvent<any>) => {
+    event.preventDefault();
+
     this.setState({registerLoading: true});
 
     try {
@@ -181,23 +184,29 @@ class LoginRegister extends React.Component<Props, State> {
                     {this.state.loginError}
                   </CrisisText>
                 ) : null}
-                <Button
-                  type="submit"
-                  style={styles.button}
-                  outline
-                  color="primary"
-                  onClick={(e: ChangeEvent<any>) => this.loginOnClick(e)}
-                  disabled={loginDisabled}
-                >
-                  LOGIN
-                </Button>
+                <div className="d-flex" style={styles.loadingBtnContainer}>
+                  {this.state.loginLoading ? (
+                    <ReactLoading type="balls" color={Colors.Primary} />
+                  ) : (
+                    <Button
+                      type="submit"
+                      style={styles.button}
+                      outline
+                      color="primary"
+                      onClick={(e: ChangeEvent<any>) => this.loginOnClick(e)}
+                      disabled={loginDisabled}
+                    >
+                      LOGIN
+                    </Button>
+                  )}
+                </div>
                 <Button style={styles.button} color="link" onClick={this.forgotPasswordOnClick}>
                   FORGOT PASSWORD
                 </Button>
               </Form>
             </Col>
             <Col style={{...styles.registerCol, minHeight: this.state.height}}>
-              <Form>
+              <Form onSubmit={(e: ChangeEvent<any>) => this.registerOnClick(e)}>
                 <FormGroup>
                   <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}} style={styles.description}>
                     Join now to gain access to exclusive paintball sponsorships.
@@ -246,9 +255,15 @@ class LoginRegister extends React.Component<Props, State> {
                     {this.state.registerError}
                   </CrisisText>
                 ) : null}
-                <Button style={styles.button} outline color="danger" onClick={this.registerOnClick} disabled={registerDisabled}>
-                  CREATE ACCOUNT
-                </Button>
+                <div className="d-flex" style={styles.loadingBtnContainer}>
+                  {this.state.registerLoading ? (
+                    <ReactLoading type="balls" color={Colors.Primary} />
+                  ) : (
+                    <Button type="submit" style={styles.button} outline color="danger" onClick={(e: ChangeEvent<any>) => this.registerOnClick(e)} disabled={registerDisabled}>
+                      CREATE ACCOUNT
+                    </Button>
+                  )}
+                </div>
               </Form>
             </Col>
           </Row>
@@ -272,6 +287,10 @@ const styles = {
   },
   description: {
     color: Colors.Beige,
+  },
+  loadingBtnContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loginCol: {
     paddingTop: Padding.V,
