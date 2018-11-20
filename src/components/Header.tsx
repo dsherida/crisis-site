@@ -3,13 +3,16 @@ import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
 import {Assets} from '../assets';
 import {HOME, LOGIN_REGISTER, PLAYERS} from '../constants/routes';
+import {firebase} from '../firebase';
 import CrisisButton from '../sfc/CrisisButton';
 import {Colors} from '../utils/Constants';
+import {Fragment} from 'react';
 
 interface Props extends RouteComponentProps<void> {}
 
 interface State {
   currentRoute: string;
+  authUser: any;
 }
 
 class Header extends React.Component<Props, State> {
@@ -20,7 +23,14 @@ class Header extends React.Component<Props, State> {
 
     this.state = {
       currentRoute: pathname,
+      authUser: null,
     };
+  }
+
+  componentDidMount() {
+    firebase.auth.onAuthStateChanged(authUser => {
+      authUser ? this.setState({authUser}) : this.setState({authUser: null});
+    });
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -47,38 +57,70 @@ class Header extends React.Component<Props, State> {
     return this.state.currentRoute === LOGIN_REGISTER;
   };
 
+  navigationAuth = () => {
+    return (
+      <Row>
+        <Col className="d-flex justify-content-center align-items-center">
+          <Link to={PLAYERS}>
+            <CrisisButton color={Colors.Primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
+              PLAYERS
+            </CrisisButton>
+          </Link>
+        </Col>
+        <Col className="d-flex" style={styles.imageRow}>
+          <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
+        </Col>
+        <Col className="d-flex justify-content-center align-items-center">
+          <Link to={LOGIN_REGISTER}>
+            <CrisisButton
+              color={Colors.Primary}
+              textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}
+              onClick={this.loginRegisterOnClick}
+            >
+              PROFILE
+            </CrisisButton>
+          </Link>
+        </Col>
+      </Row>
+    );
+  };
+
+  navigationNonAuth = () => {
+    return (
+      <Row>
+        <Col className="d-flex justify-content-center align-items-center">
+          <Link to={PLAYERS}>
+            <CrisisButton color={Colors.Primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
+              PLAYERS
+            </CrisisButton>
+          </Link>
+        </Col>
+        <Col className="d-flex" style={styles.imageRow}>
+          <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
+        </Col>
+        <Col className="d-flex justify-content-center align-items-center">
+          <Link to={LOGIN_REGISTER}>
+            <CrisisButton
+              color={Colors.Primary}
+              textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}
+              onClick={this.loginRegisterOnClick}
+            >
+              LOGIN/REGISTER
+            </CrisisButton>
+          </Link>
+        </Col>
+      </Row>
+    );
+  };
+
+  navigation = () => {
+    return <Fragment>{this.state.authUser ? this.navigationAuth() : this.navigationNonAuth()}</Fragment>;
+  };
+
   render() {
     return (
       <div style={styles.container}>
-        <Container>
-          <Row>
-            <Col className="d-flex justify-content-center align-items-center">
-              <Link to={PLAYERS}>
-                <CrisisButton
-                  color={Colors.Primary}
-                  textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink}
-                  onClick={this.playersOnClick}
-                >
-                  PLAYERS
-                </CrisisButton>
-              </Link>
-            </Col>
-            <Col className="d-flex" style={styles.imageRow}>
-              <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
-            </Col>
-            <Col className="d-flex justify-content-center align-items-center">
-              <Link to={LOGIN_REGISTER}>
-                <CrisisButton
-                  color={Colors.Primary}
-                  textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}
-                  onClick={this.loginRegisterOnClick}
-                >
-                  LOGIN/REGISTER
-                </CrisisButton>
-              </Link>
-            </Col>
-          </Row>
-        </Container>
+        <Container>{this.navigation()}</Container>
       </div>
     );
   }
