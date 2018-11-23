@@ -78,10 +78,8 @@ class LoginRegister extends React.Component<Props, State> {
       // this.setState({...INITIAL_STATE});
       this.props.history.push(HOME);
     } catch (e) {
-      this.setState({loginError: e.message});
+      this.setState({loginLoading: false, loginError: e.message});
     }
-
-    this.setState({loginLoading: false});
   };
 
   forgotPasswordOnClick = () => {
@@ -100,11 +98,10 @@ class LoginRegister extends React.Component<Props, State> {
       this.props.history.push(HOME);
     } catch (e) {
       this.setState({
+        registerLoading: false,
         registerError: e.message,
       });
     }
-
-    this.setState({registerLoading: false});
   };
 
   onChangeLoginEmail = (event: ChangeEvent<HTMLInputElement>) => {
@@ -259,7 +256,14 @@ class LoginRegister extends React.Component<Props, State> {
                   {this.state.registerLoading ? (
                     <ReactLoading type="balls" color={Colors.Primary} />
                   ) : (
-                    <Button type="submit" style={styles.button} outline color="danger" onClick={(e: ChangeEvent<any>) => this.registerOnClick(e)} disabled={registerDisabled}>
+                    <Button
+                      type="submit"
+                      style={styles.button}
+                      outline
+                      color="danger"
+                      onClick={(e: ChangeEvent<any>) => this.registerOnClick(e)}
+                      disabled={registerDisabled}
+                    >
                       CREATE ACCOUNT
                     </Button>
                   )}

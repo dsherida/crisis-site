@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Fragment} from 'react';
 import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
 import {Assets} from '../assets';
@@ -6,13 +7,12 @@ import {HOME, LOGIN_REGISTER, PLAYERS} from '../constants/routes';
 import {firebase} from '../firebase';
 import CrisisButton from '../sfc/CrisisButton';
 import {Colors} from '../utils/Constants';
-import {Fragment} from 'react';
+import AuthUserContext from './AuthUserContext';
 
 interface Props extends RouteComponentProps<void> {}
 
 interface State {
   currentRoute: string;
-  authUser: any;
 }
 
 class Header extends React.Component<Props, State> {
@@ -23,14 +23,7 @@ class Header extends React.Component<Props, State> {
 
     this.state = {
       currentRoute: pathname,
-      authUser: null,
     };
-  }
-
-  componentDidMount() {
-    firebase.auth.onAuthStateChanged(authUser => {
-      authUser ? this.setState({authUser}) : this.setState({authUser: null});
-    });
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -114,7 +107,7 @@ class Header extends React.Component<Props, State> {
   };
 
   navigation = () => {
-    return <Fragment>{this.state.authUser ? this.navigationAuth() : this.navigationNonAuth()}</Fragment>;
+    return <AuthUserContext.Consumer>{authUser => (authUser ? this.navigationAuth() : this.navigationNonAuth())}</AuthUserContext.Consumer>;
   };
 
   render() {

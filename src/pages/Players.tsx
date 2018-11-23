@@ -48,7 +48,7 @@ class Players extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={{color: Colors.Primary}}>
           Dummy
         </CrisisText>
-        <SignOutButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger"/>
+        <SignOutButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger" />
       </div>
     );
   }
