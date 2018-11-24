@@ -3,7 +3,7 @@ import {Fragment} from 'react';
 import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
 import {Assets} from '../assets';
-import {HOME, LOGIN_REGISTER, PLAYERS} from '../constants/routes';
+import {HOME, LOGIN_REGISTER, PLAYERS, PROFILE} from '../constants/routes';
 import {firebase} from '../firebase';
 import CrisisButton from '../sfc/CrisisButton';
 import {Colors} from '../utils/Constants';
@@ -50,6 +50,10 @@ class Header extends React.Component<Props, State> {
     return this.state.currentRoute === LOGIN_REGISTER;
   };
 
+  isProfileRoute = () => {
+    return this.state.currentRoute === PROFILE;
+  };
+
   navigationAuth = () => {
     return (
       <Row>
@@ -64,10 +68,10 @@ class Header extends React.Component<Props, State> {
           <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
         </Col>
         <Col className="d-flex justify-content-center align-items-center">
-          <Link to={LOGIN_REGISTER}>
+          <Link to={PROFILE}>
             <CrisisButton
               color={Colors.Primary}
-              textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}
+              textStyle={this.isProfileRoute() ? styles.activeLink : styles.navLink}
               onClick={this.loginRegisterOnClick}
             >
               PROFILE

@@ -1,4 +1,4 @@
-import {Colors, Padding} from './Constants';
+import {Colors} from './Constants';
 
 export const CommonStyle = {
   debug: {

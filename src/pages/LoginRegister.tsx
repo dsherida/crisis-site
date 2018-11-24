@@ -27,6 +27,10 @@ interface State {
   loginPassword: string;
   loginLoading: boolean;
   registerLoading: boolean;
+  forgotPassword: boolean;
+  forgotPasswordEmail: string;
+  passwordResetError: string;
+  passwordResetLoading: boolean;
 }
 
 class LoginRegister extends React.Component<Props, State> {
@@ -50,6 +54,10 @@ class LoginRegister extends React.Component<Props, State> {
       loginPassword: '',
       loginLoading: false,
       registerLoading: false,
+      forgotPassword: false,
+      forgotPasswordEmail: '',
+      passwordResetError: '',
+      passwordResetLoading: false,
     };
   }
 
@@ -69,29 +77,137 @@ class LoginRegister extends React.Component<Props, State> {
   loginOnClick = async (event: ChangeEvent<any>) => {
     event.preventDefault();
 
-    this.setState({loginLoading: true});
+    this.setState({loginLoading: true, loginError: ''});
 
     try {
-      const loginResult = await auth.doSignInWithEmailAndPassword(this.state.loginEmail, this.state.loginPassword);
-      console.log(JSON.stringify(loginResult));
-      // TODO: clear the state if needed
-      // this.setState({...INITIAL_STATE});
+      await auth.doSignInWithEmailAndPassword(this.state.loginEmail, this.state.loginPassword);
       this.props.history.push(HOME);
     } catch (e) {
       this.setState({loginLoading: false, loginError: e.message});
     }
   };
 
+  renderLogin = () => {
+    const loginDisabled = this.state.loginEmail === '' || this.state.loginPassword === '';
+
+    return (
+      <Form onSubmit={(e: ChangeEvent<any>) => this.loginOnClick(e)}>
+        <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}}>Returning members.</CrisisText>
+        <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
+          LOGIN
+        </CrisisText>
+        <FloatingTextInput value={this.state.loginEmail} onChange={this.onChangeLoginEmail} style={styles.inputGroup} labelText="EMAIL" />
+        <FloatingTextInput
+          value={this.state.loginPassword}
+          onChange={this.onChangeLoginPassword}
+          style={styles.inputGroup}
+          labelText="PASSWORD"
+          secure
+        />
+        {this.state.loginError ? (
+          <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+            {this.state.loginError}
+          </CrisisText>
+        ) : null}
+        <div className="d-flex" style={styles.loadingBtnContainer}>
+          {this.state.loginLoading ? (
+            <ReactLoading type="balls" color={Colors.Primary} />
+          ) : (
+            <Button
+              type="submit"
+              style={styles.button}
+              outline
+              color="primary"
+              onClick={(e: ChangeEvent<any>) => this.loginOnClick(e)}
+              disabled={loginDisabled}
+            >
+              LOGIN
+            </Button>
+          )}
+        </div>
+        <Button style={styles.button} color="link" onClick={this.forgotPasswordOnClick}>
+          FORGOT PASSWORD
+        </Button>
+      </Form>
+    );
+  };
+
   forgotPasswordOnClick = () => {
     this.setState({
-      loginError: 'Forgot password not yet implemented',
+      forgotPassword: !this.state.forgotPassword,
     });
+  };
+
+  passwordResetOnClick = async (event: ChangeEvent<any>) => {
+    event.preventDefault();
+
+    this.setState({
+      passwordResetLoading: true,
+      passwordResetError: '',
+    });
+
+    try {
+      await auth.doPasswordReset(this.state.forgotPasswordEmail);
+      // TODO: reset initial state if needed
+      this.setState({
+        forgotPassword: false,
+        loginError: 'Please check your email for a link to reset your password',
+      });
+    } catch (e) {
+      this.setState({
+        passwordResetLoading: false,
+        passwordResetError: e.message,
+      });
+    }
+  };
+
+  renderForgotPassword = () => {
+    const isInvalid = this.state.forgotPasswordEmail === '';
+
+    return (
+      <Form onSubmit={(e: ChangeEvent<any>) => this.passwordResetOnClick(e)}>
+        <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}}>Enter your email to reset your password</CrisisText>
+        <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
+          PASSWORD RESET
+        </CrisisText>
+        <FloatingTextInput
+          value={this.state.forgotPasswordEmail}
+          onChange={this.onChangeForgotPasswordEmail}
+          style={styles.inputGroup}
+          labelText="EMAIL"
+        />
+        {this.state.passwordResetError ? (
+          <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+            {this.state.passwordResetError}
+          </CrisisText>
+        ) : null}
+        <div className="d-flex" style={styles.loadingBtnContainer}>
+          {this.state.passwordResetLoading ? (
+            <ReactLoading type="balls" color={Colors.Primary} />
+          ) : (
+            <Button
+              type="submit"
+              style={styles.button}
+              outline
+              color="primary"
+              onClick={(e: ChangeEvent<any>) => this.passwordResetOnClick(e)}
+              disabled={isInvalid}
+            >
+              RESET PASSWORD
+            </Button>
+          )}
+        </div>
+        <Button style={styles.button} color="link" onClick={this.forgotPasswordOnClick}>
+          BACK TO LOGIN
+        </Button>
+      </Form>
+    );
   };
 
   registerOnClick = async (event: ChangeEvent<any>) => {
     event.preventDefault();
 
-    this.setState({registerLoading: true});
+    this.setState({registerLoading: true, registerError: ''});
 
     try {
       await auth.doCreateUserWithEmailAndPassword(this.state.user);
@@ -104,6 +220,71 @@ class LoginRegister extends React.Component<Props, State> {
     }
   };
 
+  renderRegister = () => {
+    const passwordMismatch = this.state.user.password !== this.state.retypePassword;
+
+    const registerDisabled =
+      this.state.retypePassword === '' ||
+      this.state.user.password === '' ||
+      this.state.user.email === '' ||
+      this.state.user.phone === '' ||
+      this.state.user.first === '' ||
+      this.state.user.last === '' ||
+      passwordMismatch;
+
+    return (
+      <Form onSubmit={(e: ChangeEvent<any>) => this.registerOnClick(e)}>
+        <FormGroup>
+          <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}} style={styles.description}>
+            Join now to gain access to exclusive paintball sponsorships.
+          </CrisisText>
+          <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
+            REGISTER
+          </CrisisText>
+          <FloatingTextInput value={this.state.user.first} onChange={this.onChangeFirst} capitalize style={styles.inputGroup} labelText="FIRST*" />
+          <FloatingTextInput value={this.state.user.last} onChange={this.onChangeLast} capitalize style={styles.inputGroup} labelText="LAST*" />
+          <FloatingTextInput value={this.state.user.phone} onChange={this.onChangePhone} style={styles.inputGroup} labelText="PHONE NUMBER*" />
+          <FloatingTextInput value={this.state.user.email} onChange={this.onChangeEmail} style={styles.inputGroup} labelText="EMAIL*" />
+          <FloatingTextInput
+            value={this.state.user.password}
+            onChange={this.onChangePassword}
+            secure
+            style={styles.inputGroup}
+            labelText="PASSWORD*"
+          />
+          <FloatingTextInput
+            value={this.state.retypePassword}
+            onChange={this.onChangeRetypePassword}
+            secure
+            style={styles.inputGroup}
+            labelText="RE-TYPE PASSWORD*"
+          />
+        </FormGroup>
+        {this.state.registerError ? (
+          <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+            {this.state.registerError}
+          </CrisisText>
+        ) : null}
+        <div className="d-flex" style={styles.loadingBtnContainer}>
+          {this.state.registerLoading ? (
+            <ReactLoading type="balls" color={Colors.Primary} />
+          ) : (
+            <Button
+              type="submit"
+              style={styles.button}
+              outline
+              color="danger"
+              onClick={(e: ChangeEvent<any>) => this.registerOnClick(e)}
+              disabled={registerDisabled}
+            >
+              CREATE ACCOUNT
+            </Button>
+          )}
+        </div>
+      </Form>
+    );
+  };
+
   onChangeLoginEmail = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       loginEmail: event.target.value,
@@ -112,6 +293,11 @@ class LoginRegister extends React.Component<Props, State> {
   onChangeLoginPassword = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       loginPassword: event.target.value,
+    });
+  };
+  onChangeForgotPasswordEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      forgotPasswordEmail: event.target.value,
     });
   };
   onChangeFirst = (event: ChangeEvent<HTMLInputElement>) => {
@@ -146,130 +332,12 @@ class LoginRegister extends React.Component<Props, State> {
   };
 
   render() {
-    const loginDisabled = this.state.loginEmail === '' || this.state.loginPassword === '';
-
-    const registerDisabled =
-      this.state.retypePassword === '' ||
-      this.state.user.password === '' ||
-      this.state.user.email === '' ||
-      this.state.user.phone === '' ||
-      this.state.user.first === '' ||
-      this.state.user.last === '';
-
-    const passwordMismatch = this.state.user.password !== this.state.retypePassword;
-
     return (
       <div style={{...CommonStyle.container, width: '100%', minHeight: this.state.height}}>
         <Container style={styles.container}>
           <Row className="no-gutters" style={styles.row}>
-            <Col style={styles.loginCol}>
-              <Form onSubmit={(e: ChangeEvent<any>) => this.loginOnClick(e)}>
-                <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}}>Returning members.</CrisisText>
-                <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.header}>
-                  LOGIN
-                </CrisisText>
-                <FloatingTextInput value={this.state.loginEmail} onChange={this.onChangeLoginEmail} style={styles.inputGroup} labelText="EMAIL" />
-                <FloatingTextInput
-                  value={this.state.loginPassword}
-                  onChange={this.onChangeLoginPassword}
-                  style={styles.inputGroup}
-                  labelText="PASSWORD"
-                  secure
-                />
-                {this.state.loginError ? (
-                  <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
-                    {this.state.loginError}
-                  </CrisisText>
-                ) : null}
-                <div className="d-flex" style={styles.loadingBtnContainer}>
-                  {this.state.loginLoading ? (
-                    <ReactLoading type="balls" color={Colors.Primary} />
-                  ) : (
-                    <Button
-                      type="submit"
-                      style={styles.button}
-                      outline
-                      color="primary"
-                      onClick={(e: ChangeEvent<any>) => this.loginOnClick(e)}
-                      disabled={loginDisabled}
-                    >
-                      LOGIN
-                    </Button>
-                  )}
-                </div>
-                <Button style={styles.button} color="link" onClick={this.forgotPasswordOnClick}>
-                  FORGOT PASSWORD
-                </Button>
-              </Form>
-            </Col>
-            <Col style={{...styles.registerCol, minHeight: this.state.height}}>
-              <Form onSubmit={(e: ChangeEvent<any>) => this.registerOnClick(e)}>
-                <FormGroup>
-                  <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}} style={styles.description}>
-                    Join now to gain access to exclusive paintball sponsorships.
-                  </CrisisText>
-                  <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
-                    REGISTER
-                  </CrisisText>
-                  <FloatingTextInput
-                    value={this.state.user.first}
-                    onChange={this.onChangeFirst}
-                    capitalize
-                    style={styles.inputGroup}
-                    labelText="FIRST*"
-                  />
-                  <FloatingTextInput
-                    value={this.state.user.last}
-                    onChange={this.onChangeLast}
-                    capitalize
-                    style={styles.inputGroup}
-                    labelText="LAST*"
-                  />
-                  <FloatingTextInput
-                    value={this.state.user.phone}
-                    onChange={this.onChangePhone}
-                    style={styles.inputGroup}
-                    labelText="PHONE NUMBER*"
-                  />
-                  <FloatingTextInput value={this.state.user.email} onChange={this.onChangeEmail} style={styles.inputGroup} labelText="EMAIL*" />
-                  <FloatingTextInput
-                    value={this.state.user.password}
-                    onChange={this.onChangePassword}
-                    secure
-                    style={styles.inputGroup}
-                    labelText="PASSWORD*"
-                  />
-                  <FloatingTextInput
-                    value={this.state.retypePassword}
-                    onChange={this.onChangeRetypePassword}
-                    secure
-                    style={styles.inputGroup}
-                    labelText="RE-TYPE PASSWORD*"
-                  />
-                </FormGroup>
-                {this.state.registerError ? (
-                  <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
-                    {this.state.registerError}
-                  </CrisisText>
-                ) : null}
-                <div className="d-flex" style={styles.loadingBtnContainer}>
-                  {this.state.registerLoading ? (
-                    <ReactLoading type="balls" color={Colors.Primary} />
-                  ) : (
-                    <Button
-                      type="submit"
-                      style={styles.button}
-                      outline
-                      color="danger"
-                      onClick={(e: ChangeEvent<any>) => this.registerOnClick(e)}
-                      disabled={registerDisabled}
-                    >
-                      CREATE ACCOUNT
-                    </Button>
-                  )}
-                </div>
-              </Form>
-            </Col>
+            <Col style={styles.loginCol}>{this.state.forgotPassword ? this.renderForgotPassword() : this.renderLogin()}</Col>
+            <Col style={{...styles.registerCol, minHeight: this.state.height}}>{this.renderRegister()}</Col>
           </Row>
         </Container>
       </div>

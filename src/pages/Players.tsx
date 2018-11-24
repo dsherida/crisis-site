@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {ChangeEvent} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Button} from 'reactstrap';
+import {Button, Container} from 'reactstrap';
 import {HeaderHeight} from '../components/Header';
 import {LOGIN_REGISTER} from '../constants/routes';
 import {auth} from '../firebase';
@@ -31,29 +31,26 @@ class Players extends React.Component<Props, State> {
     this.setState({width: window.innerWidth, height: window.innerHeight - HeaderHeight});
   }
 
-  signOutOnClick = async (event: ChangeEvent<any>) => {
-    event.preventDefault();
-
-    try {
-      await auth.doSignOut();
-      this.props.history.push(LOGIN_REGISTER);
-    } catch (e) {
-      console.error(e.message);
-    }
-  };
-
   render() {
     return (
-      <div style={{...CommonStyle.container, width: this.state.width, height: this.state.height}}>
-        <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={{color: Colors.Primary}}>
-          Dummy
-        </CrisisText>
-        <SignOutButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger" />
+      <div style={{...CommonStyle.container, ...styles.container, width: this.state.width, height: this.state.height}}>
+        <Container>
+          <div style={styles.playerCardContainer} />
+        </Container>
       </div>
     );
   }
 }
 
-const styles = {};
+const styles = {
+  container: {
+    padding: Padding.V,
+  },
+  playerCardContainer: {
+    height: 200,
+    width: 200,
+    backgroundColor: Colors.Primary,
+  },
+};
 
 export default withRouter(Players);
