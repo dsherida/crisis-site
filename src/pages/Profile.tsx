@@ -1,10 +1,11 @@
 import {TextAlignProperty} from 'csstype';
-import {ChangeEvent} from 'react';
 import * as React from 'react';
+import {ChangeEvent} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
 import FloatingTextInput from '../components/FloatingTextInput';
+import withAuthorization from '../components/withAuthorization';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import * as auth from '../firebase/auth';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
@@ -25,7 +26,7 @@ interface State {
   updatePasswordError: string;
 }
 
-export default class Profile extends React.Component<Props, State> {
+class Profile extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -162,3 +163,7 @@ const styles = {
     textAlign: 'center' as TextAlignProperty,
   },
 };
+
+const authCondition = (authUser: any) => !!authUser;
+
+export default withAuthorization(authCondition)(Profile);
