@@ -1,21 +1,22 @@
 import {TextAlignProperty} from 'csstype';
+import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import {ChangeEvent} from 'react';
+import {ChangeEvent, ComponentClass} from 'react';
 import ReactLoading from 'react-loading';
-import {RouteComponentProps} from 'react-router';
+import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
+import {compose} from 'recompose';
 import FloatingTextInput from '../components/FloatingTextInput';
 import withAuthorization from '../components/withAuthorization';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import * as auth from '../firebase/auth';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import SignOutButton from '../sfc/SignOutButton';
+import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 
-interface Props extends RouteComponentProps {
-  id: string;
-}
+interface Props extends RouteComponentProps, SessionStoreProps {}
 
 interface State {
   width: number;
@@ -166,4 +167,9 @@ const styles = {
 
 const authCondition = (authUser: any) => !!authUser;
 
-export default withAuthorization(authCondition)(Profile);
+export default compose(
+  withAuthorization(authCondition),
+  withRouter,
+  inject(SessionStoreName),
+  observer
+)(Profile as ComponentClass<any>);

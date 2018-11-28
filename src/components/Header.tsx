@@ -1,15 +1,16 @@
+import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 import {Fragment} from 'react';
-import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
+import {Link, RouteProps, withRouter} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
+import {compose} from 'recompose';
 import {Assets} from '../assets';
 import {HOME, LOGIN_REGISTER, PLAYERS, PROFILE} from '../constants/routes';
-import {firebase} from '../firebase';
 import CrisisButton from '../sfc/CrisisButton';
+import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {Colors} from '../utils/Constants';
-import AuthUserContext from './AuthUserContext';
 
-interface Props extends RouteComponentProps<void> {}
+interface Props extends RouteProps, SessionStoreProps {}
 
 interface State {
   currentRoute: string;
@@ -111,7 +112,9 @@ class Header extends React.Component<Props, State> {
   };
 
   navigation = () => {
-    return <AuthUserContext.Consumer>{authUser => (authUser ? this.navigationAuth() : this.navigationNonAuth())}</AuthUserContext.Consumer>;
+    const {authUser} = this.props.sessionStore;
+
+    return <Fragment>{authUser ? this.navigationAuth() : this.navigationNonAuth()}</Fragment>;
   };
 
   render() {
@@ -148,4 +151,8 @@ const styles = {
   },
 };
 
-export default withRouter(props => <Header {...props} />) as React.ComponentClass<{}>;
+export default compose(
+  withRouter,
+  inject(SessionStoreName),
+  observer
+)(Header);

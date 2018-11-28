@@ -1,11 +1,20 @@
+import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import {withRouter} from 'react-router';
+import {Fragment} from 'react';
+import {ReactNode} from 'react';
+import {ComponentClass} from 'react';
+import {RouteComponentProps, withRouter} from 'react-router';
+import {compose} from 'recompose';
 import {LOGIN_REGISTER} from '../constants/routes';
 import {firebase} from '../firebase';
-import AuthUserContext from './AuthUserContext';
+import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 
-const withAuthorization = (authCondition: (authUser: any) => boolean) => (Component: React.ComponentType<any>) => {
-  class WithAuthorization extends React.Component<any> {
+interface Props extends RouteComponentProps, SessionStoreProps {
+  children?: ReactNode[] | ReactNode | undefined;
+}
+
+const withAuthorization = (authCondition: (authUser: any) => boolean) => (Component: React.ComponentType) => {
+  class WithAuthorization extends React.Component<Props> {
     componentDidMount() {
       firebase.auth.onAuthStateChanged(authUser => {
         if (!authCondition(authUser)) {
@@ -15,11 +24,17 @@ const withAuthorization = (authCondition: (authUser: any) => boolean) => (Compon
     }
 
     render() {
-      return <AuthUserContext.Consumer>{authUser => (authUser ? <Component {...this.props} /> : null)}</AuthUserContext.Consumer>;
+      const {authUser} = this.props.sessionStore;
+
+      return <Fragment>{authUser ? <Component {...this.props} /> : null}</Fragment>;
     }
   }
 
-  return withRouter(WithAuthorization);
+  return compose(
+    withRouter,
+    inject(SessionStoreName),
+    observer
+  )(WithAuthorization as ComponentClass<any>);
 };
 
 export default withAuthorization;

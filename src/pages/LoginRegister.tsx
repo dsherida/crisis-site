@@ -13,8 +13,9 @@ import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import UserCredential = firebase.auth.UserCredential;
+import {SessionStoreProps} from '../stores/sessionStore';
 
-interface Props extends RouteComponentProps {
+interface Props extends RouteComponentProps, SessionStoreProps {
   id: string;
 }
 
