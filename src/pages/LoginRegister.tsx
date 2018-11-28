@@ -1,16 +1,18 @@
 import {TextAlignProperty} from 'csstype';
-import {ChangeEvent} from 'react';
+import {User} from 'firebase';
 import * as React from 'react';
+import {ChangeEvent} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, FormGroup, Row} from 'reactstrap';
 import FloatingTextInput from '../components/FloatingTextInput';
 import {HOME} from '../constants/routes';
-import {auth} from '../firebase';
+import {auth, db} from '../firebase';
 import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
+import UserCredential = firebase.auth.UserCredential;
 
 interface Props extends RouteComponentProps {
   id: string;
@@ -210,7 +212,10 @@ class LoginRegister extends React.Component<Props, State> {
     this.setState({registerLoading: true, registerError: ''});
 
     try {
-      await auth.doCreateUserWithEmailAndPassword(this.state.user);
+      const authUser: UserCredential = await auth.doCreateUserWithEmailAndPassword(this.state.user);
+
+      await db.doCreateUser(authUser.user.uid, this.state.user);
+
       this.props.history.push(HOME);
     } catch (e) {
       this.setState({

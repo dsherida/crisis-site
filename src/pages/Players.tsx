@@ -1,18 +1,18 @@
 import * as React from 'react';
-import {ChangeEvent} from 'react';
+import {Fragment} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Button, Container} from 'reactstrap';
+import {Container} from 'reactstrap';
 import {HeaderHeight} from '../components/Header';
-import {LOGIN_REGISTER} from '../constants/routes';
-import {auth} from '../firebase';
+import {db} from '../firebase/index';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
-import SignOutButton from '../sfc/SignOutButton';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 
 interface State {
   width: number;
   height: number;
+  users: {};
+  playersError: string;
 }
 
 interface Props extends RouteComponentProps {}
@@ -24,18 +24,52 @@ class Players extends React.Component<Props, State> {
     this.state = {
       width: 0,
       height: 0,
+      users: {},
+      playersError: '',
     };
   }
 
-  componentDidMount() {
-    this.setState({width: window.innerWidth, height: window.innerHeight - HeaderHeight});
+  async componentDidMount() {
+    try {
+      const snapshot = await db.onceGetUsers();
+
+      console.log('players: ' + JSON.stringify(snapshot.val()));
+
+      this.setState({
+        users: snapshot.val(),
+      });
+    } catch (e) {
+      console.error(e.message);
+
+      this.setState({
+        playersError: e.message,
+      });
+    }
+
+    this.setState({
+      width: window.innerWidth,
+      height: window.innerHeight - HeaderHeight,
+    });
   }
 
+  renderPlayers = (users: any) => {
+    return (
+      <Fragment>
+        {Object.keys(users).map(key => (
+          <CrisisText font={{size: FontSize.S, type: FontType.Paragraph}}>{users[key].first}</CrisisText>
+        ))}
+      </Fragment>
+    );
+  };
+
   render() {
+    const {users} = this.state;
+
     return (
       <div style={{...CommonStyle.container, ...styles.container, width: this.state.width, height: this.state.height}}>
         <Container>
           <div style={styles.playerCardContainer} />
+          {!!users && this.renderPlayers(users)}
         </Container>
       </div>
     );
