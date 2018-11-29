@@ -8,6 +8,7 @@ export enum FontType {
 }
 
 export enum FontSize {
+  XS = 'XS',
   S = 'S',
   M = 'M',
   L = 'L',
@@ -30,13 +31,15 @@ export const getFontTypeStyle = (type: FontType) => {
     case FontType.Header:
       return headerStyles.default;
     case FontType.Paragraph:
-      return styles.default;
+      return paragraphStyles.default;
   }
 };
 
 export const getFontSize = (size: FontSize) => {
   switch (size) {
     default:
+    case FontSize.XS:
+      return 16;
     case FontSize.S:
       return 22;
     case FontSize.M:
@@ -54,16 +57,15 @@ const CrisisText: SFC<Props> = props => {
   );
 };
 
-const headerStyles = {
+export const headerStyles = {
   default: {
-    fontFamily: 'Righteous',
-    fontWeight: 400,
+    fontFamily: 'Rapier_Zero',
   },
 };
 
-const styles = {
+export const paragraphStyles = {
   default: {
-    fontFamily: 'sans-serif',
+    fontFamily: 'Quicksand_Bold',
     color: Colors.White,
   },
 };

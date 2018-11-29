@@ -2,7 +2,7 @@ import {TextTransformProperty} from 'csstype';
 import * as React from 'react';
 import {ChangeEvent, Component, CSSProperties} from 'react';
 import {Col, FormGroup, Input, Label, Row} from 'reactstrap';
-import CrisisText, {FontSize, FontType, getFontSize} from '../sfc/CrisisText';
+import CrisisText, {FontSize, FontType, getFontSize, paragraphStyles} from '../sfc/CrisisText';
 import {Colors, Padding} from '../utils/Constants';
 import {BorderRadius} from '../utils/StyleUtils';
 
@@ -35,14 +35,14 @@ export default class FloatingTextInput extends Component<Props, State> {
     return (
       <FormGroup style={{...styles.container, ...this.props.style}}>
         <Label for={`${this.props.labelText}`} style={styles.label}>
-          <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.labelHeader}>
+          <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.labelHeader}>
             {this.props.labelText}
           </CrisisText>
         </Label>
         <input
           type={this.props.secure ? 'password' : null}
           id={`${this.props.labelText}`}
-          style={{...styles.input, textTransform: this.props.capitalize ? ('capitalize' as TextTransformProperty) : null}}
+          style={{...paragraphStyles.default, ...styles.input, textTransform: this.props.capitalize ? ('capitalize' as TextTransformProperty) : null}}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.props.onChange}
@@ -74,7 +74,7 @@ const styles = {
     width: '100%',
     borderWidth: 0,
     boxShadow: 'none',
-    fontSize: getFontSize(FontSize.M),
+    fontSize: getFontSize(FontSize.L),
     color: Colors.Primary,
   },
 };

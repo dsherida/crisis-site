@@ -26,3 +26,13 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+@font-face {
+  font-family: 'Quicksand_Bold';
+  src: local('Quicksand_Bold'), url(./fonts/Quicksand_Bold.otf);
+}
+
+@font-face {
+  font-family: 'Rapier_Zero';
+  src: local('Rapier_Zero'), url(./fonts/Rapier_Zero.otf);
+}
