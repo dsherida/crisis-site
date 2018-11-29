@@ -4,14 +4,13 @@ import * as React from 'react';
 import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Button, Col, Container, Form, FormGroup, Row} from 'reactstrap';
+import {Button, Col, Container, Form, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import {Assets} from '../assets';
 import FloatingTextInput from '../components/FloatingTextInput';
 import withAuthorization from '../components/withAuthorization';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import * as auth from '../firebase/auth';
-import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import SignOutButton from '../sfc/SignOutButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
@@ -46,6 +45,8 @@ class Profile extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    console.log(JSON.stringify(props.sessionStore.authUser));
+
     this.state = {
       width: 0,
       height: 0,
@@ -53,9 +54,9 @@ class Profile extends React.Component<Props, State> {
       password2: '',
       updatePasswordError: '',
       updatePasswordLoading: false,
-      first: '',
+      first: props.sessionStore.authUser.displayName,
       last: '',
-      email: '',
+      email: props.sessionStore.authUser.email,
       phone: '',
       password: '',
       playerNumber: '',
@@ -224,7 +225,6 @@ class Profile extends React.Component<Props, State> {
             </Button>
           )}
         </div>
-        <SignOutButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger" />
       </Form>
     );
   };
@@ -280,6 +280,7 @@ class Profile extends React.Component<Props, State> {
           style={styles.inputGroup}
           labelText="ZIP CODE"
         />
+        <SignOutButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger" />
       </Fragment>
     );
   };

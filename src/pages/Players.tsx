@@ -1,9 +1,10 @@
 import {inject, observer} from 'mobx-react';
-import * as React from 'react';
 import {Fragment} from 'react';
+import * as React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Container} from 'reactstrap';
+import {Col, Container, Row} from 'reactstrap';
 import {compose} from 'recompose';
+import {Assets} from '../assets';
 import {HeaderHeight} from '../components/Header';
 import {db} from '../firebase/index';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
@@ -77,8 +78,12 @@ class Players extends React.Component<Props, State> {
     return (
       <div style={{...CommonStyle.container, ...styles.container, width: this.state.width, height: this.state.height}}>
         <Container>
-          <div style={styles.playerCardContainer} />
-          {!!users && this.renderPlayers(users)}
+          <Row>
+            <Col>
+              <img src={Assets.src['Player Card']} />
+            </Col>
+            <Col>{!!users && this.renderPlayers(users)}</Col>
+          </Row>
         </Container>
       </div>
     );

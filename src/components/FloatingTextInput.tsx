@@ -74,7 +74,7 @@ const styles = {
     width: '100%',
     borderWidth: 0,
     boxShadow: 'none',
-    fontSize: getFontSize(FontSize.L),
+    fontSize: getFontSize(FontSize.M),
     color: Colors.Primary,
   },
 };
