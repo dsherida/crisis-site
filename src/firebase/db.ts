@@ -4,6 +4,7 @@ import {db} from './firebase';
 // User API
 export const doCreateUser = (id: string, user: IUser) =>
   db.ref(`users/${id}`).set({
+    id,
     first: user.first,
     last: user.last,
     email: user.email,
@@ -11,3 +12,11 @@ export const doCreateUser = (id: string, user: IUser) =>
   });
 
 export const onceGetUsers = () => db.ref('users').once('value');
+
+export const getFirebaseUser = (id: string, callback: (a: firebase.database.DataSnapshot | null, b?: string) => any) =>
+  db
+    .ref('users')
+    .orderByChild('id')
+    .equalTo(id)
+    .limitToFirst(1)
+    .on('child_added', callback);

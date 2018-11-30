@@ -57,17 +57,18 @@ const styles = {
   container: {
     backgroundColor: Colors.Beige,
     borderRadius: BorderRadius.S,
-    padding: Padding.H2,
   },
   label: {
     marginBottom: 0,
+    marginLeft: Padding.H2,
   },
   labelHeader: {
     color: Colors.Secondary,
     marginBottom: 0,
   },
   input: {
-    padding: 0,
+    paddingLeft: Padding.H2,
+    paddingRight: Padding.H2,
     outline: 'none',
     backgroundColor: Colors.Transparent,
     highlight: 0,

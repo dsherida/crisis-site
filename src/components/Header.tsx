@@ -35,13 +35,9 @@ class Header extends React.Component<Props, State> {
     });
   }
 
-  playersOnClick = () => {
-    console.log('playersOnClick');
-  };
+  playersOnClick = () => {};
 
-  loginRegisterOnClick = () => {
-    console.log('loginRegisterOnClick');
-  };
+  loginRegisterOnClick = () => {};
 
   isPlayersRoute = () => {
     return this.state.currentRoute === PLAYERS || this.state.currentRoute === HOME;

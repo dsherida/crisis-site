@@ -1,6 +1,6 @@
+import {User} from 'firebase';
 import {action, observable} from 'mobx';
 import {RootStore} from './index';
-import {User} from 'firebase';
 
 class UserStore {
   rootStore: RootStore;

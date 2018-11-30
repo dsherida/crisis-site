@@ -10,7 +10,9 @@ import {Assets} from '../assets';
 import FloatingTextInput from '../components/FloatingTextInput';
 import withAuthorization from '../components/withAuthorization';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
+import {db} from '../firebase';
 import * as auth from '../firebase/auth';
+import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import SignOutButton from '../sfc/SignOutButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
@@ -45,8 +47,6 @@ class Profile extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    console.log(JSON.stringify(props.sessionStore.authUser));
-
     this.state = {
       width: 0,
       height: 0,
@@ -54,7 +54,7 @@ class Profile extends React.Component<Props, State> {
       password2: '',
       updatePasswordError: '',
       updatePasswordLoading: false,
-      first: props.sessionStore.authUser.displayName,
+      first: '',
       last: '',
       email: props.sessionStore.authUser.email,
       phone: '',
@@ -68,6 +68,20 @@ class Profile extends React.Component<Props, State> {
       ccv: '',
       zipCode: '',
     };
+
+    db.getFirebaseUser(props.sessionStore.authUser.uid, snapshot => {
+      const user: IUser = snapshot.val() as IUser;
+
+      this.props.sessionStore.setFirebaseUser(user);
+
+      this.setState({
+        first: user.first,
+        last: user.last,
+        phone: user.phone,
+        password1: '123456',
+        password2: '123456',
+      });
+    });
   }
 
   componentDidMount() {

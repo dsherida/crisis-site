@@ -38,17 +38,10 @@ class Players extends React.Component<Props, State> {
 
     try {
       const snapshot = await db.onceGetUsers();
-
       console.log('players: ' + JSON.stringify(snapshot.val()));
-
       userStore.setUsers(snapshot.val());
-
-      // this.setState({
-      //   users: snapshot.val(),
-      // });
     } catch (e) {
       console.error(e.message);
-
       this.setState({
         playersError: e.message,
       });

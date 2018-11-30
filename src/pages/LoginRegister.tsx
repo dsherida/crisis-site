@@ -1,5 +1,4 @@
 import {TextAlignProperty} from 'csstype';
-import {User} from 'firebase';
 import * as React from 'react';
 import {ChangeEvent} from 'react';
 import ReactLoading from 'react-loading';
@@ -10,10 +9,10 @@ import {HOME} from '../constants/routes';
 import {auth, db} from '../firebase';
 import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
+import {SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import UserCredential = firebase.auth.UserCredential;
-import {SessionStoreProps} from '../stores/sessionStore';
 
 interface Props extends RouteComponentProps, SessionStoreProps {
   id: string;
@@ -46,6 +45,7 @@ class LoginRegister extends React.Component<Props, State> {
       loginError: null,
       registerError: null,
       user: {
+        id: '',
         first: '',
         last: '',
         email: '',
