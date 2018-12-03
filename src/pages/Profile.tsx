@@ -1,7 +1,7 @@
 import {TextAlignProperty} from 'csstype';
 import {inject, observer} from 'mobx-react';
-import * as React from 'react';
 import {ChangeEvent, ComponentClass, Fragment} from 'react';
+import * as React from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
@@ -13,7 +13,9 @@ import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
 import * as auth from '../firebase/auth';
 import {IUser} from '../models/User';
+import CrisisButton from '../sfc/CrisisButton';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
+import LinkButton from '../sfc/LinkButton';
 import SignOutButton from '../sfc/SignOutButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
@@ -132,6 +134,7 @@ class Profile extends React.Component<Props, State> {
           PLAYER CARD
         </CrisisText>
         <img src={Assets.src['Player Card']} />
+        <LinkButton style={styles.changeProfilePicButton}>CHANGE PROFILE PICTURE</LinkButton>
       </Fragment>
     );
   };
@@ -344,6 +347,9 @@ const styles = {
   },
   profileColumn: {
     paddingRight: Padding.H,
+  },
+  changeProfilePicButton: {
+    alignSelf: 'center',
   },
 };
 
