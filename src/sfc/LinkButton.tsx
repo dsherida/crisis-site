@@ -9,11 +9,12 @@ import CrisisText, {FontSize, FontType} from './CrisisText';
 interface Props {
   children?: ReactNode;
   style?: CSSProperties | undefined;
+  onClick: () => void;
 }
 
 const LinkButton: SFC<Props> = props => {
   return (
-    <Button {...props} onClick={() => console.log('clicked!')} style={{...styles.default, ...props.style}}>
+    <Button {...props} onClick={props.onClick} style={{...styles.default, ...props.style}}>
       <CrisisText style={styles.text} font={{type: FontType.Paragraph, size: FontSize.XS}}>
         {props.children}
       </CrisisText>

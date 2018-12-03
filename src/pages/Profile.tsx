@@ -1,7 +1,7 @@
 import {TextAlignProperty} from 'csstype';
 import {inject, observer} from 'mobx-react';
-import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import * as React from 'react';
+import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
@@ -13,9 +13,9 @@ import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
 import * as auth from '../firebase/auth';
 import {IUser} from '../models/User';
-import CrisisButton from '../sfc/CrisisButton';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
+import PlayerCard from '../sfc/PlayerCard';
 import SignOutButton from '../sfc/SignOutButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
@@ -71,7 +71,7 @@ class Profile extends React.Component<Props, State> {
       zipCode: '',
     };
 
-    db.getFirebaseUser(props.sessionStore.authUser.uid, snapshot => {
+    db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
       const user: IUser = snapshot.val() as IUser;
 
       this.props.sessionStore.setFirebaseUser(user);
@@ -82,6 +82,9 @@ class Profile extends React.Component<Props, State> {
         phone: user.phone,
         password1: '123456',
         password2: '123456',
+        playerNumber: '00',
+        position: 'Snake',
+        division: 'D5',
       });
     });
   }
@@ -89,6 +92,20 @@ class Profile extends React.Component<Props, State> {
   componentDidMount() {
     this.updateDimensions();
     window.addEventListener('resize', this.updateDimensions);
+
+    const {firebaseUser} = this.props.sessionStore;
+
+    firebaseUser &&
+      this.setState({
+        first: firebaseUser.first,
+        last: firebaseUser.last,
+        phone: firebaseUser.phone,
+        password1: '******',
+        password2: '******',
+        playerNumber: '00',
+        position: 'Snake',
+        division: 'D5',
+      });
   }
 
   updateDimensions = () => {
@@ -128,18 +145,29 @@ class Profile extends React.Component<Props, State> {
   };
 
   renderPlayerCard = () => {
+
     return (
       <Fragment>
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PLAYER CARD
         </CrisisText>
-        <img src={Assets.src['Player Card']} />
-        <LinkButton style={styles.changeProfilePicButton}>CHANGE PROFILE PICTURE</LinkButton>
+        <PlayerCard
+          first={this.state.first}
+          last={this.state.last}
+          number={this.state.playerNumber}
+          position={this.state.position}
+          division={this.state.division}
+        />
+        <LinkButton style={styles.changeProfilePicButton} onClick={() => console.log('todo: upload profile image')}>
+          CHANGE PROFILE PICTURE
+        </LinkButton>
       </Fragment>
     );
   };
 
   renderPlayerInfoForm = () => {
+    const {firebaseUser} = this.props.sessionStore;
+
     return (
       <Form>
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
@@ -263,33 +291,20 @@ class Profile extends React.Component<Props, State> {
           style={styles.inputGroup}
           labelText="CARD NUMBER"
         />
-        <Row>
-          <Col>
+        <Row className="no-gutters">
+          <Col style={{marginRight: Padding.H2}}>
             <FloatingTextInput
               value={this.state.expMonth}
               onChange={event => this.inputOnChange('expMonth', event)}
               capitalize
-              style={styles.inputGroup}
               labelText="EXP. MONTH"
             />
           </Col>
-          <Col>
-            <FloatingTextInput
-              value={this.state.expYear}
-              onChange={event => this.inputOnChange('expYear', event)}
-              capitalize
-              style={styles.inputGroup}
-              labelText="EXP. YEAR"
-            />
+          <Col style={{marginLeft: Padding.H2}}>
+            <FloatingTextInput value={this.state.expYear} onChange={event => this.inputOnChange('expYear', event)} capitalize labelText="EXP. YEAR" />
           </Col>
         </Row>
-        <FloatingTextInput
-          value={this.state.ccv}
-          onChange={event => this.inputOnChange('ccv', event)}
-          capitalize
-          style={styles.inputGroup}
-          labelText="CVC/CCV"
-        />
+        <FloatingTextInput value={this.state.ccv} onChange={event => this.inputOnChange('ccv', event)} capitalize labelText="CVC/CCV" />
         <FloatingTextInput
           value={this.state.zipCode}
           onChange={event => this.inputOnChange('zipCode', event)}
@@ -350,6 +365,7 @@ const styles = {
   },
   changeProfilePicButton: {
     alignSelf: 'center',
+    marginTop: Padding.V2,
   },
 };
 

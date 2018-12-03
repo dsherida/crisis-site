@@ -12,6 +12,7 @@ export enum FontSize {
   S = 'S',
   M = 'M',
   L = 'L',
+  XL = 'XL',
 }
 
 export interface Font {
@@ -46,6 +47,8 @@ export const getFontSize = (size: FontSize) => {
       return 26;
     case FontSize.L:
       return 34;
+    case FontSize.XL:
+      return 56;
   }
 };
 

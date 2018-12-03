@@ -1,4 +1,3 @@
-import {OutlineStyleProperty} from 'csstype';
 import * as React from 'react';
 import {CSSProperties, ReactNode, SFC} from 'react';
 import {Button} from 'reactstrap';
