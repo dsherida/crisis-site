@@ -1,10 +1,10 @@
-import {AlignSelfProperty, PositionProperty, TextAlignProperty} from 'csstype';
+import {AlignSelfProperty, BorderStyleProperty, PositionProperty, TextAlignProperty} from 'csstype';
 import * as React from 'react';
 import {ReactNode, SFC} from 'react';
 import {Col, Row} from 'reactstrap';
-import {Colors} from '../utils/Constants';
+import {Colors, Padding} from '../utils/Constants';
 import {BorderRadius} from '../utils/StyleUtils';
-import CrisisText, {FontSize, FontType} from './CrisisText';
+import CrisisText, {CursiveText, FontSize, FontType} from './CrisisText';
 
 interface Props {
   children?: ReactNode;
@@ -18,21 +18,22 @@ interface Props {
 const PlayerCard: SFC<Props> = props => {
   return (
     <div {...props} style={styles.default}>
-      <CrisisText style={styles.division} font={{type: FontType.Paragraph, size: FontSize.S}}>
+      <CursiveText style={styles.division} size={FontSize.XS}>
         {props.division}
-      </CrisisText>
-      <Row className="d-flex no-gutters align-bottom" style={styles.playerInfo}>
-        <CrisisText font={{type: FontType.Header, size: FontSize.XL}} style={styles.name}>
+      </CursiveText>
+      <Row className="no-gutters" style={styles.playerInfo}>
+        <CursiveText size={FontSize.XL} style={styles.number}>
           {props.number}
-        </CrisisText>
-        <Col>
-          <CrisisText font={{type: FontType.Header, size: FontSize.L}} style={styles.name}>
+        </CursiveText>
+        <div style={{width: 1, height: 80, backgroundColor: Colors.Primary, marginLeft: Padding.H2}} />
+        <Col style={styles.namewrapper}>
+          <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.name}>
             {props.first}
           </CrisisText>
-          <CrisisText font={{type: FontType.Header, size: FontSize.L}} style={{...styles.name, ...styles.last}}>
+          <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={{...styles.name, ...styles.last}}>
             {props.last}
           </CrisisText>
-          <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}} style={{...styles.name, ...styles.last}}>
+          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={{...styles.position}}>
             {props.position}
           </CrisisText>
         </Col>
@@ -41,13 +42,22 @@ const PlayerCard: SFC<Props> = props => {
   );
 };
 
+const PLAYER_CARD_HEIGHT = 350;
+
 const styles = {
   default: {
+    paddingTop: Padding.H2,
+    paddingLeft: Padding.H2,
     backgroundColor: Colors.Black,
     width: '100%',
-    height: 350,
+    height: PLAYER_CARD_HEIGHT,
     ratio: '1:1',
-    aspectRatio: 1,
+  },
+  namewrapper: {
+    marginLeft: Padding.H2,
+  },
+  number: {
+    color: Colors.Primary,
   },
   name: {
     color: Colors.Beige,
@@ -55,19 +65,24 @@ const styles = {
   last: {
     marginTop: -15,
   },
+  position: {
+    marginTop: -10,
+    color: Colors.White,
+  },
   division: {
     color: Colors.Primary,
     backgroundColor: Colors.White,
     borderRadius: BorderRadius.S,
-    width: '33%',
+    width: '35%',
     textAlign: 'center' as TextAlignProperty,
   },
-  playerInfo: {
-    backgroundColor: Colors.Gray,
-    alignSelf: 'bottom' as AlignSelfProperty,
+  spacer: {
+    height: 'auto',
   },
-  playerInfoRow: {
-    backgroundColor: Colors.Primary,
+  playerInfo: {
+    position: 'absolute' as PositionProperty,
+    top: PLAYER_CARD_HEIGHT,
+    left: Padding.H2,
   },
 };
 

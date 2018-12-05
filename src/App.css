@@ -36,3 +36,8 @@
   font-family: 'Rapier_Zero';
   src: local('Rapier_Zero'), url(./fonts/Rapier_Zero.otf);
 }
+
+@font-face {
+  font-family: 'Brush_Script';
+  src: local('Brush_Script'), url(./fonts/Brush_Script.ttf);
+}

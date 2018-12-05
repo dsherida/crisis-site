@@ -52,12 +52,51 @@ export const getFontSize = (size: FontSize) => {
   }
 };
 
+const getCursiveSize = (size: FontSize) => {
+  const multiplier = 1.5;
+
+  switch (size) {
+    default:
+    case FontSize.XS:
+      return getFontSize(FontSize.XS) * multiplier;
+    case FontSize.S:
+      return getFontSize(FontSize.S) * multiplier;
+    case FontSize.M:
+      return getFontSize(FontSize.M) * multiplier;
+    case FontSize.L:
+      return getFontSize(FontSize.L) * multiplier;
+    case FontSize.XL:
+      return getFontSize(FontSize.XL) * multiplier;
+  }
+};
+
 const CrisisText: SFC<Props> = props => {
   return (
     <h1 {...props} style={{...getFontTypeStyle(props.font.type), fontSize: getFontSize(props.font.size), ...props.style}}>
       {props.children}
     </h1>
   );
+};
+
+interface CursiveProps {
+  className?: string;
+  size?: FontSize;
+  children?: ReactNode;
+  style?: CSSProperties | undefined;
+}
+
+const CursiveText: SFC<CursiveProps> = props => {
+  return (
+    <h1 {...props} style={{fontSize: getCursiveSize(props.size), ...cursiveStyles.default, ...props.style}}>
+      {props.children}
+    </h1>
+  );
+};
+
+const cursiveStyles = {
+  default: {
+    fontFamily: 'Brush_Script',
+  },
 };
 
 export const headerStyles = {
@@ -74,3 +113,4 @@ export const paragraphStyles = {
 };
 
 export default CrisisText;
+export {CursiveText};

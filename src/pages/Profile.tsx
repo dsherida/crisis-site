@@ -145,7 +145,6 @@ class Profile extends React.Component<Props, State> {
   };
 
   renderPlayerCard = () => {
-
     return (
       <Fragment>
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
