@@ -1,7 +1,7 @@
 import {TextAlignProperty} from 'csstype';
 import {inject, observer} from 'mobx-react';
-import * as React from 'react';
 import {ChangeEvent, ComponentClass, Fragment} from 'react';
+import * as React from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
@@ -12,6 +12,7 @@ import withAuthorization from '../components/withAuthorization';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
 import * as auth from '../firebase/auth';
+import {storage} from '../firebase/firebase';
 import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
@@ -20,6 +21,8 @@ import SignOutButton from '../sfc/SignOutButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
+import UploadTask = firebase.storage.UploadTask;
+import UploadTaskSnapshot = firebase.storage.UploadTaskSnapshot;
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -30,6 +33,7 @@ interface State {
   password2: string;
   updatePasswordLoading: boolean;
   updatePasswordError: string;
+  playerImage: string;
   first: string;
   last: string;
   email: string;
@@ -43,6 +47,7 @@ interface State {
   expYear: string;
   ccv: string;
   zipCode: string;
+  uploadInput: HTMLInputElement;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -56,6 +61,7 @@ class Profile extends React.Component<Props, State> {
       password2: '',
       updatePasswordError: '',
       updatePasswordLoading: false,
+      playerImage: '',
       first: '',
       last: '',
       email: props.sessionStore.authUser.email,
@@ -69,6 +75,7 @@ class Profile extends React.Component<Props, State> {
       expYear: '',
       ccv: '',
       zipCode: '',
+      uploadInput: null,
     };
 
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
@@ -107,6 +114,22 @@ class Profile extends React.Component<Props, State> {
         division: 'D5',
       });
   }
+
+  onInputChange = () => {
+    if (this.state.uploadInput.files[0] !== undefined) {
+      console.log('uploadInput: ' + this.state.uploadInput.files[0]);
+
+      try {
+        const snapshot = storage
+          .ref()
+          .child(`avatars/${this.props.sessionStore.authUser.uid}`)
+          .put(this.state.uploadInput.files[0]);
+        console.log('Success: ' + snapshot.snapshot.ref.getDownloadURL());
+      } catch (e) {
+        console.error('Error uploading image: ' + e.message);
+      }
+    }
+  };
 
   updateDimensions = () => {
     this.setState({width: window.innerWidth, height: window.innerHeight});
@@ -151,13 +174,24 @@ class Profile extends React.Component<Props, State> {
           PLAYER CARD
         </CrisisText>
         <PlayerCard
+          image={this.state.playerImage}
           first={this.state.first}
           last={this.state.last}
           number={this.state.playerNumber}
           position={this.state.position}
           division={this.state.division}
         />
-        <LinkButton style={styles.changeProfilePicButton} onClick={() => console.log('todo: upload profile image')}>
+        <input
+          type="file"
+          ref={ref => {
+            if (this.state.uploadInput === null) {
+              this.setState({uploadInput: ref});
+            }
+          }}
+          onChange={this.onInputChange}
+          style={{opacity: 0}}
+        />
+        <LinkButton style={styles.changeProfilePicButton} onClick={() => this.state.uploadInput.click()}>
           CHANGE PROFILE PICTURE
         </LinkButton>
       </Fragment>

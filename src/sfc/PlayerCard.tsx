@@ -1,4 +1,4 @@
-import {AlignSelfProperty, BorderStyleProperty, PositionProperty, TextAlignProperty} from 'csstype';
+import {AlignSelfProperty, BackgroundPositionProperty, BorderStyleProperty, PositionProperty, TextAlignProperty} from 'csstype';
 import * as React from 'react';
 import {ReactNode, SFC} from 'react';
 import {Col, Row} from 'reactstrap';
@@ -8,6 +8,7 @@ import CrisisText, {CursiveText, FontSize, FontType} from './CrisisText';
 
 interface Props {
   children?: ReactNode;
+  image?: string;
   first?: string;
   last?: string;
   number?: string;
@@ -17,7 +18,7 @@ interface Props {
 
 const PlayerCard: SFC<Props> = props => {
   return (
-    <div {...props} style={styles.default}>
+    <div {...props} style={{...styles.default, backgroundImage: props.image, backgroundRepeat: 'none'}}>
       <CursiveText style={styles.division} size={FontSize.XS}>
         {props.division}
       </CursiveText>
