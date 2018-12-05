@@ -2,6 +2,7 @@ import {AlignSelfProperty, BackgroundPositionProperty, BorderStyleProperty, Posi
 import * as React from 'react';
 import {ReactNode, SFC} from 'react';
 import {Col, Row} from 'reactstrap';
+import {Assets} from '../assets';
 import {Colors, Padding} from '../utils/Constants';
 import {BorderRadius} from '../utils/StyleUtils';
 import CrisisText, {CursiveText, FontSize, FontType} from './CrisisText';
@@ -22,13 +23,22 @@ const PlayerCard: SFC<Props> = props => {
       {...props}
       style={{
         ...styles.default,
-        backgroundImage: `url(${props.image})`,
+        backgroundImage: props.image ? `url(${props.image})` : `url(${Assets.src.avatar})`,
         backgroundRepeat: 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      {/*<img key={props.image} src={`${props.image}#${new Date().getTime()}`} style={{width: '100%', height: '100%'}} />*/}
+      <div
+        style={{
+          position: 'absolute',
+          height: PLAYER_CARD_HEIGHT,
+          width: PLAYER_CARD_HEIGHT,
+          opacity: 0.5,
+          borderRadius: BORDER_RADIUS,
+          background: `linear-gradient(to bottom, ${Colors.Primary} 0%, ${Colors.Secondary} 100%)`,
+        }}
+      />
       <CursiveText style={styles.division} size={FontSize.XS}>
         {props.division}
       </CursiveText>
@@ -54,15 +64,14 @@ const PlayerCard: SFC<Props> = props => {
 };
 
 const PLAYER_CARD_HEIGHT = 350;
+const BORDER_RADIUS = BorderRadius.M;
 
 const styles = {
   default: {
-    paddingTop: Padding.H2,
-    paddingLeft: Padding.H2,
     backgroundColor: Colors.Black,
-    width: '100%',
+    width: PLAYER_CARD_HEIGHT,
     height: PLAYER_CARD_HEIGHT,
-    ratio: '1:1',
+    borderRadius: BORDER_RADIUS,
   },
   namewrapper: {
     marginLeft: Padding.H2,
@@ -81,6 +90,9 @@ const styles = {
     color: Colors.White,
   },
   division: {
+    position: 'absolute' as PositionProperty,
+    marginTop: Padding.H2,
+    marginLeft: Padding.H2,
     color: Colors.Primary,
     backgroundColor: Colors.White,
     borderRadius: BorderRadius.S,
