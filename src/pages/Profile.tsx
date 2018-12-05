@@ -113,18 +113,35 @@ class Profile extends React.Component<Props, State> {
         position: 'Snake',
         division: 'D5',
       });
+
+    this.getPlayerImageUrl();
   }
 
-  onInputChange = () => {
+  getPlayerImageUrl = async () => {
+    const snapshot = storage.ref().child(`avatars/${this.props.sessionStore.authUser.uid}`);
+
+    const downloadUrl = await snapshot.getDownloadURL();
+    console.log('downloadUrl: ' + downloadUrl);
+    this.setState({
+      playerImage: downloadUrl,
+    });
+  };
+
+  onInputChange = async () => {
     if (this.state.uploadInput.files[0] !== undefined) {
       console.log('uploadInput: ' + this.state.uploadInput.files[0]);
 
       try {
-        const snapshot = storage
+        const snapshot = await storage
           .ref()
           .child(`avatars/${this.props.sessionStore.authUser.uid}`)
           .put(this.state.uploadInput.files[0]);
-        console.log('Success: ' + snapshot.snapshot.ref.getDownloadURL());
+
+        const downloadUrl = await snapshot.ref.getDownloadURL();
+        console.log('downloadUrl: ' + downloadUrl);
+        this.setState({
+          playerImage: downloadUrl,
+        });
       } catch (e) {
         console.error('Error uploading image: ' + e.message);
       }

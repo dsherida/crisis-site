@@ -18,7 +18,17 @@ interface Props {
 
 const PlayerCard: SFC<Props> = props => {
   return (
-    <div {...props} style={{...styles.default, backgroundImage: props.image, backgroundRepeat: 'none'}}>
+    <div
+      {...props}
+      style={{
+        ...styles.default,
+        backgroundImage: `url(${props.image})`,
+        backgroundRepeat: 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/*<img key={props.image} src={`${props.image}#${new Date().getTime()}`} style={{width: '100%', height: '100%'}} />*/}
       <CursiveText style={styles.division} size={FontSize.XS}>
         {props.division}
       </CursiveText>
