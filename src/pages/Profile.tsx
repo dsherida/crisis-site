@@ -17,7 +17,7 @@ import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
 import PlayerCard from '../sfc/PlayerCard';
-import SignOutButton from '../sfc/SignOutButton';
+import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
@@ -173,17 +173,6 @@ class Profile extends React.Component<Props, State> {
     }
   };
 
-  signOutOnClick = async (event: ChangeEvent<any>) => {
-    event.preventDefault();
-
-    try {
-      await auth.doSignOut();
-      this.props.history.push(LOGIN_REGISTER);
-    } catch (e) {
-      console.error(e.message);
-    }
-  };
-
   renderPlayerCard = () => {
     return (
       <Fragment>
@@ -262,7 +251,6 @@ class Profile extends React.Component<Props, State> {
         <FloatingTextInput
           value={this.state.email}
           onChange={event => this.inputOnChange('email', event)}
-          capitalize
           style={styles.inputGroup}
           labelText="EMAIL"
         />
@@ -310,7 +298,7 @@ class Profile extends React.Component<Props, State> {
           ) : (
             <Button
               type="submit"
-              style={styles.button}
+              style={{...styles.button, marginTop: 0}}
               outline
               color="primary"
               onClick={(e: ChangeEvent<any>) => this.updatePasswordOnClick(e)}
@@ -322,6 +310,25 @@ class Profile extends React.Component<Props, State> {
         </div>
       </Form>
     );
+  };
+
+  saveOnClick = async (event: ChangeEvent<any>) => {
+    console.log('TODO: Save');
+  };
+
+  cancelOnClick = async (event: ChangeEvent<any>) => {
+    console.log('TODO: Cancel');
+  };
+
+  signOutOnClick = async (event: ChangeEvent<any>) => {
+    event.preventDefault();
+
+    try {
+      await auth.doSignOut();
+      this.props.history.push(LOGIN_REGISTER);
+    } catch (e) {
+      console.error(e.message);
+    }
   };
 
   renderMembershipForm = () => {
@@ -362,7 +369,21 @@ class Profile extends React.Component<Props, State> {
           style={styles.inputGroup}
           labelText="ZIP CODE"
         />
-        <SignOutButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger" />
+        <Row>
+          <Col>
+            <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">
+              SAVE CHANGES
+            </StrokeButton>
+          </Col>
+          <Col>
+            <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelOnClick(e)} color="secondary">
+              CANCEL
+            </StrokeButton>
+          </Col>
+        </Row>
+        <StrokeButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger">
+          SIGN OUT
+        </StrokeButton>
       </Fragment>
     );
   };
@@ -414,8 +435,15 @@ const styles = {
     paddingRight: Padding.H,
   },
   changeProfilePicButton: {
+    flex: 1,
     alignSelf: 'center',
-    marginTop: Padding.V2,
+    marginTop: Padding.H2,
+  },
+  cancelButton: {
+    flex: 1,
+    alignSelf: 'center',
+    marginTop: Padding.H2,
+    color: Colors.Gray,
   },
 };
 

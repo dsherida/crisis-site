@@ -10,12 +10,13 @@ interface Props {
   children?: ReactNode;
   style?: CSSProperties | undefined;
   onClick: () => void;
+  textStyle?: CSSProperties | undefined;
 }
 
 const LinkButton: SFC<Props> = props => {
   return (
     <Button {...props} onClick={props.onClick} style={{...styles.default, ...props.style}}>
-      <CrisisText style={styles.text} font={{type: FontType.Paragraph, size: FontSize.XS}}>
+      <CrisisText style={{...styles.text, ...props.textStyle}} font={{type: FontType.Paragraph, size: FontSize.XS}}>
         {props.children}
       </CrisisText>
     </Button>

@@ -1,17 +1,18 @@
-import {ChangeEvent, SFC} from 'react';
+import {ChangeEvent, ReactNode, SFC} from 'react';
 import * as React from 'react';
 import {Button} from 'reactstrap';
 import {Padding} from '../utils/Constants';
 
 interface Props {
   onClick: (e: ChangeEvent<any>) => void;
-  color?: 'primary' | 'danger' | undefined;
+  color?: 'primary' | 'danger' | 'secondary' | undefined;
+  children?: ReactNode[] | ReactNode | undefined;
 }
 
-const SignOutButton: SFC<Props> = (props: Props) => {
+const StrokeButton: SFC<Props> = (props: Props) => {
   return (
     <Button style={styles.button} outline color={props.color ? props.color : 'primary'} onClick={props.onClick}>
-      SIGN OUT
+      {props.children}
     </Button>
   );
 };
@@ -25,4 +26,4 @@ const styles = {
   },
 };
 
-export default SignOutButton;
+export default StrokeButton;
