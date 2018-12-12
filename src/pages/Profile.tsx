@@ -21,8 +21,6 @@ import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
-import UploadTask = firebase.storage.UploadTask;
-import UploadTaskSnapshot = firebase.storage.UploadTaskSnapshot;
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -48,6 +46,8 @@ interface State {
   ccv: string;
   zipCode: string;
   uploadInput: HTMLInputElement;
+  saveError: string;
+  updatedUser: IUser;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -76,6 +76,8 @@ class Profile extends React.Component<Props, State> {
       ccv: '',
       zipCode: '',
       uploadInput: null,
+      saveError: '',
+      updatedUser: null,
     };
 
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
@@ -300,7 +302,7 @@ class Profile extends React.Component<Props, State> {
               type="submit"
               style={{...styles.button, marginTop: 0}}
               outline
-              color="primary"
+              color="secondary"
               onClick={(e: ChangeEvent<any>) => this.updatePasswordOnClick(e)}
               disabled={disabled}
             >
@@ -313,7 +315,28 @@ class Profile extends React.Component<Props, State> {
   };
 
   saveOnClick = async (event: ChangeEvent<any>) => {
-    console.log('TODO: Save');
+    const updatedUser: IUser = {
+      first: this.state.first,
+      last: this.state.last,
+      playerNumber: this.state.playerNumber,
+      position: this.state.position,
+      division: this.state.division,
+      email: this.state.email,
+      phone: this.state.phone,
+    };
+    this.setState({updatedUser});
+
+    console.log('updatedUser: ' + JSON.stringify(updatedUser));
+
+    db.updateFirebaseUser(this.props.sessionStore.authUser.uid, updatedUser, e => {
+      if (e) {
+        this.setState({
+          saveError: e.message,
+        });
+      } else {
+        alert('User was saved successfully');
+      }
+    });
   };
 
   cancelOnClick = async (event: ChangeEvent<any>) => {
@@ -369,6 +392,11 @@ class Profile extends React.Component<Props, State> {
           style={styles.inputGroup}
           labelText="ZIP CODE"
         />
+        {this.state.saveError ? (
+          <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+            {this.state.saveError}
+          </CrisisText>
+        ) : null}
         <Row>
           <Col>
             <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">

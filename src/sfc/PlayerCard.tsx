@@ -34,7 +34,7 @@ const PlayerCard: SFC<Props> = props => {
           position: 'absolute',
           height: PLAYER_CARD_HEIGHT,
           width: PLAYER_CARD_HEIGHT,
-          opacity: 0.5,
+          opacity: 0.34,
           borderRadius: BORDER_RADIUS,
           background: `linear-gradient(to bottom, ${Colors.Primary} 0%, ${Colors.Secondary} 100%)`,
         }}

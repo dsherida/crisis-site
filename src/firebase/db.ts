@@ -20,3 +20,9 @@ export const getFirebaseUser = (id: string, callback: (a: firebase.database.Data
     .equalTo(id)
     .limitToFirst(1)
     .on('child_added', callback);
+
+export const updateFirebaseUser = (id: string, value: IUser, callback: (a: Error | null) => any) =>
+  db
+    .ref('users')
+    .child(id)
+    .update({...value}, callback);
