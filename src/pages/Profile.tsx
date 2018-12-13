@@ -89,11 +89,11 @@ class Profile extends React.Component<Props, State> {
         first: user.first,
         last: user.last,
         phone: user.phone,
-        password1: '123456',
-        password2: '123456',
-        playerNumber: '00',
-        position: 'Snake',
-        division: 'D5',
+        password1: '******',
+        password2: '******',
+        playerNumber: user.playerNumber,
+        position: user.position,
+        division: user.division,
       });
     });
   }
@@ -111,9 +111,9 @@ class Profile extends React.Component<Props, State> {
         phone: firebaseUser.phone,
         password1: '******',
         password2: '******',
-        playerNumber: '00',
-        position: 'Snake',
-        division: 'D5',
+        playerNumber: firebaseUser.playerNumber,
+        position: firebaseUser.position,
+        division: firebaseUser.division,
       });
 
     this.getPlayerImageUrl();
