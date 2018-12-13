@@ -13,15 +13,16 @@ import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
 import * as auth from '../firebase/auth';
 import {storage} from '../firebase/firebase';
+import {getAvatar} from '../firebase/storage';
 import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
+import MembershipStatus from '../sfc/MembershipStatus';
 import PlayerCard from '../sfc/PlayerCard';
 import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
-import {getAvatar} from '../firebase/storage';
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -357,7 +358,8 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           MEMBERSHIP
         </CrisisText>
-        <img src={Assets.src.Membership} />
+        <MembershipStatus />
+
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>
