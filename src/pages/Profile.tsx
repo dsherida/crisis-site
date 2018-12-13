@@ -21,6 +21,7 @@ import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
+import {getAvatar} from '../firebase/storage';
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -89,8 +90,6 @@ class Profile extends React.Component<Props, State> {
         first: user.first,
         last: user.last,
         phone: user.phone,
-        password1: '******',
-        password2: '******',
         playerNumber: user.playerNumber,
         position: user.position,
         division: user.division,
@@ -109,8 +108,6 @@ class Profile extends React.Component<Props, State> {
         first: firebaseUser.first,
         last: firebaseUser.last,
         phone: firebaseUser.phone,
-        password1: '******',
-        password2: '******',
         playerNumber: firebaseUser.playerNumber,
         position: firebaseUser.position,
         division: firebaseUser.division,
@@ -120,7 +117,7 @@ class Profile extends React.Component<Props, State> {
   }
 
   getPlayerImageUrl = async () => {
-    const snapshot = storage.ref().child(`avatars/${this.props.sessionStore.authUser.uid}`);
+    const snapshot = getAvatar(this.props.sessionStore.authUser.uid);
 
     const downloadUrl = await snapshot.getDownloadURL();
     console.log('downloadUrl: ' + downloadUrl);
