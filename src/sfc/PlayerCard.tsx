@@ -4,7 +4,7 @@ import {ReactNode, SFC} from 'react';
 import {Col, Row} from 'reactstrap';
 import {Assets} from '../assets';
 import {Colors, Padding} from '../utils/Constants';
-import {BorderRadius} from '../utils/StyleUtils';
+import {BorderRadius, crisisGlow} from '../utils/StyleUtils';
 import CrisisText, {CursiveText, FontSize, FontType} from './CrisisText';
 
 interface Props {
@@ -46,7 +46,7 @@ const PlayerCard: SFC<Props> = props => {
         <CursiveText size={FontSize.XL} style={styles.number}>
           {props.number}
         </CursiveText>
-        <div style={{width: 1, height: 80, backgroundColor: Colors.Primary, marginLeft: Padding.H2}} />
+        <div style={{width: '2px', height: '80px', backgroundColor: Colors.Primary, marginLeft: Padding.H2}} />
         <Col style={styles.namewrapper}>
           <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.name}>
             {props.first}
@@ -68,6 +68,10 @@ const BORDER_RADIUS = BorderRadius.M;
 
 const styles = {
   default: {
+    boxShadow: crisisGlow(),
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    borderColor: Colors.PrimaryDark,
     backgroundColor: Colors.Black,
     width: PLAYER_CARD_HEIGHT,
     height: PLAYER_CARD_HEIGHT,
@@ -104,7 +108,7 @@ const styles = {
   },
   playerInfo: {
     position: 'absolute' as PositionProperty,
-    top: PLAYER_CARD_HEIGHT,
+    top: PLAYER_CARD_HEIGHT - Padding.H2,
     left: Padding.H2,
   },
 };

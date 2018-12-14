@@ -1,3 +1,5 @@
+import {Colors} from './Constants';
+
 export const CENTER = 'center' as 'center';
 export const BOLD = 'bold' as 'bold';
 export const REGULAR = '400' as '400';
@@ -18,3 +20,5 @@ export const BorderRadius = {
   L: 9,
   XL: 12,
 };
+
+export const crisisGlow = (color: string = Colors.Primary) => `0px 0px 30px ${color}`;
