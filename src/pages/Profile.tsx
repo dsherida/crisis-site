@@ -372,6 +372,7 @@ class Profile extends React.Component<Props, State> {
 
     try {
       await auth.doSignOut();
+      await this.props.sessionStore.clearSession();
       this.props.history.push(LOGIN_REGISTER);
     } catch (e) {
       console.error(e.message);

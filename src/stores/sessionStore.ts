@@ -25,6 +25,12 @@ class SessionStore {
   setFirebaseUser = (user: IUser) => {
     this.firebaseUser = user;
   };
+
+  @action
+  clearSession = () => {
+    this.authUser = null;
+    this.firebaseUser = null;
+  };
 }
 
 export type SessionStoreProps = {sessionStore?: SessionStore};
