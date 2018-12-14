@@ -13,7 +13,7 @@ import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
 import * as auth from '../firebase/auth';
 import {storage} from '../firebase/firebase';
-import {getAvatar} from '../firebase/storage';
+import {getAvatar, getPlayerImageUrl} from '../firebase/storage';
 import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
@@ -23,6 +23,7 @@ import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
+import {notEmptyOrNull} from '../utils/Utils';
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -85,16 +86,26 @@ class Profile extends React.Component<Props, State> {
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
       const user: IUser = snapshot.val() as IUser;
 
+      console.log('user: ' + JSON.stringify(user));
+
       this.props.sessionStore.setFirebaseUser(user);
 
-      this.setState({
-        first: user.first,
-        last: user.last,
-        phone: user.phone,
-        playerNumber: user.playerNumber,
-        position: user.position,
-        division: user.division,
-      });
+      this.setState(
+        {
+          first: user.first,
+          last: user.last,
+          phone: user.phone,
+          playerNumber: user.playerNumber,
+          position: user.position,
+          division: user.division,
+          playerImage: user.avatarUrl,
+        },
+        () => {
+          if (!notEmptyOrNull(this.state.playerImage)) {
+            this.getPlayerImage();
+          }
+        }
+      );
     });
   }
 
@@ -105,26 +116,31 @@ class Profile extends React.Component<Props, State> {
     const {firebaseUser} = this.props.sessionStore;
 
     firebaseUser &&
-      this.setState({
-        first: firebaseUser.first,
-        last: firebaseUser.last,
-        phone: firebaseUser.phone,
-        playerNumber: firebaseUser.playerNumber,
-        position: firebaseUser.position,
-        division: firebaseUser.division,
-      });
-
-    this.getPlayerImageUrl();
+      this.setState(
+        {
+          first: firebaseUser.first,
+          last: firebaseUser.last,
+          phone: firebaseUser.phone,
+          playerNumber: firebaseUser.playerNumber,
+          position: firebaseUser.position,
+          division: firebaseUser.division,
+          playerImage: firebaseUser.avatarUrl,
+        },
+        () => {
+          if (!notEmptyOrNull(this.state.playerImage)) {
+            this.getPlayerImage();
+          }
+        }
+      );
   }
 
-  getPlayerImageUrl = async () => {
-    const snapshot = getAvatar(this.props.sessionStore.authUser.uid);
-
-    const downloadUrl = await snapshot.getDownloadURL();
-    console.log('downloadUrl: ' + downloadUrl);
-    this.setState({
-      playerImage: downloadUrl,
-    });
+  getPlayerImage = () => {
+    console.log('getPlayerImage');
+    getPlayerImageUrl(this.props.sessionStore.authUser.uid, downloadUrl =>
+      this.setState({
+        playerImage: downloadUrl,
+      })
+    );
   };
 
   onInputChange = async () => {
@@ -141,6 +157,14 @@ class Profile extends React.Component<Props, State> {
         console.log('downloadUrl: ' + downloadUrl);
         this.setState({
           playerImage: downloadUrl,
+        });
+
+        db.updateFirebaseUser(this.props.sessionStore.authUser.uid, {avatarUrl: downloadUrl}, e => {
+          if (e) {
+            this.setState({
+              saveError: e.message,
+            });
+          }
         });
       } catch (e) {
         console.error('Error uploading image: ' + e.message);

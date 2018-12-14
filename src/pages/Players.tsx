@@ -11,6 +11,7 @@ import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {UserStoreProps} from '../stores/userStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
+import PlayerCard from '../sfc/PlayerCard';
 
 interface State {
   width: number;

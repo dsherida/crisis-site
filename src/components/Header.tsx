@@ -9,6 +9,7 @@ import {HOME, LOGIN_REGISTER, PLAYERS, PROFILE} from '../constants/routes';
 import CrisisButton from '../sfc/CrisisButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {Colors} from '../utils/Constants';
+import {crisisGlow} from '../utils/StyleUtils';
 
 interface Props extends RouteProps, SessionStoreProps {}
 
