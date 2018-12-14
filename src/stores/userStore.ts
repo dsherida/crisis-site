@@ -1,19 +1,19 @@
-import {User} from 'firebase';
 import {action, observable} from 'mobx';
 import {RootStore} from './index';
+import {IUser} from '../models/User';
 
 class UserStore {
   rootStore: RootStore;
 
   @observable
-  users: User[] = [];
+  users: IUser[] = [];
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
   }
 
   @action
-  setUsers = (users: User[]) => {
+  setUsers = (users: IUser[]) => {
     this.users = users;
   };
 }

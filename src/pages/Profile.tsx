@@ -203,14 +203,16 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PLAYER CARD
         </CrisisText>
-        <PlayerCard
-          image={this.state.playerImage}
-          first={this.state.first}
-          last={this.state.last}
-          number={this.state.playerNumber}
-          position={this.state.position}
-          division={this.state.division}
-        />
+        <Col>
+          <PlayerCard
+            image={this.state.playerImage}
+            first={this.state.first}
+            last={this.state.last}
+            number={this.state.playerNumber}
+            position={this.state.position}
+            division={this.state.division}
+          />
+        </Col>
         <input
           type="file"
           ref={ref => {

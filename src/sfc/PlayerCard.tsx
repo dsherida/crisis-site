@@ -39,26 +39,37 @@ const PlayerCard: SFC<Props> = props => {
           background: `linear-gradient(to bottom, ${Colors.Primary} 0%, ${Colors.Secondary} 100%)`,
         }}
       />
-      <CursiveText style={styles.division} size={FontSize.XS}>
-        {props.division}
-      </CursiveText>
-      <Row className="no-gutters" style={styles.playerInfo}>
-        <CursiveText size={FontSize.XL} style={styles.number}>
-          {props.number}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          paddingLeft: Padding.H2,
+        }}
+      >
+        <CursiveText style={styles.division} size={FontSize.XS}>
+          {props.division ? props.division : 'Unranked'}
         </CursiveText>
-        <div style={{width: '2px', height: '80px', backgroundColor: Colors.Primary, marginLeft: Padding.H2}} />
-        <Col style={styles.namewrapper}>
-          <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.name}>
-            {props.first}
-          </CrisisText>
-          <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={{...styles.name, ...styles.last}}>
-            {props.last}
-          </CrisisText>
-          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={{...styles.position}}>
-            {props.position}
-          </CrisisText>
-        </Col>
-      </Row>
+        <Row className="no-gutters" style={styles.playerInfo}>
+          <CursiveText size={FontSize.XL} style={styles.number}>
+            {props.number ? props.number : '00'}
+          </CursiveText>
+          <div style={{width: '2px', height: '80px', backgroundColor: Colors.Primary, marginLeft: Padding.H2}} />
+          <Col style={styles.namewrapper}>
+            <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.name}>
+              {props.first ? props.first : 'XXX'}
+            </CrisisText>
+            <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={{...styles.name, ...styles.last}}>
+              {props.last ? props.last : 'XXX'}
+            </CrisisText>
+            <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={{...styles.position}}>
+              {props.position ? props.position : 'All Around'}
+            </CrisisText>
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 };
@@ -94,7 +105,6 @@ const styles = {
     color: Colors.White,
   },
   division: {
-    position: 'absolute' as PositionProperty,
     marginTop: Padding.H2,
     marginLeft: Padding.H2,
     color: Colors.Primary,
@@ -107,9 +117,8 @@ const styles = {
     height: 'auto',
   },
   playerInfo: {
-    position: 'absolute' as PositionProperty,
-    top: PLAYER_CARD_HEIGHT - Padding.H2,
-    left: Padding.H2,
+    marginTop: PLAYER_CARD_HEIGHT / 1.7,
+    marginLeft: Padding.H2,
   },
 };
 
