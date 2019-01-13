@@ -35,6 +35,8 @@ interface State {
   updatePasswordLoading: boolean;
   updatePasswordError: string;
   playerImage: string;
+  updatePlayerImageLoading: boolean;
+  updatePlayerImageError: string;
   first: string;
   last: string;
   email: string;
@@ -65,6 +67,8 @@ class Profile extends React.Component<Props, State> {
       updatePasswordError: '',
       updatePasswordLoading: false,
       playerImage: '',
+      updatePlayerImageLoading: false,
+      updatePlayerImageError: '',
       first: '',
       last: '',
       email: props.sessionStore.authUser.email,
@@ -147,6 +151,11 @@ class Profile extends React.Component<Props, State> {
     if (this.state.uploadInput.files[0] !== undefined) {
       console.log('uploadInput: ' + this.state.uploadInput.files[0]);
 
+      await this.setState({
+        updatePlayerImageLoading: true,
+        updatePlayerImageError: '',
+      });
+
       try {
         const snapshot = await storage
           .ref()
@@ -162,12 +171,21 @@ class Profile extends React.Component<Props, State> {
         db.updateFirebaseUser(this.props.sessionStore.authUser.uid, {avatarUrl: downloadUrl}, e => {
           if (e) {
             this.setState({
-              saveError: e.message,
+              updatePlayerImageError: e.message,
+              updatePlayerImageLoading: false,
+            });
+          } else {
+            this.setState({
+              updatePlayerImageLoading: false,
             });
           }
         });
       } catch (e) {
         console.error('Error uploading image: ' + e.message);
+        this.setState({
+          updatePlayerImageError: e.message,
+          updatePlayerImageLoading: false,
+        });
       }
     }
   };
@@ -223,9 +241,20 @@ class Profile extends React.Component<Props, State> {
           onChange={this.onInputChange}
           style={{opacity: 0}}
         />
-        <LinkButton style={styles.changeProfilePicButton} onClick={() => this.state.uploadInput.click()}>
-          CHANGE PROFILE PICTURE
-        </LinkButton>
+        {this.state.updatePlayerImageError ? (
+          <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+            {this.state.updatePlayerImageError}
+          </CrisisText>
+        ) : null}
+        <div className="d-flex" style={styles.loadingBtnContainer}>
+          {this.state.updatePlayerImageLoading ? (
+            <ReactLoading type="balls" color={Colors.Primary} />
+          ) : (
+            <LinkButton style={styles.changeProfilePicButton} onClick={() => this.state.uploadInput.click()}>
+              CHANGE PROFILE PICTURE
+            </LinkButton>
+          )}
+        </div>
       </Fragment>
     );
   };

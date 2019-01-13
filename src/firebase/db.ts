@@ -25,4 +25,4 @@ export const updateFirebaseUser = (id: string, value: IUser, callback: (a: Error
   db
     .ref('users')
     .child(id)
-    .update({...value}, callback);
+    .update(value, callback);
