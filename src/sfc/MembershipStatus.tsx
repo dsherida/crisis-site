@@ -49,14 +49,19 @@ const MembershipStatus: SFC<Props> = props => {
           <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.headerText}>
             STATUS
           </CrisisText>
-          <CrisisText font={{type: FontType.Paragraph, size: FontSize.L}} style={{
-            ...styles.statusText,
-            color: props.active === false ? Colors.Red : null,
-          }}>
+          <CrisisText
+            font={{type: FontType.Paragraph, size: FontSize.L}}
+            style={{
+              ...styles.statusText,
+              color: props.active === false ? Colors.Red : null,
+            }}
+          >
             {props.active ? 'ACTIVE' : 'INACTIVE'}
           </CrisisText>
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.statusSubtext}>
-            {props.active ? 'Billed next on December 17th, 2018' : 'Pay now using our Stripe secure checkout and get access to team benefits at your next field outing.'}
+            {props.active
+              ? 'Billed next on December 17th, 2018'
+              : 'Pay now using our Stripe secure checkout and get access to team benefits at your next field outing.'}
           </CrisisText>
         </Col>
       </Row>

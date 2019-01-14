@@ -6,14 +6,13 @@ import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
 import {compose} from 'recompose';
-import {Assets} from '../assets';
 import FloatingTextInput from '../components/FloatingTextInput';
 import withAuthorization from '../components/withAuthorization';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
 import * as auth from '../firebase/auth';
 import {storage} from '../firebase/firebase';
-import {getAvatar, getPlayerImageUrl} from '../firebase/storage';
+import {getPlayerImageUrl} from '../firebase/storage';
 import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
@@ -369,6 +368,10 @@ class Profile extends React.Component<Props, State> {
     );
   };
 
+  payWithStripe = async (event: ChangeEvent<any>) => {
+
+  };
+
   saveOnClick = async (event: ChangeEvent<any>) => {
     const updatedUser: IUser = {
       first: this.state.first,
@@ -421,7 +424,7 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>
-        <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">
+        <StrokeButton onClick={(e: ChangeEvent<any>) => this.payWithStripe(e)} color="primary">
           PAY WITH STRIPE
         </StrokeButton>
         {/*<FloatingTextInput
