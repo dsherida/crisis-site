@@ -53,6 +53,7 @@ interface State {
   uploadInput: HTMLInputElement;
   saveError: string;
   updatedUser: IUser;
+  active: boolean;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -85,6 +86,7 @@ class Profile extends React.Component<Props, State> {
       uploadInput: null,
       saveError: '',
       updatedUser: null,
+      active: false,
     };
 
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
@@ -414,12 +416,15 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           MEMBERSHIP
         </CrisisText>
-        <MembershipStatus />
+        <MembershipStatus active={this.state.active} />
 
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>
-        <FloatingTextInput
+        <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">
+          PAY WITH STRIPE
+        </StrokeButton>
+        {/*<FloatingTextInput
           value={this.state.cardNumber}
           onChange={event => this.inputOnChange('cardNumber', event)}
           capitalize
@@ -446,7 +451,7 @@ class Profile extends React.Component<Props, State> {
           capitalize
           style={styles.inputGroup}
           labelText="ZIP CODE"
-        />
+        />*/}
         {this.state.saveError ? (
           <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
             {this.state.saveError}

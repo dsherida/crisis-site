@@ -8,13 +8,23 @@ import CrisisText, {FontSize, FontType} from './CrisisText';
 
 interface StatusDotProps {
   actionTitle?: string;
+  active: boolean;
 }
 
 const StatusDot: SFC<StatusDotProps> = (props: StatusDotProps) => {
   return (
     <div style={styles.statusDotWrapper}>
       <div style={styles.statusDotInner}>
-        <div style={styles.statusDot} />
+        <div
+          style={{
+            ...styles.statusDot,
+            backgroundColor: props.active ? Colors.Primary : Colors.Secondary,
+            boxShadow: props.active ? crisisGlow(Colors.Primary) : null,
+            borderWidth: props.active === false ? '2px' : null,
+            borderColor: props.active === false ? Colors.Gray : null,
+            borderStyle: 'solid',
+          }}
+        />
         {props.actionTitle && (
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.actionText}>
             {props.actionTitle}
@@ -27,22 +37,26 @@ const StatusDot: SFC<StatusDotProps> = (props: StatusDotProps) => {
 
 interface Props {
   children?: ReactNode;
+  active: boolean;
 }
 
 const MembershipStatus: SFC<Props> = props => {
   return (
     <div style={styles.clickable} onClick={() => console.log('Click!')}>
       <Row style={styles.container}>
-        <StatusDot />
+        <StatusDot active={props.active} />
         <Col>
           <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.headerText}>
             STATUS
           </CrisisText>
-          <CrisisText font={{type: FontType.Paragraph, size: FontSize.L}} style={styles.statusText}>
-            ACTIVE
+          <CrisisText font={{type: FontType.Paragraph, size: FontSize.L}} style={{
+            ...styles.statusText,
+            color: props.active === false ? Colors.Red : null,
+          }}>
+            {props.active ? 'ACTIVE' : 'INACTIVE'}
           </CrisisText>
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.statusSubtext}>
-            Billed next on December 17th, 2018
+            {props.active ? 'Billed next on December 17th, 2018' : 'Pay now using our Stripe secure checkout and get access to team benefits at your next field outing.'}
           </CrisisText>
         </Col>
       </Row>
@@ -73,8 +87,6 @@ const styles = {
     width: STATUS_DOT_SIZE,
     height: STATUS_DOT_SIZE,
     borderRadius: STATUS_DOT_SIZE / 2,
-    backgroundColor: Colors.Primary,
-    boxShadow: crisisGlow(Colors.Primary),
   },
   actionText: {
     color: Colors.Red,
