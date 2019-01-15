@@ -4,6 +4,7 @@ import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import * as React from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
+import {CardElement, Elements} from 'react-stripe-elements';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import FloatingTextInput from '../components/FloatingTextInput';
@@ -23,8 +24,13 @@ import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import {notEmptyOrNull} from '../utils/Utils';
+import Stripe = stripe.Stripe;
+import {injectStripe} from 'react-stripe-elements';
+import {Checkout} from '../components/PaymentForm';
 
-interface Props extends RouteComponentProps, SessionStoreProps {}
+interface Props extends RouteComponentProps, SessionStoreProps {
+  stripe: Stripe;
+}
 
 interface State {
   width: number;
@@ -256,6 +262,26 @@ class Profile extends React.Component<Props, State> {
             </LinkButton>
           )}
         </div>
+        {this.state.saveError ? (
+          <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
+            {this.state.saveError}
+          </CrisisText>
+        ) : null}
+        <Row>
+          <Col>
+            <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">
+              SAVE CHANGES
+            </StrokeButton>
+          </Col>
+          <Col>
+            <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelOnClick(e)} color="secondary">
+              CANCEL
+            </StrokeButton>
+          </Col>
+        </Row>
+        <StrokeButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger">
+          SIGN OUT
+        </StrokeButton>
       </Fragment>
     );
   };
@@ -368,9 +394,7 @@ class Profile extends React.Component<Props, State> {
     );
   };
 
-  payWithStripe = async (event: ChangeEvent<any>) => {
-
-  };
+  payWithStripe = async (event: ChangeEvent<any>) => {};
 
   saveOnClick = async (event: ChangeEvent<any>) => {
     const updatedUser: IUser = {
@@ -421,12 +445,16 @@ class Profile extends React.Component<Props, State> {
         </CrisisText>
         <MembershipStatus active={this.state.active} />
 
-        <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
+        <div style={{backgroundColor: Colors.White}}>
+          <Checkout />
+        </div>
+
+        {/*<CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>
         <StrokeButton onClick={(e: ChangeEvent<any>) => this.payWithStripe(e)} color="primary">
           PAY WITH STRIPE
-        </StrokeButton>
+        </StrokeButton>*/}
         {/*<FloatingTextInput
           value={this.state.cardNumber}
           onChange={event => this.inputOnChange('cardNumber', event)}
@@ -455,26 +483,6 @@ class Profile extends React.Component<Props, State> {
           style={styles.inputGroup}
           labelText="ZIP CODE"
         />*/}
-        {this.state.saveError ? (
-          <CrisisText className="text-danger" style={styles.error} font={{type: FontType.Paragraph, size: FontSize.S}}>
-            {this.state.saveError}
-          </CrisisText>
-        ) : null}
-        <Row>
-          <Col>
-            <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">
-              SAVE CHANGES
-            </StrokeButton>
-          </Col>
-          <Col>
-            <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelOnClick(e)} color="secondary">
-              CANCEL
-            </StrokeButton>
-          </Col>
-        </Row>
-        <StrokeButton onClick={(e: ChangeEvent<any>) => this.signOutOnClick(e)} color="danger">
-          SIGN OUT
-        </StrokeButton>
       </Fragment>
     );
   };
