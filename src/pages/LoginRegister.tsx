@@ -5,7 +5,7 @@ import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, FormGroup, Row} from 'reactstrap';
 import FloatingTextInput from '../components/FloatingTextInput';
-import {HOME} from '../constants/routes';
+import {HOME, PROFILE} from '../constants/routes';
 import {auth, db} from '../firebase';
 import {IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
@@ -220,7 +220,7 @@ class LoginRegister extends React.Component<Props, State> {
 
       await db.doCreateUser(authUser.user.uid, this.state.user);
 
-      this.props.history.push(HOME);
+      this.props.history.push(PROFILE);
     } catch (e) {
       this.setState({
         registerLoading: false,
