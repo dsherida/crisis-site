@@ -4,10 +4,10 @@ import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import * as React from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {CardElement, Elements} from 'react-stripe-elements';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import FloatingTextInput from '../components/FloatingTextInput';
+import {Checkout} from '../components/PaymentForm';
 import withAuthorization from '../components/withAuthorization';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
@@ -24,13 +24,8 @@ import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import {notEmptyOrNull} from '../utils/Utils';
-import Stripe = stripe.Stripe;
-import {injectStripe} from 'react-stripe-elements';
-import {Checkout} from '../components/PaymentForm';
 
-interface Props extends RouteComponentProps, SessionStoreProps {
-  stripe: Stripe;
-}
+interface Props extends RouteComponentProps, SessionStoreProps {}
 
 interface State {
   width: number;

@@ -9,4 +9,5 @@ export interface IUser {
   position?: string;
   division?: string;
   avatarUrl?: string;
+  stripeToken?: string;
 }

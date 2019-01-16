@@ -1,31 +1,49 @@
+import {inject} from 'mobx-react';
 import * as React from 'react';
-import {ChangeEvent} from 'react';
+import {ChangeEvent, ComponentClass} from 'react';
 import {CardElement, Elements, injectStripe, ReactStripeElements} from 'react-stripe-elements';
 import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
+import {compose} from 'recompose';
+import {db} from '../firebase';
+import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 
-interface Props extends InjectedStripeProps {}
+interface Props extends InjectedStripeProps, SessionStoreProps {}
 
 class _PaymentForm extends React.Component<Props> {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<{}>, snapshot?: any): void {
+    console.log('firebaseUser: ' + JSON.stringify(this.props.sessionStore.firebaseUser));
+  }
+
   checkout = async (event: ChangeEvent<any>) => {
     event.preventDefault();
 
+    if (!this.props.sessionStore.firebaseUser) {
+      alert('Sorry something went wrong, please try again in a few moments...');
+      return;
+    }
+
+    const {first, last, email} = this.props.sessionStore.firebaseUser;
+
     // Within the context of `Elements`, this call to createToken knows which Element to
     // tokenize, since there's only one in this group.
-    const source = await this.props.stripe.createToken({
-      name: 'Mother Theresa', // `${this.props.first} ${this.props.last}`,
+    const createTokenResponse = await this.props.stripe.createToken({
+      name: `${first} ${last}`,
+      currency: 'usd',
     });
 
-    // You can also use createSource to create Sources. See our Sources
-    // documentation for more: https://stripe.com/docs/stripe-js/reference#stripe-create-source
-    // const source = await this.props.stripe.createSource({
-    //   type: 'card',
-    //   owner: {
-    //     name: 'Test', // `${this.state.first} ${this.state.last}`,
-    //     email: 'test@test.com', // `${this.state.email}`,
-    //   },
-    // });
+    console.log('createTokenResponse: ' + JSON.stringify(createTokenResponse, null, 2));
 
-    console.log('source: ' + JSON.stringify(source));
+    const stripeToken = createTokenResponse.token.id;
+    const updatedFirebaseUser = {...this.props.sessionStore.firebaseUser, stripeToken};
+    this.props.sessionStore.setFirebaseUser(updatedFirebaseUser);
+
+    db.updateFirebaseUser(this.props.sessionStore.authUser.uid, {stripeToken}, e => {
+      if (e) {
+        console.log('Something went wrong while trying to save the Stripe token to SessionStore.firebaseUser');
+      } else {
+        console.log('User was updated with their new Stripe Token');
+      }
+    });
   };
 
   render() {
@@ -55,7 +73,12 @@ class _PaymentForm extends React.Component<Props> {
   }
 }
 
-const PaymentForm = injectStripe(_PaymentForm);
+const PaymentForm = compose(
+  injectStripe,
+  inject(SessionStoreName)
+)(_PaymentForm as ComponentClass<any>);
+
+export default PaymentForm;
 
 export class Checkout extends React.Component {
   render() {
