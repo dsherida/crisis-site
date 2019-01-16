@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {inject} from 'mobx-react';
 import * as React from 'react';
 import {ChangeEvent, ComponentClass} from 'react';
@@ -44,6 +45,13 @@ class _PaymentForm extends React.Component<Props> {
         console.log('User was updated with their new Stripe Token');
       }
     });
+
+    // Create a Stripe Customer
+    axios
+      .post(`https://us-central1-crisis-site.cloudfunctions.net/createCustomer?token=tok_1Dt64OEzetDhGLoKHYVfq08o`, {email, token: stripeToken})
+      .then(res => {
+        console.log('res: ' + JSON.stringify(res));
+      });
   };
 
   render() {
