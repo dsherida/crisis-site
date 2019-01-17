@@ -389,8 +389,6 @@ class Profile extends React.Component<Props, State> {
     );
   };
 
-  payWithStripe = async (event: ChangeEvent<any>) => {};
-
   saveOnClick = async (event: ChangeEvent<any>) => {
     const updatedUser: IUser = {
       first: this.state.first,

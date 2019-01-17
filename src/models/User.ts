@@ -10,4 +10,5 @@ export interface IUser {
   division?: string;
   avatarUrl?: string;
   stripeToken?: string;
+  stripeUid?: string;
 }

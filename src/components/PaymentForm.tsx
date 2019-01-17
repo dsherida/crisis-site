@@ -3,10 +3,10 @@ import {inject} from 'mobx-react';
 import * as React from 'react';
 import {ChangeEvent, ComponentClass} from 'react';
 import {CardElement, Elements, injectStripe, ReactStripeElements} from 'react-stripe-elements';
-import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
 import {compose} from 'recompose';
 import {db} from '../firebase';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
+import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
 
 interface Props extends InjectedStripeProps, SessionStoreProps {}
 
@@ -47,35 +47,53 @@ class _PaymentForm extends React.Component<Props> {
     });
 
     // Create a Stripe Customer
-    axios
-      .post(`https://us-central1-crisis-site.cloudfunctions.net/createCustomer?token=tok_1Dt64OEzetDhGLoKHYVfq08o`, {email, token: stripeToken})
-      .then(res => {
-        console.log('res: ' + JSON.stringify(res));
-      });
+    let createStripeCustomerResponse: any;
+
+    try {
+      createStripeCustomerResponse = await axios.post(
+        `https://us-central1-crisis-site.cloudfunctions.net/createCustomer?token=tok_1Dt64OEzetDhGLoKHYVfq08o`,
+        {
+          email,
+          token: stripeToken,
+        }
+      );
+
+      console.log('createStripeCustomerResponse: ' + JSON.stringify(createStripeCustomerResponse));
+    } catch (err) {
+      console.error('An error occurred while trying to create a new Stripe Customer.');
+    }
+
+    db.updateFirebaseUser(this.props.sessionStore.authUser.uid, {stripeUid: createStripeCustomerResponse.data.customer.id}, error => {
+      if (error) {
+        console.log('Error while trying to set Stripe UID on Firebase User. Error: ' + error);
+        return;
+      }
+
+      console.log('Successfully updated Firebase User with Stripe UID');
+    });
   };
 
   render() {
     const style = {
       base: {
-        color: '#32325d',
-        lineHeight: '18px',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: 'antialiased',
+        color: '#32325D',
+        fontWeight: 500,
+        fontFamily: 'Inter UI, Open Sans, Segoe UI, sans-serif',
         fontSize: '16px',
+        fontSmoothing: 'antialiased',
         '::placeholder': {
-          color: '#aab7c4',
+          color: '#CFD7DF',
         },
       },
       invalid: {
-        color: '#fa755a',
-        iconColor: '#fa755a',
+        color: '#E25950',
       },
     };
 
     return (
       <form onSubmit={this.checkout}>
         <CardElement style={style} />
-        <button>Confirm order</button>
+        <button>ACTIVATE MEMBERSHIP</button>
       </form>
     );
   }
