@@ -50,13 +50,10 @@ class _PaymentForm extends React.Component<Props> {
     let createStripeCustomerResponse: any;
 
     try {
-      createStripeCustomerResponse = await axios.post(
-        `https://us-central1-crisis-site.cloudfunctions.net/createCustomer?token=tok_1Dt64OEzetDhGLoKHYVfq08o`,
-        {
-          email,
-          token: stripeToken,
-        }
-      );
+      createStripeCustomerResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/createCustomer`, {
+        email,
+        token: stripeToken,
+      });
 
       console.log('createStripeCustomerResponse: ' + JSON.stringify(createStripeCustomerResponse));
     } catch (err) {
@@ -71,6 +68,19 @@ class _PaymentForm extends React.Component<Props> {
 
       console.log('Successfully updated Firebase User with Stripe UID');
     });
+
+    let subscribeToMembershipResponse: any;
+
+    try {
+      subscribeToMembershipResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/subscribeToPlan`, {
+        customerId: createStripeCustomerResponse.data.customer.id,
+        planId: 'plan_EL3YNV4Iha9VQR',
+      });
+
+      console.log('subscribeToMembershipResponse: ' + JSON.stringify(subscribeToMembershipResponse));
+    } catch (err) {
+      console.error('An error occurred while attempting to subscribe to Stripe plan.');
+    }
   };
 
   render() {

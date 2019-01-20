@@ -87,7 +87,7 @@ class LoginRegister extends React.Component<Props, State> {
 
     try {
       await auth.doSignInWithEmailAndPassword(this.state.loginEmail, this.state.loginPassword);
-      this.props.history.push(HOME);
+      this.props.history.push(PROFILE);
     } catch (e) {
       this.setState({loginLoading: false, loginError: e.message});
     }
