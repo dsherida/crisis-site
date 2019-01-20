@@ -20,7 +20,7 @@ const StatusDot: SFC<StatusDotProps> = (props: StatusDotProps) => {
             ...styles.statusDot,
             backgroundColor: props.active ? Colors.Primary : Colors.Secondary,
             boxShadow: props.active ? crisisGlow(Colors.Primary) : null,
-            borderWidth: props.active === false ? '2px' : null,
+            borderWidth: props.active === false ? '2px' : '0px',
             borderColor: props.active === false ? Colors.Gray : null,
             borderStyle: 'solid',
           }}
@@ -38,6 +38,7 @@ const StatusDot: SFC<StatusDotProps> = (props: StatusDotProps) => {
 interface Props {
   children?: ReactNode;
   active: boolean;
+  billedNext: number;
 }
 
 const MembershipStatus: SFC<Props> = props => {
@@ -53,14 +54,14 @@ const MembershipStatus: SFC<Props> = props => {
             font={{type: FontType.Paragraph, size: FontSize.L}}
             style={{
               ...styles.statusText,
-              color: props.active === false ? Colors.Red : null,
+              color: props.active === false ? Colors.Red : Colors.Primary,
             }}
           >
             {props.active ? 'ACTIVE' : 'INACTIVE'}
           </CrisisText>
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.statusSubtext}>
             {props.active
-              ? 'Billed next on December 17th, 2018'
+              ? `Billed next on ${new Date(props.billedNext).toLocaleDateString()}`
               : 'Pay now using our Stripe secure checkout and get access to team benefits at your next field outing.'}
           </CrisisText>
         </Col>

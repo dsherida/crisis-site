@@ -11,4 +11,5 @@ export interface IUser {
   avatarUrl?: string;
   stripeToken?: string;
   stripeUid?: string;
+  membershipPeriodEnd?: number;
 }

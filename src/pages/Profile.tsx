@@ -105,6 +105,7 @@ class Profile extends React.Component<Props, State> {
           position: user.position,
           division: user.division,
           playerImage: user.avatarUrl,
+          active: user.membershipPeriodEnd >= Date.now(),
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -138,6 +139,15 @@ class Profile extends React.Component<Props, State> {
           }
         }
       );
+  }
+
+  componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
+    const membershipPeriodEnd = nextProps.sessionStore.firebaseUser.membershipPeriodEnd;
+    if (membershipPeriodEnd) {
+      this.setState({
+        active: membershipPeriodEnd >= Date.now(),
+      });
+    }
   }
 
   getPlayerImage = () => {
@@ -431,12 +441,18 @@ class Profile extends React.Component<Props, State> {
   };
 
   renderMembershipForm = () => {
+    let membershipPeriodEnd = new Date().getMilliseconds();
+
+    if (this.props.sessionStore.firebaseUser) {
+      membershipPeriodEnd = this.props.sessionStore.firebaseUser.membershipPeriodEnd;
+    }
+
     return (
       <Fragment>
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           MEMBERSHIP
         </CrisisText>
-        <MembershipStatus active={this.state.active} />
+        <MembershipStatus active={this.state.active} billedNext={membershipPeriodEnd} />
 
         <div style={{backgroundColor: Colors.White}}>
           <Checkout />

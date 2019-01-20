@@ -34,11 +34,18 @@ class _PaymentForm extends React.Component<Props> {
 
     console.log('createTokenResponse: ' + JSON.stringify(createTokenResponse, null, 2));
 
+    if (createTokenResponse.error) {
+      console.error('Something went wrong during checkout.');
+      return;
+    }
+
     const stripeToken = createTokenResponse.token.id;
     const updatedFirebaseUser = {...this.props.sessionStore.firebaseUser, stripeToken};
     this.props.sessionStore.setFirebaseUser(updatedFirebaseUser);
 
-    db.updateFirebaseUser(this.props.sessionStore.authUser.uid, {stripeToken}, e => {
+    const {uid} = this.props.sessionStore.authUser;
+
+    db.updateFirebaseUser(uid, {stripeToken}, e => {
       if (e) {
         console.log('Something went wrong while trying to save the Stripe token to SessionStore.firebaseUser');
       } else {
@@ -60,15 +67,22 @@ class _PaymentForm extends React.Component<Props> {
       console.error('An error occurred while trying to create a new Stripe Customer.');
     }
 
-    db.updateFirebaseUser(this.props.sessionStore.authUser.uid, {stripeUid: createStripeCustomerResponse.data.customer.id}, error => {
+    if (!createStripeCustomerResponse) {
+      return;
+    }
+
+    const stripeUid = createStripeCustomerResponse.data.customer.id;
+
+    db.updateFirebaseUser(uid, {stripeUid}, error => {
       if (error) {
-        console.log('Error while trying to set Stripe UID on Firebase User. Error: ' + error);
+        console.error('Error while trying to set Stripe UID on Firebase User. Error: ' + error);
         return;
       }
 
       console.log('Successfully updated Firebase User with Stripe UID');
     });
 
+    // Subscribe to the Membership Plan in Stripe
     let subscribeToMembershipResponse: any;
 
     try {
@@ -81,6 +95,24 @@ class _PaymentForm extends React.Component<Props> {
     } catch (err) {
       console.error('An error occurred while attempting to subscribe to Stripe plan.');
     }
+
+    if (!subscribeToMembershipResponse) {
+      return;
+    }
+
+    const membershipPeriodEnd = subscribeToMembershipResponse.data.response.current_period_end;
+
+    // Write the Period End value to Firebase Db
+    db.updateFirebaseUser(uid, {membershipPeriodEnd}, error => {
+      if (error) {
+        console.error('Error while trying to write the Membership Period End value to Firebase User');
+        return;
+      }
+
+      console.log('Successfully saved the Membership Period End value.');
+    });
+
+    this.props.sessionStore.setFirebaseUser({...this.props.sessionStore.firebaseUser, membershipPeriodEnd, stripeUid});
   };
 
   render() {
