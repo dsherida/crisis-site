@@ -1,7 +1,7 @@
 import {TextAlignProperty} from 'csstype';
 import {inject, observer} from 'mobx-react';
-import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import * as React from 'react';
+import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
@@ -23,8 +23,8 @@ import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
-import {notEmptyOrNull} from '../utils/Utils';
 import {epochToLocalTime} from '../utils/DateUtils';
+import {notEmptyOrNull} from '../utils/Utils';
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -125,7 +125,9 @@ class Profile extends React.Component<Props, State> {
 
     const {firebaseUser} = this.props.sessionStore;
 
-    firebaseUser &&
+    if (firebaseUser) {
+      const periodEnd = epochToLocalTime(firebaseUser.membershipPeriodEnd);
+
       this.setState(
         {
           first: firebaseUser.first,
@@ -135,6 +137,7 @@ class Profile extends React.Component<Props, State> {
           position: firebaseUser.position,
           division: firebaseUser.division,
           playerImage: firebaseUser.avatarUrl,
+          active: periodEnd >= new Date(),
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -142,6 +145,7 @@ class Profile extends React.Component<Props, State> {
           }
         }
       );
+    }
   }
 
   componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
@@ -455,11 +459,12 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           MEMBERSHIP
         </CrisisText>
-        <MembershipStatus active={this.state.active} billedNext={membershipPeriodEnd} />
+        <MembershipStatus active={this.state.active} billedNext={epochToLocalTime(membershipPeriodEnd)} />
 
-        <div style={{backgroundColor: Colors.White}}>
-          <Checkout />
-        </div>
+        <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
+          PAYMENT
+        </CrisisText>
+        <Checkout />
 
         {/*<CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT

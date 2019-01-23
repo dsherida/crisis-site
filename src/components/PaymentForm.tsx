@@ -5,8 +5,11 @@ import {ChangeEvent, ComponentClass} from 'react';
 import {CardElement, Elements, injectStripe, ReactStripeElements} from 'react-stripe-elements';
 import {compose} from 'recompose';
 import {db} from '../firebase';
+import {strokeButtonStyle} from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
+import {Colors} from '../utils/Constants';
 import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
+import {BorderRadius} from '../utils/StyleUtils';
 
 interface Props extends InjectedStripeProps, SessionStoreProps {}
 
@@ -118,24 +121,34 @@ class _PaymentForm extends React.Component<Props> {
   render() {
     const style = {
       base: {
-        color: '#32325D',
-        fontWeight: 500,
-        fontFamily: 'Inter UI, Open Sans, Segoe UI, sans-serif',
-        fontSize: '16px',
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
         fontSmoothing: 'antialiased',
+        fontSize: '16px',
         '::placeholder': {
-          color: '#CFD7DF',
+          color: '#aab7c4',
         },
       },
       invalid: {
-        color: '#E25950',
+        color: '#fa755a',
+        iconColor: '#fa755a',
       },
     };
 
     return (
-      <form onSubmit={this.checkout}>
+      <form onSubmit={this.checkout} style={{backgroundColor: Colors.Transparent}}>
         <CardElement style={style} />
-        <button>ACTIVATE MEMBERSHIP</button>
+        <button
+          className="btn-outline-primary"
+          style={{
+            ...strokeButtonStyle.button,
+            borderRadius: BorderRadius.M,
+            cursor: 'pointer',
+          }}
+        >
+          ACTIVATE MEMBERSHIP
+        </button>
       </form>
     );
   }

@@ -5,6 +5,7 @@ import {Col, Row} from 'reactstrap';
 import {Colors, Padding} from '../utils/Constants';
 import {crisisGlow} from '../utils/StyleUtils';
 import CrisisText, {FontSize, FontType} from './CrisisText';
+import {prettyPrintDate} from '../utils/DateUtils';
 
 interface StatusDotProps {
   actionTitle?: string;
@@ -38,7 +39,7 @@ const StatusDot: SFC<StatusDotProps> = (props: StatusDotProps) => {
 interface Props {
   children?: ReactNode;
   active: boolean;
-  billedNext: number;
+  billedNext: Date;
 }
 
 const MembershipStatus: SFC<Props> = props => {
@@ -61,7 +62,7 @@ const MembershipStatus: SFC<Props> = props => {
           </CrisisText>
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.statusSubtext}>
             {props.active
-              ? `Billed next on ${new Date(props.billedNext).toLocaleDateString()}`
+              ? `Billed next on ${prettyPrintDate(props.billedNext)}`
               : 'Pay now using our Stripe secure checkout and get access to team benefits at your next field outing.'}
           </CrisisText>
         </Col>

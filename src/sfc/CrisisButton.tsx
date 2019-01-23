@@ -5,7 +5,7 @@ import {Colors} from '../utils/Constants';
 import {FontSize, FontType, getFontSize, getFontTypeStyle} from './CrisisText';
 
 interface Props {
-  onClick: () => void;
+  onClick: () => any;
   style?: CSSProperties | undefined;
   textStyle?: CSSProperties | undefined;
   children?: ReactNode[] | ReactNode | undefined;

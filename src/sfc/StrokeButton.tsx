@@ -11,13 +11,13 @@ interface Props {
 
 const StrokeButton: SFC<Props> = (props: Props) => {
   return (
-    <Button style={styles.button} outline color={props.color ? props.color : 'primary'} onClick={props.onClick}>
+    <Button style={strokeButtonStyle.button} outline color={props.color ? props.color : 'primary'} onClick={props.onClick}>
       {props.children}
     </Button>
   );
 };
 
-const styles = {
+export const strokeButtonStyle = {
   button: {
     marginTop: Padding.H2,
     paddingTop: Padding.H2,

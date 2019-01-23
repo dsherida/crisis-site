@@ -8,3 +8,8 @@ export const epochToLocalTime = (utcSeconds: number) => {
 
   return d;
 };
+
+export const prettyPrintDate = (date: Date) => {
+  let options = {weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'};
+  return date.toLocaleDateString('en-US', options);
+};
