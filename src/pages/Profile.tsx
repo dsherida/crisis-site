@@ -55,6 +55,7 @@ interface State {
   saveError: string;
   updatedUser: IUser;
   active: boolean;
+  periodEnd: Date;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -88,6 +89,7 @@ class Profile extends React.Component<Props, State> {
       saveError: '',
       updatedUser: null,
       active: false,
+      periodEnd: new Date(),
     };
 
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
@@ -109,6 +111,7 @@ class Profile extends React.Component<Props, State> {
           division: user.division,
           playerImage: user.avatarUrl,
           active: periodEnd >= new Date(),
+          periodEnd,
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -138,6 +141,7 @@ class Profile extends React.Component<Props, State> {
           division: firebaseUser.division,
           playerImage: firebaseUser.avatarUrl,
           active: periodEnd >= new Date(),
+          periodEnd,
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -148,12 +152,20 @@ class Profile extends React.Component<Props, State> {
     }
   }
 
-  componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
-    const membershipPeriodEnd = nextProps.sessionStore.firebaseUser.membershipPeriodEnd;
-    if (membershipPeriodEnd) {
-      this.setState({
-        active: membershipPeriodEnd >= Date.now(),
-      });
+  componentWillUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): void {
+    console.log('componentWillUpdate');
+
+    if (nextProps.sessionStore.firebaseUser) {
+      const membershipPeriodEnd = nextProps.sessionStore.firebaseUser.membershipPeriodEnd;
+      if (membershipPeriodEnd) {
+        const periodEnd = epochToLocalTime(membershipPeriodEnd);
+        if (periodEnd.getTime() !== this.state.periodEnd.getTime()) {
+          this.setState({
+            active: periodEnd >= new Date(),
+            periodEnd,
+          });
+        }
+      }
     }
   }
 
