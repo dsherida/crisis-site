@@ -24,6 +24,7 @@ import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import {notEmptyOrNull} from '../utils/Utils';
+import {epochToLocalTime} from '../utils/DateUtils';
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -96,6 +97,8 @@ class Profile extends React.Component<Props, State> {
 
       this.props.sessionStore.setFirebaseUser(user);
 
+      const periodEnd = epochToLocalTime(user.membershipPeriodEnd);
+
       this.setState(
         {
           first: user.first,
@@ -105,7 +108,7 @@ class Profile extends React.Component<Props, State> {
           position: user.position,
           division: user.division,
           playerImage: user.avatarUrl,
-          active: user.membershipPeriodEnd >= Date.now(),
+          active: periodEnd >= new Date(),
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
