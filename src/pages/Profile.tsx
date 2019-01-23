@@ -249,7 +249,13 @@ class Profile extends React.Component<Props, State> {
   renderPlayerCard = () => {
     return (
       <Fragment>
-        <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
+        <CrisisText
+          font={{type: FontType.Header, size: FontSize.XS}}
+          style={{
+            ...styles.header,
+            paddingLeft: '12px',
+          }}
+        >
           PLAYER CARD
         </CrisisText>
         <Col>
@@ -444,7 +450,9 @@ class Profile extends React.Component<Props, State> {
   };
 
   cancelOnClick = async (event: ChangeEvent<any>) => {
-    console.log('TODO: Cancel');
+    if (window.confirm('Are you sure you wish to cancel? All un-saved changes will be lost for eternity.')) {
+      window.location.reload();
+    }
   };
 
   signOutOnClick = async (event: ChangeEvent<any>) => {
