@@ -58,10 +58,10 @@ const PlayerCard: SFC<Props> = props => {
           </CursiveText>
           <div style={{width: '2px', height: '80px', backgroundColor: Colors.Primary, marginLeft: Padding.H2}} />
           <Col style={styles.namewrapper}>
-            <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={styles.name}>
+            <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.name}>
               {props.first ? props.first : 'XXX'}
             </CrisisText>
-            <CrisisText font={{type: FontType.Header, size: FontSize.M}} style={{...styles.name, ...styles.last}}>
+            <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={{...styles.name, ...styles.last}}>
               {props.last ? props.last : 'XXX'}
             </CrisisText>
             <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={{...styles.position}}>

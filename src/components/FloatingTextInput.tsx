@@ -12,6 +12,7 @@ interface Props {
   secure?: boolean;
   capitalize?: boolean;
   value: string;
+  maxLength?: number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -40,6 +41,7 @@ export default class FloatingTextInput extends Component<Props, State> {
           </CrisisText>
         </Label>
         <input
+          maxLength={this.props.maxLength}
           type={this.props.secure ? 'password' : null}
           id={`${this.props.labelText}`}
           style={{...paragraphStyles.default, ...styles.input, textTransform: this.props.capitalize ? ('capitalize' as TextTransformProperty) : null}}

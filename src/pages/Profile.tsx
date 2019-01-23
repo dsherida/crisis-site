@@ -230,6 +230,10 @@ class Profile extends React.Component<Props, State> {
   });
 
   inputOnChange = (propName: string, event: ChangeEvent<HTMLInputElement>) => {
+    if (propName === 'playerNumber' || propName === 'phone') {
+      event.target.value = event.target.value.replace(/\D/g, '');
+    }
+
     this.setState(this.byPropKey(propName, event.target.value));
   };
 
@@ -299,13 +303,13 @@ class Profile extends React.Component<Props, State> {
         ) : null}
         <Row>
           <Col>
-            <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">
-              SAVE CHANGES
+            <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelOnClick(e)} color="secondary">
+              CANCEL
             </StrokeButton>
           </Col>
           <Col>
-            <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelOnClick(e)} color="secondary">
-              CANCEL
+            <StrokeButton onClick={(e: ChangeEvent<any>) => this.saveOnClick(e)} color="primary">
+              SAVE
             </StrokeButton>
           </Col>
         </Row>
@@ -330,6 +334,7 @@ class Profile extends React.Component<Props, State> {
           capitalize
           style={styles.inputGroup}
           labelText="FIRST"
+          maxLength={12}
         />
         <FloatingTextInput
           value={this.state.last}
@@ -337,24 +342,28 @@ class Profile extends React.Component<Props, State> {
           capitalize
           style={styles.inputGroup}
           labelText="LAST"
+          maxLength={12}
         />
         <FloatingTextInput
           value={this.state.playerNumber}
           onChange={event => this.inputOnChange('playerNumber', event)}
           style={styles.inputGroup}
           labelText="PLAYER NUMBER"
+          maxLength={3}
         />
         <FloatingTextInput
           value={this.state.position}
           onChange={event => this.inputOnChange('position', event)}
           style={styles.inputGroup}
           labelText="POSITION"
+          maxLength={12}
         />
         <FloatingTextInput
           value={this.state.division}
           onChange={event => this.inputOnChange('division', event)}
           style={styles.inputGroup}
           labelText="DIVISION"
+          maxLength={12}
         />
 
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
@@ -372,6 +381,7 @@ class Profile extends React.Component<Props, State> {
           capitalize
           style={styles.inputGroup}
           labelText="PHONE"
+          maxLength={10}
         />
       </Form>
     );
@@ -458,12 +468,14 @@ class Profile extends React.Component<Props, State> {
   signOutOnClick = async (event: ChangeEvent<any>) => {
     event.preventDefault();
 
-    try {
-      await auth.doSignOut();
-      await this.props.sessionStore.clearSession();
-      this.props.history.push(LOGIN_REGISTER);
-    } catch (e) {
-      console.error(e.message);
+    if (window.confirm('Are you sure you wish to logout? All un-saved changes will be lost for eternity.')) {
+      try {
+        await auth.doSignOut();
+        await this.props.sessionStore.clearSession();
+        this.props.history.push(LOGIN_REGISTER);
+      } catch (e) {
+        console.error(e.message);
+      }
     }
   };
 
@@ -557,6 +569,7 @@ const styles = {
   loadingBtnContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: Padding.H2,
   },
   button: {
     marginTop: Padding.H2,
