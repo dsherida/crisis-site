@@ -23,14 +23,14 @@ const Footer: SFC<Props> = props => {
 const styles = {
   default: {
     position: 'absolute' as PositionProperty,
-    backgroundColor: Colors.Primary,
+    backgroundColor: Colors.primary,
     bottom: 0,
     left: 0,
     right: 0,
   },
   title: {
     textAlign: 'center' as TextAlignProperty,
-    color: Colors.Gray,
+    color: Colors.gray,
   },
 };
 

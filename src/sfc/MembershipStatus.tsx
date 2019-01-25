@@ -19,10 +19,10 @@ const StatusDot: SFC<StatusDotProps> = (props: StatusDotProps) => {
         <div
           style={{
             ...styles.statusDot,
-            backgroundColor: props.active ? Colors.Primary : Colors.Secondary,
-            boxShadow: props.active ? crisisGlow(Colors.Primary) : null,
+            backgroundColor: props.active ? Colors.primary : Colors.secondary,
+            boxShadow: props.active ? crisisGlow(Colors.primary) : null,
             borderWidth: props.active === false ? '2px' : '0px',
-            borderColor: props.active === false ? Colors.Gray : null,
+            borderColor: props.active === false ? Colors.gray : null,
             borderStyle: 'solid',
           }}
         />
@@ -55,7 +55,7 @@ const MembershipStatus: SFC<Props> = props => {
             font={{type: FontType.Paragraph, size: FontSize.L}}
             style={{
               ...styles.statusText,
-              color: props.active === false ? Colors.Red : Colors.Primary,
+              color: props.active === false ? Colors.red : Colors.primary,
             }}
           >
             {props.active ? 'ACTIVE' : 'INACTIVE'}
@@ -96,16 +96,16 @@ const styles = {
     borderRadius: STATUS_DOT_SIZE / 2,
   },
   actionText: {
-    color: Colors.Red,
+    color: Colors.red,
   },
   headerText: {
-    color: Colors.Beige,
+    color: Colors.beige,
   },
   statusText: {
-    color: Colors.Primary,
+    color: Colors.primary,
   },
   statusSubtext: {
-    color: Colors.White,
+    color: Colors.white,
   },
 };
 

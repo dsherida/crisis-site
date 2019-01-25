@@ -1,7 +1,7 @@
 import {TextAlignProperty} from 'csstype';
 import {inject, observer} from 'mobx-react';
-import * as React from 'react';
 import {ChangeEvent, ComponentClass, Fragment} from 'react';
+import * as React from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
@@ -14,16 +14,17 @@ import {db} from '../firebase';
 import * as auth from '../firebase/auth';
 import {storage} from '../firebase/firebase';
 import {getPlayerImageUrl} from '../firebase/storage';
-import {IUser} from '../models/User';
+import {ICreditCard, IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
 import MembershipStatus from '../sfc/MembershipStatus';
 import PlayerCard from '../sfc/PlayerCard';
-import StrokeButton from '../sfc/StrokeButton';
+import StrokeButton, {strokeButtonStyle} from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import {epochToLocalTime} from '../utils/DateUtils';
+import {BorderRadius} from '../utils/StyleUtils';
 import {notEmptyOrNull} from '../utils/Utils';
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
@@ -56,6 +57,8 @@ interface State {
   updatedUser: IUser;
   active: boolean;
   periodEnd: Date;
+  card: ICreditCard;
+  updatingCard: boolean;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -90,6 +93,8 @@ class Profile extends React.Component<Props, State> {
       updatedUser: null,
       active: false,
       periodEnd: new Date(),
+      card: null,
+      updatingCard: false,
     };
 
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
@@ -142,6 +147,7 @@ class Profile extends React.Component<Props, State> {
           playerImage: firebaseUser.avatarUrl,
           active: periodEnd >= new Date(),
           periodEnd,
+          card: firebaseUser.card,
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -153,10 +159,8 @@ class Profile extends React.Component<Props, State> {
   }
 
   componentWillUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): void {
-    console.log('componentWillUpdate');
-
     if (nextProps.sessionStore.firebaseUser) {
-      const membershipPeriodEnd = nextProps.sessionStore.firebaseUser.membershipPeriodEnd;
+      const {membershipPeriodEnd, card} = nextProps.sessionStore.firebaseUser;
       if (membershipPeriodEnd) {
         const periodEnd = epochToLocalTime(membershipPeriodEnd);
         if (periodEnd.getTime() !== this.state.periodEnd.getTime()) {
@@ -165,6 +169,10 @@ class Profile extends React.Component<Props, State> {
             periodEnd,
           });
         }
+      }
+
+      if (card && this.state.card !== card) {
+        this.setState({card});
       }
     }
   }
@@ -289,7 +297,7 @@ class Profile extends React.Component<Props, State> {
         ) : null}
         <div className="d-flex" style={styles.loadingBtnContainer}>
           {this.state.updatePlayerImageLoading ? (
-            <ReactLoading type="balls" color={Colors.Primary} />
+            <ReactLoading type="balls" color={Colors.primary} />
           ) : (
             <LinkButton style={styles.changeProfilePicButton} onClick={() => this.state.uploadInput.click()}>
               CHANGE PROFILE PICTURE
@@ -416,7 +424,7 @@ class Profile extends React.Component<Props, State> {
         ) : null}
         <div className="d-flex" style={styles.loadingBtnContainer}>
           {this.state.updatePasswordLoading ? (
-            <ReactLoading type="balls" color={Colors.Primary} />
+            <ReactLoading type="balls" color={Colors.primary} />
           ) : (
             <Button
               type="submit"
@@ -479,6 +487,41 @@ class Profile extends React.Component<Props, State> {
     }
   };
 
+  updateCardInfo = () => {
+    this.setState({
+      card: null,
+      updatingCard: true,
+    });
+  };
+
+  cancelEditCard = (event: ChangeEvent<any>) => {
+    this.setState({card: this.props.sessionStore.firebaseUser.card, updatingCard: false});
+  };
+
+  removeCard = () => {
+    console.log('TODO: Implement remove card feature');
+  };
+
+  renderCardInfo = () => {
+    return (
+      <Fragment>
+        <div style={styles.cardContainer}>
+          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`${this.state.card.brand} ending in ****${
+            this.state.card.last4
+          }`}</CrisisText>
+          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`Exp. ${
+            this.state.card.expMonth
+          }/${this.state.card.expYear.toString().substring(2, 4)}`}</CrisisText>
+        </div>
+        <LinkButton onClick={this.updateCardInfo} textStyle={{color: Colors.white}} style={{marginTop: Padding.V4}}>
+          UPDATE CARD INFO
+        </LinkButton>
+        {/*TODO: Implement Remove Card, too many edge cases for V1 */}
+        {/*<LinkButton onClick={this.removeCard}>REMOVE CARD</LinkButton>*/}
+      </Fragment>
+    );
+  };
+
   renderMembershipForm = () => {
     let membershipPeriodEnd = new Date().getMilliseconds();
 
@@ -492,46 +535,15 @@ class Profile extends React.Component<Props, State> {
           MEMBERSHIP
         </CrisisText>
         <MembershipStatus active={this.state.active} billedNext={epochToLocalTime(membershipPeriodEnd)} />
-
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>
-        <Checkout />
-
-        {/*<CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
-          PAYMENT
-        </CrisisText>
-        <StrokeButton onClick={(e: ChangeEvent<any>) => this.payWithStripe(e)} color="primary">
-          PAY WITH STRIPE
-        </StrokeButton>*/}
-        {/*<FloatingTextInput
-          value={this.state.cardNumber}
-          onChange={event => this.inputOnChange('cardNumber', event)}
-          capitalize
-          style={styles.inputGroup}
-          labelText="CARD NUMBER"
-        />
-        <Row className="no-gutters">
-          <Col style={{marginRight: Padding.H2}}>
-            <FloatingTextInput
-              value={this.state.expMonth}
-              onChange={event => this.inputOnChange('expMonth', event)}
-              capitalize
-              labelText="EXP. MONTH"
-            />
-          </Col>
-          <Col style={{marginLeft: Padding.H2}}>
-            <FloatingTextInput value={this.state.expYear} onChange={event => this.inputOnChange('expYear', event)} capitalize labelText="EXP. YEAR" />
-          </Col>
-        </Row>
-        <FloatingTextInput value={this.state.ccv} onChange={event => this.inputOnChange('ccv', event)} capitalize labelText="CVC/CCV" />
-        <FloatingTextInput
-          value={this.state.zipCode}
-          onChange={event => this.inputOnChange('zipCode', event)}
-          capitalize
-          style={styles.inputGroup}
-          labelText="ZIP CODE"
-        />*/}
+        {this.state.card ? this.renderCardInfo() : <Checkout updatingCard={this.state.updatingCard}/>}
+        {this.state.updatingCard ? (
+          <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelEditCard(e)} color="secondary">
+            CANCEL
+          </StrokeButton>
+        ) : null}
       </Fragment>
     );
   };
@@ -563,7 +575,7 @@ const styles = {
     marginTop: Padding.H2,
   },
   header: {
-    color: Colors.Gray,
+    color: Colors.gray,
     marginTop: Padding.V,
   },
   loadingBtnContainer: {
@@ -586,13 +598,23 @@ const styles = {
   changeProfilePicButton: {
     flex: 1,
     alignSelf: 'center',
-    marginTop: Padding.H2,
   },
   cancelButton: {
     flex: 1,
     alignSelf: 'center',
     marginTop: Padding.H2,
-    color: Colors.Gray,
+    color: Colors.gray,
+  },
+  cardContainer: {
+    backgroundColor: Colors.white,
+    borderRadius: BorderRadius.M,
+    paddingTop: Padding.H2,
+    paddingBottom: Padding.H2,
+    paddingLeft: Padding.H2,
+    paddingRight: Padding.H2,
+  },
+  cardText: {
+    color: Colors.secondary,
   },
 };
 

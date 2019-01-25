@@ -12,4 +12,13 @@ export interface IUser {
   stripeToken?: string;
   stripeUid?: string;
   membershipPeriodEnd?: number;
+  card?: ICreditCard;
+}
+
+export interface ICreditCard {
+  id?: string;
+  brand?: string;
+  expMonth?: number;
+  expYear?: number;
+  last4?: string;
 }

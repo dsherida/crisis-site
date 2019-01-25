@@ -9,6 +9,6 @@ export const CommonStyle = {
   },
   container: {
     height: '100%',
-    backgroundColor: Colors.Secondary,
+    backgroundColor: Colors.secondary,
   },
 };

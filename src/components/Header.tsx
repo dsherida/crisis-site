@@ -57,7 +57,7 @@ class Header extends React.Component<Props, State> {
       <Row>
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={PLAYERS}>
-            <CrisisButton color={Colors.Primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
+            <CrisisButton color={Colors.primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
               PLAYERS
             </CrisisButton>
           </Link>
@@ -68,7 +68,7 @@ class Header extends React.Component<Props, State> {
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={PROFILE}>
             <CrisisButton
-              color={Colors.Primary}
+              color={Colors.primary}
               textStyle={this.isProfileRoute() ? styles.activeLink : styles.navLink}
               onClick={this.loginRegisterOnClick}
             >
@@ -85,7 +85,7 @@ class Header extends React.Component<Props, State> {
       <Row>
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={PLAYERS}>
-            <CrisisButton color={Colors.Primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
+            <CrisisButton color={Colors.primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
               PLAYERS
             </CrisisButton>
           </Link>
@@ -96,7 +96,7 @@ class Header extends React.Component<Props, State> {
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={LOGIN_REGISTER}>
             <CrisisButton
-              color={Colors.Primary}
+              color={Colors.primary}
               textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}
               onClick={this.loginRegisterOnClick}
             >
@@ -129,7 +129,7 @@ const styles = {
   container: {
     width: '100%',
     height: '100%',
-    background: `linear-gradient(to bottom, ${Colors.SecondaryDark} 0%, ${Colors.PrimaryTransparent} 50%, ${Colors.SecondaryDark} 100%)`,
+    background: `linear-gradient(to bottom, ${Colors.secondaryDark} 0%, ${Colors.primaryTransparent} 50%, ${Colors.secondaryDark} 100%)`,
   },
   imageRow: {
     justifyContent: 'center',
@@ -144,7 +144,7 @@ const styles = {
   },
   navLink: {},
   activeLink: {
-    color: Colors.Primary,
+    color: Colors.primary,
   },
 };
 

@@ -26,13 +26,13 @@ const LinkButton: SFC<Props> = props => {
 const styles = {
   default: {
     width: '100%',
-    backgroundColor: Colors.Transparent,
+    backgroundColor: Colors.transparent,
     cursor: 'pointer',
     borderWidth: 0,
     boxShadow: 'none',
   },
   text: {
-    color: Colors.Primary,
+    color: Colors.primary,
     textDecorationLine: 'underline',
     textAlign: 'center' as TextAlignProperty,
   },

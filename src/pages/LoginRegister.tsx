@@ -117,7 +117,7 @@ class LoginRegister extends React.Component<Props, State> {
         ) : null}
         <div className="d-flex" style={styles.loadingBtnContainer}>
           {this.state.loginLoading ? (
-            <ReactLoading type="balls" color={Colors.Primary} />
+            <ReactLoading type="balls" color={Colors.primary} />
           ) : (
             <Button
               type="submit"
@@ -189,7 +189,7 @@ class LoginRegister extends React.Component<Props, State> {
         ) : null}
         <div className="d-flex" style={styles.loadingBtnContainer}>
           {this.state.passwordResetLoading ? (
-            <ReactLoading type="balls" color={Colors.Primary} />
+            <ReactLoading type="balls" color={Colors.primary} />
           ) : (
             <Button
               type="submit"
@@ -276,7 +276,7 @@ class LoginRegister extends React.Component<Props, State> {
         ) : null}
         <div className="d-flex" style={styles.loadingBtnContainer}>
           {this.state.registerLoading ? (
-            <ReactLoading type="balls" color={Colors.Primary} />
+            <ReactLoading type="balls" color={Colors.primary} />
           ) : (
             <Button
               type="submit"
@@ -360,14 +360,14 @@ const styles = {
     height: '100%',
   },
   header: {
-    color: Colors.White,
+    color: Colors.white,
     marginTop: Padding.V,
   },
   inputGroup: {
     marginTop: Padding.H2,
   },
   description: {
-    color: Colors.Beige,
+    color: Colors.beige,
   },
   loadingBtnContainer: {
     justifyContent: 'center',
@@ -381,7 +381,7 @@ const styles = {
     paddingTop: Padding.V,
     paddingLeft: Padding.V,
     zIndex: 1,
-    background: `linear-gradient(to right, ${Colors.PrimaryLightTransparent} 0%, ${Colors.Secondary} 100%)`,
+    background: `linear-gradient(to right, ${Colors.primaryLightTransparent} 0%, ${Colors.secondary} 100%)`,
     paddingBottom: Padding.V,
   },
   button: {

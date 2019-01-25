@@ -25,13 +25,13 @@ const CrisisButton: SFC<Props> = props => {
 
 const styles = {
   dStyle: {
-    backgroundColor: Colors.Transparent,
+    backgroundColor: Colors.transparent,
     cursor: 'pointer',
     borderWidth: 0,
     boxShadow: 'none',
   },
   dTextStyle: {
-    color: Colors.Gray,
+    color: Colors.gray,
   },
 };
 

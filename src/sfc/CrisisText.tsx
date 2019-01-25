@@ -108,7 +108,7 @@ export const headerStyles = {
 export const paragraphStyles = {
   default: {
     fontFamily: 'Quicksand_Bold',
-    color: Colors.White,
+    color: Colors.white,
   },
 };
 

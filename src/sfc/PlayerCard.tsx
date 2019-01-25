@@ -36,7 +36,7 @@ const PlayerCard: SFC<Props> = props => {
           width: PLAYER_CARD_HEIGHT,
           opacity: 0.34,
           borderRadius: BORDER_RADIUS,
-          background: `linear-gradient(to bottom, ${Colors.Primary} 0%, ${Colors.Secondary} 100%)`,
+          background: `linear-gradient(to bottom, ${Colors.primary} 0%, ${Colors.secondary} 100%)`,
         }}
       />
       <div
@@ -56,7 +56,7 @@ const PlayerCard: SFC<Props> = props => {
           <CursiveText size={FontSize.XL} style={styles.number}>
             {props.number ? props.number : '00'}
           </CursiveText>
-          <div style={{width: '2px', height: '80px', backgroundColor: Colors.Primary, marginLeft: Padding.H2}} />
+          <div style={{width: '2px', height: '80px', backgroundColor: Colors.primary, marginLeft: Padding.H2}} />
           <Col style={styles.namewrapper}>
             <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.name}>
               {props.first ? props.first : 'XXX'}
@@ -82,8 +82,8 @@ const styles = {
     boxShadow: crisisGlow(),
     borderStyle: 'solid',
     borderWidth: '1px',
-    borderColor: Colors.PrimaryDark,
-    backgroundColor: Colors.Black,
+    borderColor: Colors.primaryDark,
+    backgroundColor: Colors.black,
     width: PLAYER_CARD_HEIGHT,
     height: PLAYER_CARD_HEIGHT,
     borderRadius: BORDER_RADIUS,
@@ -92,23 +92,23 @@ const styles = {
     marginLeft: Padding.H2,
   },
   number: {
-    color: Colors.Primary,
+    color: Colors.primary,
   },
   name: {
-    color: Colors.Beige,
+    color: Colors.beige,
   },
   last: {
     marginTop: -15,
   },
   position: {
     marginTop: -10,
-    color: Colors.White,
+    color: Colors.white,
   },
   division: {
     marginTop: Padding.H2,
     marginLeft: Padding.H2,
-    color: Colors.Primary,
-    backgroundColor: Colors.White,
+    color: Colors.primary,
+    backgroundColor: Colors.white,
     borderRadius: BorderRadius.S,
     width: '35%',
     textAlign: 'center' as TextAlignProperty,

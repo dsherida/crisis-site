@@ -1,18 +1,18 @@
 /* Colors */
 export const Colors = {
-  Primary: '#f45722',
-  PrimaryLightTransparent: '#5e3122',
-  PrimaryDark: '#bf3816',
-  PrimaryTransparent: '#2c2321',
-  Secondary: '#242222',
-  SecondaryDark: '#1b1919',
-  Black: 'black',
-  White: '#fff',
-  Beige: '#f2cfb4',
-  Tan: '#fbba85',
-  Gray: '#988080',
-  Red: '#c01616',
-  Transparent: '#00000000',
+  primary: '#f45722',
+  primaryLightTransparent: '#5e3122',
+  primaryDark: '#bf3816',
+  primaryTransparent: '#2c2321',
+  secondary: '#242222',
+  secondaryDark: '#1b1919',
+  black: 'black',
+  white: '#fff',
+  beige: '#f2cfb4',
+  tan: '#fbba85',
+  gray: '#988080',
+  red: '#c01616',
+  transparent: '#00000000',
 };
 
 /* Margins + Padding */
@@ -23,6 +23,7 @@ export const Padding = {
   H: DefaultPadding / 2,
   H2: DefaultPadding / 4,
   V2: DefaultPadding / 2,
+  V4: DefaultPadding / 4,
 };
 
 /* Heights + Widths */

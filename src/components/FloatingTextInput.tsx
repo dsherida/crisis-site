@@ -57,7 +57,7 @@ export default class FloatingTextInput extends Component<Props, State> {
 
 const styles = {
   container: {
-    backgroundColor: Colors.Beige,
+    backgroundColor: Colors.beige,
     borderRadius: BorderRadius.S,
   },
   label: {
@@ -65,19 +65,19 @@ const styles = {
     marginLeft: Padding.H2,
   },
   labelHeader: {
-    color: Colors.Secondary,
+    color: Colors.secondary,
     marginBottom: 0,
   },
   input: {
     paddingLeft: Padding.H2,
     paddingRight: Padding.H2,
     outline: 'none',
-    backgroundColor: Colors.Transparent,
+    backgroundColor: Colors.transparent,
     highlight: 0,
     width: '100%',
     borderWidth: 0,
     boxShadow: 'none',
     fontSize: getFontSize(FontSize.M),
-    color: Colors.Primary,
+    color: Colors.primary,
   },
 };

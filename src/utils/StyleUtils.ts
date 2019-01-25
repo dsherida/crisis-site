@@ -21,4 +21,4 @@ export const BorderRadius = {
   XL: 12,
 };
 
-export const crisisGlow = (color: string = Colors.Primary) => `0px 0px 30px ${color}`;
+export const crisisGlow = (color: string = Colors.primary) => `0px 0px 30px ${color}`;
