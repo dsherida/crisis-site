@@ -107,7 +107,7 @@ const styles = {
   division: {
     marginTop: Padding.H2,
     marginLeft: Padding.H2,
-    color: Colors.primary,
+    color: Colors.black,
     backgroundColor: Colors.white,
     borderRadius: BorderRadius.S,
     width: '35%',
