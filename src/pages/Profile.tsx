@@ -171,7 +171,7 @@ class Profile extends React.Component<Props, State> {
         }
       }
 
-      if (card && this.state.card !== card) {
+      if (card && this.state.card !== card && !this.state.updatingCard) {
         this.setState({card});
       }
     }
@@ -498,6 +498,10 @@ class Profile extends React.Component<Props, State> {
     this.setState({card: this.props.sessionStore.firebaseUser.card, updatingCard: false});
   };
 
+  doneUpdatingCard = () => {
+    this.setState({updatingCard: false});
+  };
+
   removeCard = () => {
     console.log('TODO: Implement remove card feature');
   };
@@ -506,7 +510,7 @@ class Profile extends React.Component<Props, State> {
     return (
       <Fragment>
         <div style={styles.cardContainer}>
-          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`${this.state.card.brand} ending in ****${
+          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`${this.state.card.brand} ****${
             this.state.card.last4
           }`}</CrisisText>
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`Exp. ${
@@ -538,7 +542,7 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>
-        {this.state.card ? this.renderCardInfo() : <Checkout updatingCard={this.state.updatingCard}/>}
+        {this.state.card ? this.renderCardInfo() : <Checkout updatingCard={this.state.updatingCard} onDone={this.doneUpdatingCard}/>}
         {this.state.updatingCard ? (
           <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelEditCard(e)} color="secondary">
             CANCEL
@@ -606,7 +610,7 @@ const styles = {
     color: Colors.gray,
   },
   cardContainer: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.beige,
     borderRadius: BorderRadius.M,
     paddingTop: Padding.H2,
     paddingBottom: Padding.H2,

@@ -3,23 +3,26 @@ import {TextAlignProperty} from 'csstype';
 import {inject} from 'mobx-react';
 import * as React from 'react';
 import {ChangeEvent, ComponentClass} from 'react';
+import ReactLoading from 'react-loading';
 import {CardElement, Elements, injectStripe, ReactStripeElements} from 'react-stripe-elements';
 import {compose} from 'recompose';
 import {db} from '../firebase';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import {strokeButtonStyle} from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
-import {Colors} from '../utils/Constants';
+import {Colors, Padding} from '../utils/Constants';
 import DataModelUtils from '../utils/DataModelUtils';
 import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
 import {BorderRadius} from '../utils/StyleUtils';
 
 interface Props extends InjectedStripeProps, SessionStoreProps {
   updatingCard: boolean;
+  onDone: () => void;
 }
 
 interface State {
   paymentError: string;
+  processCardLoading: boolean;
 }
 
 class _PaymentForm extends React.Component<Props, State> {
@@ -27,6 +30,7 @@ class _PaymentForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       paymentError: '',
+      processCardLoading: false,
     };
   }
 
@@ -37,12 +41,35 @@ class _PaymentForm extends React.Component<Props, State> {
   updateCard = async (event: ChangeEvent<any>) => {
     event.preventDefault();
 
-    // TODO: Implement update card
-    console.log('TODO: Implement update card');
+    this.setState({processCardLoading: true});
+
+    if (!this.props.sessionStore.firebaseUser) {
+      alert('Sorry something went wrong, please try again in a few moments...');
+      return;
+    }
+
+    try {
+      const updateCustomerStripeTokenResponse = await this.props.sessionStore.updateCustomerStripeToken(this.props.stripe);
+
+      if (!updateCustomerStripeTokenResponse) {
+        this.setState({
+          paymentError: 'Something went wrong while attempting to update your card info. Please double-check your card info and try again...',
+        });
+      }
+
+      console.log('updateCustomerStripeTokenResponse: ' + JSON.stringify(updateCustomerStripeTokenResponse));
+    } catch (err) {
+      this.setState({paymentError: err.message});
+    }
+
+    this.setState({processCardLoading: false});
+    this.props.onDone();
   };
 
   checkout = async (event: ChangeEvent<any>) => {
     event.preventDefault();
+
+    this.setState({processCardLoading: true});
 
     if (!this.props.sessionStore.firebaseUser) {
       alert('Sorry something went wrong, please try again in a few moments...');
@@ -146,6 +173,9 @@ class _PaymentForm extends React.Component<Props, State> {
     });
 
     this.props.sessionStore.setFirebaseUser({...this.props.sessionStore.firebaseUser, membershipPeriodEnd, stripeUid, card});
+
+    this.setState({processCardLoading: true});
+    this.props.onDone();
   };
 
   render() {
@@ -174,16 +204,22 @@ class _PaymentForm extends React.Component<Props, State> {
           </CrisisText>
         ) : null}
         <CardElement style={style} />
-        <button
-          className="btn-outline-primary"
-          style={{
-            ...strokeButtonStyle.button,
-            borderRadius: BorderRadius.M,
-            cursor: 'pointer',
-          }}
-        >
-          {this.props.updatingCard ? 'UPDATE CARD' : 'ACTIVATE MEMBERSHIP'}
-        </button>
+        <div className="d-flex" style={styles.loadingBtnContainer}>
+          {this.state.processCardLoading ? (
+            <ReactLoading type="balls" color={Colors.primary} />
+          ) : (
+            <button
+              className="btn-outline-primary"
+              style={{
+                ...strokeButtonStyle.button,
+                borderRadius: BorderRadius.M,
+                cursor: 'pointer',
+              }}
+            >
+              {this.props.updatingCard ? 'UPDATE CARD' : 'ACTIVATE MEMBERSHIP'}
+            </button>
+          )}
+        </div>
       </form>
     );
   }
@@ -192,6 +228,11 @@ class _PaymentForm extends React.Component<Props, State> {
 const styles = {
   error: {
     textAlign: 'center' as TextAlignProperty,
+  },
+  loadingBtnContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Padding.H2,
   },
 };
 
@@ -204,13 +245,14 @@ export default PaymentForm;
 
 interface CheckoutProps {
   updatingCard?: boolean;
+  onDone: () => void;
 }
 
 export class Checkout extends React.Component<CheckoutProps> {
   render() {
     return (
       <Elements>
-        <PaymentForm updatingCard={this.props.updatingCard} />
+        <PaymentForm updatingCard={this.props.updatingCard} onDone={this.props.onDone} />
       </Elements>
     );
   }
