@@ -1,9 +1,10 @@
 import {TextAlignProperty} from 'csstype';
 import {inject, observer} from 'mobx-react';
-import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import * as React from 'react';
+import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
+import {injectStripe, ReactStripeElements} from 'react-stripe-elements';
 import {Button, Col, Container, Form, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import FloatingTextInput from '../components/FloatingTextInput';
@@ -19,13 +20,14 @@ import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
 import MembershipStatus from '../sfc/MembershipStatus';
 import PlayerCard from '../sfc/PlayerCard';
-import StrokeButton, {strokeButtonStyle} from '../sfc/StrokeButton';
+import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import {epochToLocalTime} from '../utils/DateUtils';
 import {BorderRadius} from '../utils/StyleUtils';
 import {notEmptyOrNull} from '../utils/Utils';
+import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -59,6 +61,7 @@ interface State {
   periodEnd: Date;
   card: ICreditCard;
   updatingCard: boolean;
+  canceledAt: number;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -95,6 +98,7 @@ class Profile extends React.Component<Props, State> {
       periodEnd: new Date(),
       card: null,
       updatingCard: false,
+      canceledAt: null,
     };
 
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
@@ -117,6 +121,7 @@ class Profile extends React.Component<Props, State> {
           playerImage: user.avatarUrl,
           active: periodEnd >= new Date(),
           periodEnd,
+          canceledAt: user.canceledAt,
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -148,6 +153,7 @@ class Profile extends React.Component<Props, State> {
           active: periodEnd >= new Date(),
           periodEnd,
           card: firebaseUser.card,
+          canceledAt: firebaseUser.canceledAt,
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -526,6 +532,17 @@ class Profile extends React.Component<Props, State> {
     );
   };
 
+  cancelMembership = async () => {
+    if (window.confirm('Are you sure you wish to pause your membership?')) {
+      try {
+        await this.props.sessionStore.cancelSubscription();
+      } catch (err) {
+        console.error('Cancel Membership Error: ' + err.message);
+        alert('Whoops! Something went wrong while trying to cancel your membership. Please try again in a few moments...');
+      }
+    }
+  };
+
   renderMembershipForm = () => {
     let membershipPeriodEnd = new Date().getMilliseconds();
 
@@ -538,11 +555,11 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           MEMBERSHIP
         </CrisisText>
-        <MembershipStatus active={this.state.active} billedNext={epochToLocalTime(membershipPeriodEnd)} />
+        <MembershipStatus active={this.state.active} billedNext={epochToLocalTime(membershipPeriodEnd)} onClick={this.cancelMembership} canceledAt={this.state.canceledAt} />
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>
-        {this.state.card ? this.renderCardInfo() : <Checkout updatingCard={this.state.updatingCard} onDone={this.doneUpdatingCard}/>}
+        {this.state.card ? this.renderCardInfo() : <Checkout updatingCard={this.state.updatingCard} onDone={this.doneUpdatingCard} />}
         {this.state.updatingCard ? (
           <StrokeButton onClick={(e: ChangeEvent<any>) => this.cancelEditCard(e)} color="secondary">
             CANCEL

@@ -3,9 +3,9 @@ import * as React from 'react';
 import {ReactNode, SFC} from 'react';
 import {Col, Row} from 'reactstrap';
 import {Colors, Padding} from '../utils/Constants';
+import {prettyPrintDate} from '../utils/DateUtils';
 import {crisisGlow} from '../utils/StyleUtils';
 import CrisisText, {FontSize, FontType} from './CrisisText';
-import {prettyPrintDate} from '../utils/DateUtils';
 
 interface StatusDotProps {
   actionTitle?: string;
@@ -40,11 +40,25 @@ interface Props {
   children?: ReactNode;
   active: boolean;
   billedNext: Date;
+  onClick: () => void;
+  canceledAt: number;
 }
 
 const MembershipStatus: SFC<Props> = props => {
+  const getBilledNextString = (props: Props) => {
+    let result = '';
+
+    if (props.canceledAt) {
+      result += 'Pauses on ';
+    } else {
+      result += 'Billed next on ';
+    }
+
+    return `${result} ${prettyPrintDate(props.billedNext)}`;
+  };
+
   return (
-    <div style={styles.clickable} onClick={() => console.log('Click!')}>
+    <div style={styles.clickable} onClick={props.onClick}>
       <Row style={styles.container}>
         <StatusDot active={props.active} />
         <Col>
@@ -62,7 +76,7 @@ const MembershipStatus: SFC<Props> = props => {
           </CrisisText>
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.statusSubtext}>
             {props.active
-              ? `Billed next on ${prettyPrintDate(props.billedNext)}`
+              ? getBilledNextString(props)
               : 'Pay now using our Stripe secure checkout and get access to team benefits at your next field outing.'}
           </CrisisText>
         </Col>

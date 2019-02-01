@@ -160,11 +160,12 @@ class _PaymentForm extends React.Component<Props, State> {
     }
 
     const membershipPeriodEnd = subscribeToMembershipResponse.data.response.current_period_end;
+    const subscriptionId = subscribeToMembershipResponse.data.response.id;
 
     // Write the Period End value to Firebase Db
-    db.updateFirebaseUser(uid, {membershipPeriodEnd}, error => {
+    db.updateFirebaseUser(uid, {membershipPeriodEnd, subscriptionId}, error => {
       if (error) {
-        console.error('Error while trying to write the Membership Period End value to Firebase User');
+        console.error('Error while trying to write the Membership Period End value and Subscription ID to Firebase User');
         this.setState({paymentError: error.message});
         return;
       } else {
@@ -172,7 +173,7 @@ class _PaymentForm extends React.Component<Props, State> {
       }
     });
 
-    this.props.sessionStore.setFirebaseUser({...this.props.sessionStore.firebaseUser, membershipPeriodEnd, stripeUid, card});
+    this.props.sessionStore.setFirebaseUser({...this.props.sessionStore.firebaseUser, membershipPeriodEnd, subscriptionId, stripeUid, card});
 
     this.setState({processCardLoading: true});
     this.props.onDone();

@@ -13,6 +13,8 @@ export interface IUser {
   stripeUid?: string;
   membershipPeriodEnd?: number;
   card?: ICreditCard;
+  subscriptionId?: string;
+  canceledAt?: number;
 }
 
 export interface ICreditCard {

@@ -2,6 +2,7 @@ import axios from 'axios';
 import {User} from 'firebase';
 import {action, observable} from 'mobx';
 import {ReactStripeElements} from 'react-stripe-elements';
+import CrisisApi from '../CrisisApi';
 import {db} from '../firebase';
 import {IUser} from '../models/User';
 import StripeProps = ReactStripeElements.StripeProps;
@@ -89,6 +90,32 @@ class SessionStore {
       return Promise.resolve(updateCustomerCardResponse);
     } catch (err) {
       console.error('An error occurred while attempting to update the Customer Token on Stripe');
+      return Promise.reject(err.message);
+    }
+  };
+
+  @action
+  cancelSubscription = async (): Promise<any | Error> => {
+    try {
+      const cancelSubscriptionResponse = await CrisisApi.cancelSubscription(this.firebaseUser.subscriptionId);
+
+      console.log('cancelSubscriptionResponse: ' + JSON.stringify(cancelSubscriptionResponse));
+
+      const canceledAt = cancelSubscriptionResponse.data.response.canceled_at;
+
+      this.setFirebaseUser({...this.firebaseUser, canceledAt});
+
+      db.updateFirebaseUser(this.authUser.uid, {canceledAt}, error => {
+        if (error) {
+          console.error('Error while trying to write Canceled At value to Firebase User');
+          return Promise.reject(error.message);
+        } else {
+          console.log('Successfully saved the Canceled At value to Firebase User.');
+        }
+      });
+
+      return Promise.resolve(cancelSubscriptionResponse);
+    } catch (err) {
       return Promise.reject(err.message);
     }
   };
