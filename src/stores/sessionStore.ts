@@ -119,6 +119,34 @@ class SessionStore {
       return Promise.reject(err.message);
     }
   };
+
+  @action
+  resumeSubscription = async (): Promise<any | Error> => {
+    try {
+      const resumeSubscriptionResponse = await CrisisApi.resumeSubscription(this.firebaseUser.subscriptionId);
+
+      const {cancel_at_period_end} = resumeSubscriptionResponse.data.response;
+
+      if (cancel_at_period_end) {
+        return Promise.reject('Failed to resume membership. Stripe cancel_at_period_end was TRUE, expected to be FALSE.');
+      }
+
+      this.setFirebaseUser({...this.firebaseUser, canceledAt: null});
+
+      db.updateFirebaseUser(this.authUser.uid, {canceledAt: null}, error => {
+        if (error) {
+          console.error('Error while trying to write canceledAt value to Firebase User');
+          return Promise.reject(error.message);
+        } else {
+          console.log('Successfully saved the canceledAt value to Firebase User.');
+        }
+      });
+
+      return Promise.resolve(resumeSubscriptionResponse);
+    } catch (err) {
+      return Promise.reject(err.message);
+    }
+  };
 }
 
 export type SessionStoreProps = {sessionStore?: SessionStore};

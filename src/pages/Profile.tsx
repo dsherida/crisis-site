@@ -167,6 +167,7 @@ class Profile extends React.Component<Props, State> {
   componentWillUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): void {
     if (nextProps.sessionStore.firebaseUser) {
       const {membershipPeriodEnd, card} = nextProps.sessionStore.firebaseUser;
+
       if (membershipPeriodEnd) {
         const periodEnd = epochToLocalTime(membershipPeriodEnd);
         if (periodEnd.getTime() !== this.state.periodEnd.getTime()) {
@@ -516,9 +517,9 @@ class Profile extends React.Component<Props, State> {
     return (
       <Fragment>
         <div style={styles.cardContainer}>
-          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`${this.state.card.brand} ****${
+          <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`${this.state.card.brand} (****${
             this.state.card.last4
-          }`}</CrisisText>
+          })`}</CrisisText>
           <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.cardText}>{`Exp. ${
             this.state.card.expMonth
           }/${this.state.card.expYear.toString().substring(2, 4)}`}</CrisisText>
@@ -526,14 +527,14 @@ class Profile extends React.Component<Props, State> {
         <LinkButton onClick={this.updateCardInfo} textStyle={{color: Colors.white}} style={{marginTop: Padding.V4}}>
           UPDATE CARD INFO
         </LinkButton>
-        {/*TODO: Implement Remove Card, too many edge cases for V1 */}
+        {/*TODO: Implement Remove Card, not for V1 */}
         {/*<LinkButton onClick={this.removeCard}>REMOVE CARD</LinkButton>*/}
       </Fragment>
     );
   };
 
   cancelMembership = async () => {
-    if (window.confirm('Are you sure you wish to pause your membership?')) {
+    if (window.confirm('Are you sure you wish to PAUSE your membership? You will still be billed at the end of the current membership period, but after that all future payments will be canceled.')) {
       try {
         await this.props.sessionStore.cancelSubscription();
       } catch (err) {
@@ -543,7 +544,22 @@ class Profile extends React.Component<Props, State> {
     }
   };
 
+  resumeMembership = async () => {
+    if (window.confirm('RESUME membership? Payments will resume at the end of your normal membership period.')) {
+      try {
+        await this.props.sessionStore.resumeSubscription();
+      } catch (err) {
+        console.error('Resume Membership Error: ' + err.message);
+        alert('Whoops! Something went wrong while trying to resume your membership. Please try again in a few moments...');
+      }
+    }
+  };
+
   renderMembershipForm = () => {
+    if (!this.props.sessionStore.firebaseUser) {
+      return null;
+    }
+
     let membershipPeriodEnd = new Date().getMilliseconds();
 
     if (this.props.sessionStore.firebaseUser) {
@@ -555,7 +571,12 @@ class Profile extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           MEMBERSHIP
         </CrisisText>
-        <MembershipStatus active={this.state.active} billedNext={epochToLocalTime(membershipPeriodEnd)} onClick={this.cancelMembership} canceledAt={this.state.canceledAt} />
+        <MembershipStatus
+          active={this.state.active}
+          billedNext={epochToLocalTime(membershipPeriodEnd)}
+          onClick={this.state.active ? (this.props.sessionStore.firebaseUser.canceledAt ? this.resumeMembership : this.cancelMembership) : null}
+          canceledAt={this.props.sessionStore.firebaseUser ? this.props.sessionStore.firebaseUser.canceledAt : null}
+        />
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>

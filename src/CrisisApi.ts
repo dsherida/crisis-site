@@ -6,4 +6,10 @@ export default class CrisisApi {
       subscriptionId,
     });
   }
+
+  static resumeSubscription(subscriptionId: string) {
+    return axios.post('https://us-central1-crisis-site.cloudfunctions.net/resumeSubscription', {
+      subscriptionId,
+    });
+  }
 }

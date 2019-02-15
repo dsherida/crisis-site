@@ -58,7 +58,7 @@ const MembershipStatus: SFC<Props> = props => {
   };
 
   return (
-    <div style={styles.clickable} onClick={props.onClick}>
+    <div style={props.active ? styles.clickable : null} onClick={props.onClick}>
       <Row style={styles.container}>
         <StatusDot active={props.active} />
         <Col>
