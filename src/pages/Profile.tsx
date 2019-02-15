@@ -449,13 +449,41 @@ class Profile extends React.Component<Props, State> {
     );
   };
 
+  validateInputs = () => {
+    if (!notEmptyOrNull(this.state.first)) {
+      alert('Firstname cannot be blank!');
+      return false;
+    }
+
+    if (!notEmptyOrNull(this.state.last)) {
+      alert('Lastname cannot be blank!');
+      return false;
+    }
+
+    if (!notEmptyOrNull(this.state.email)) {
+      alert('Email cannot be blank!');
+      return false;
+    }
+
+    if (!notEmptyOrNull(this.state.phone)) {
+      alert('Phone number cannot be blank!');
+      return false;
+    }
+
+    return true;
+  };
+
   saveOnClick = async (event: ChangeEvent<any>) => {
+    if (!this.validateInputs()) {
+      return;
+    }
+
     const updatedUser: IUser = {
       first: this.state.first,
       last: this.state.last,
-      playerNumber: this.state.playerNumber,
-      position: this.state.position,
-      division: this.state.division,
+      playerNumber: this.state.playerNumber ? this.state.playerNumber : null,
+      position: this.state.position ? this.state.position : null,
+      division: this.state.division ? this.state.division : null,
       email: this.state.email,
       phone: this.state.phone,
     };
@@ -534,7 +562,11 @@ class Profile extends React.Component<Props, State> {
   };
 
   cancelMembership = async () => {
-    if (window.confirm('Are you sure you wish to PAUSE your membership? You will still be billed at the end of the current membership period, but after that all future payments will be canceled.')) {
+    if (
+      window.confirm(
+        'Are you sure you wish to PAUSE your membership? You will still be billed at the end of the current membership period, but after that all future payments will be canceled.'
+      )
+    ) {
       try {
         await this.props.sessionStore.cancelSubscription();
       } catch (err) {
