@@ -13,6 +13,7 @@ import PlayerCard from '../sfc/PlayerCard';
 import {UserStoreProps} from '../stores/userStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
+import {epochToLocalTime} from '../utils/DateUtils';
 
 interface State {
   width: number;
@@ -60,18 +61,23 @@ class Players extends React.Component<Props, State> {
 
     return Object.keys(users).map((key: any) => {
       const user = users[key];
-      return (
-        <Col className="col-4" style={styles.playerCardCol}>
-          <PlayerCard
-            image={user.avatarUrl}
-            first={user.first}
-            last={user.last}
-            division={user.division}
-            position={user.position}
-            number={user.playerNumber}
-          />
-        </Col>
-      );
+
+      if (epochToLocalTime(user.membershipPeriodEnd) >= new Date()) {
+        return (
+          <Col className="col-4" style={styles.playerCardCol}>
+            <PlayerCard
+              image={user.avatarUrl}
+              first={user.first}
+              last={user.last}
+              division={user.division}
+              position={user.position}
+              number={user.playerNumber}
+            />
+          </Col>
+        );
+      } else {
+        return null;
+      }
     });
   };
 
