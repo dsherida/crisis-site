@@ -609,6 +609,11 @@ class Profile extends React.Component<Props, State> {
           onClick={this.state.active ? (this.props.sessionStore.firebaseUser.canceledAt ? this.resumeMembership : this.cancelMembership) : null}
           canceledAt={this.props.sessionStore.firebaseUser ? this.props.sessionStore.firebaseUser.canceledAt : null}
         />
+        {this.props.sessionStore.membershipStatusLoading ? (
+          <div className="d-flex" style={styles.loadingBtnContainer}>
+            <ReactLoading type="balls" color={Colors.primary} />
+          </div>
+        ) : null}
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           PAYMENT
         </CrisisText>

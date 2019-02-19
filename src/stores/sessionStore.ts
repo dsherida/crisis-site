@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {User} from 'firebase';
-import {action, observable} from 'mobx';
+import {action, observable, runInAction} from 'mobx';
 import {ReactStripeElements} from 'react-stripe-elements';
 import CrisisApi from '../CrisisApi';
 import {db} from '../firebase';
@@ -18,6 +18,9 @@ class SessionStore {
 
   @observable
   firebaseUser: IUser = null;
+
+  @observable
+  membershipStatusLoading: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -37,6 +40,16 @@ class SessionStore {
   clearSession = () => {
     this.authUser = null;
     this.firebaseUser = null;
+  };
+
+  @action
+  setMembershipStatusLoadingTimeout = (timeout: number = 10000) => {
+    this.membershipStatusLoading = true;
+    setTimeout(() => {
+      runInAction(() => {
+        this.membershipStatusLoading = false;
+      });
+    }, timeout);
   };
 
   @action
@@ -96,6 +109,8 @@ class SessionStore {
 
   @action
   cancelSubscription = async (): Promise<any | Error> => {
+    this.setMembershipStatusLoadingTimeout();
+
     try {
       const cancelSubscriptionResponse = await CrisisApi.cancelSubscription(this.firebaseUser.subscriptionId);
 
@@ -114,14 +129,18 @@ class SessionStore {
         }
       });
 
+      runInAction(() => (this.membershipStatusLoading = false));
       return Promise.resolve(cancelSubscriptionResponse);
     } catch (err) {
+      this.membershipStatusLoading = false;
       return Promise.reject(err.message);
     }
   };
 
   @action
   resumeSubscription = async (): Promise<any | Error> => {
+    this.setMembershipStatusLoadingTimeout();
+
     try {
       const resumeSubscriptionResponse = await CrisisApi.resumeSubscription(this.firebaseUser.subscriptionId);
 
@@ -142,8 +161,10 @@ class SessionStore {
         }
       });
 
+      runInAction(() => (this.membershipStatusLoading = false));
       return Promise.resolve(resumeSubscriptionResponse);
     } catch (err) {
+      this.membershipStatusLoading = false;
       return Promise.reject(err.message);
     }
   };
