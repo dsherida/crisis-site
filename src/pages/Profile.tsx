@@ -19,7 +19,7 @@ import {ICreditCard, IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
 import MembershipStatus from '../sfc/MembershipStatus';
-import PlayerCard from '../sfc/PlayerCard';
+import PlayerCard, {DIVISIONS, POSITIONS} from '../sfc/PlayerCard';
 import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
@@ -370,6 +370,7 @@ class Profile extends React.Component<Props, State> {
           value={this.state.position}
           onChange={event => this.inputOnChange('position', event)}
           style={styles.inputGroup}
+          capitalize
           labelText="POSITION"
           maxLength={12}
         />
@@ -377,6 +378,7 @@ class Profile extends React.Component<Props, State> {
           value={this.state.division}
           onChange={event => this.inputOnChange('division', event)}
           style={styles.inputGroup}
+          capitalize
           labelText="DIVISION"
           maxLength={12}
         />
@@ -449,6 +451,24 @@ class Profile extends React.Component<Props, State> {
     );
   };
 
+  isValidPosition = () => {
+    if (POSITIONS.find(position => position.toLowerCase() === this.state.position.toLowerCase())) {
+      return true;
+    }
+
+    alert('Position must be one of the following values: \n' + POSITIONS.join('\n'));
+    return false;
+  };
+
+  isValidDivision = () => {
+    if (DIVISIONS.find(division => division.toLowerCase() === this.state.division.toLowerCase())) {
+      return true;
+    }
+
+    alert('Division must be one of the following values: \n' + DIVISIONS.join('\n'));
+    return false;
+  };
+
   validateInputs = () => {
     if (!notEmptyOrNull(this.state.first)) {
       alert('Firstname cannot be blank!');
@@ -467,6 +487,14 @@ class Profile extends React.Component<Props, State> {
 
     if (!notEmptyOrNull(this.state.phone)) {
       alert('Phone number cannot be blank!');
+      return false;
+    }
+
+    if (this.state.position && !this.isValidPosition()) {
+      return false;
+    }
+
+    if (this.state.division && !this.isValidDivision()) {
       return false;
     }
 
@@ -497,7 +525,7 @@ class Profile extends React.Component<Props, State> {
           saveError: e.message,
         });
       } else {
-        alert('User was saved successfully');
+        alert('Changes were saved successfully!');
       }
     });
   };

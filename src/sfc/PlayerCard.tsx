@@ -17,6 +17,50 @@ interface Props {
   division?: string;
 }
 
+export const DIVISIONS = ['Unranked', 'D5', 'D4', 'D3', 'D2', 'D1', 'Semi-Pro', 'Pro'];
+
+const transformDivision = (division: string) => {
+  switch (division.toLowerCase()) {
+    default:
+      return division;
+    case DIVISIONS[1].toLowerCase():
+      return DIVISIONS[1];
+    case DIVISIONS[2].toLowerCase():
+      return DIVISIONS[2];
+    case DIVISIONS[3].toLowerCase():
+      return DIVISIONS[3];
+    case DIVISIONS[4].toLowerCase():
+      return DIVISIONS[4];
+    case DIVISIONS[5].toLowerCase():
+      return DIVISIONS[5];
+    case DIVISIONS[6].toLowerCase():
+      return DIVISIONS[6];
+    case DIVISIONS[7].toLowerCase():
+      return DIVISIONS[7];
+  }
+};
+
+export const POSITIONS = ['All-Around', 'Snake Front', 'Snake Fill', 'Dorito Front', 'Dorito Fill', 'Home', 'Middle'];
+
+const transformPosition = (position: string) => {
+  switch (position.toLowerCase()) {
+    default:
+      return position;
+    case POSITIONS[1].toLowerCase():
+      return POSITIONS[1];
+    case POSITIONS[2].toLowerCase():
+      return POSITIONS[2];
+    case POSITIONS[3].toLowerCase():
+      return POSITIONS[3];
+    case POSITIONS[4].toLowerCase():
+      return POSITIONS[4];
+    case POSITIONS[5].toLowerCase():
+      return POSITIONS[5];
+    case POSITIONS[6].toLowerCase():
+      return POSITIONS[6];
+  }
+};
+
 const PlayerCard: SFC<Props> = props => {
   return (
     <div
@@ -50,7 +94,7 @@ const PlayerCard: SFC<Props> = props => {
         }}
       >
         <CursiveText style={styles.division} size={FontSize.XS}>
-          {props.division ? props.division : 'Unranked'}
+          {props.division ? transformDivision(props.division) : 'Unranked'}
         </CursiveText>
         <Row className="no-gutters" style={styles.playerInfo}>
           <CursiveText size={FontSize.XL} style={styles.number}>
@@ -65,7 +109,7 @@ const PlayerCard: SFC<Props> = props => {
               {props.last ? props.last : 'XXX'}
             </CrisisText>
             <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={{...styles.position}}>
-              {props.position ? props.position : 'All Around'}
+              {props.position ? transformPosition(props.position) : 'All-Around'}
             </CrisisText>
           </Col>
         </Row>
