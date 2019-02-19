@@ -14,6 +14,7 @@ import {Colors, Padding} from '../utils/Constants';
 import DataModelUtils from '../utils/DataModelUtils';
 import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
 import {BorderRadius} from '../utils/StyleUtils';
+import {notEmptyOrNull} from '../utils/Utils';
 
 interface Props extends InjectedStripeProps, SessionStoreProps {
   updatingCard: boolean;
@@ -111,45 +112,51 @@ class _PaymentForm extends React.Component<Props, State> {
       if (e) {
         console.log('Something went wrong while trying to save the Stripe token to SessionStore.firebaseUser');
         this.setState({paymentError: e.message});
+        return;
       } else {
         console.log('User was updated with their new Stripe Token and Credit Card');
       }
     });
 
-    // Create a Stripe Customer
+    // Create a Stripe Customer if needed
     let createStripeCustomerResponse: any;
+    let stripeUid: string;
 
-    try {
-      createStripeCustomerResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/createCustomer`, {
-        email,
-        token: stripeToken,
-      });
+    if (!notEmptyOrNull(this.props.sessionStore.firebaseUser.stripeUid)) {
+      try {
+        createStripeCustomerResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/createCustomer`, {
+          email,
+          token: stripeToken,
+        });
 
-      console.log('createStripeCustomerResponse: ' + JSON.stringify(createStripeCustomerResponse));
-    } catch (err) {
-      console.error('An error occurred while trying to create a new Stripe Customer.');
-      this.setState({paymentError: err.message});
-      return;
-    }
-
-    const stripeUid = createStripeCustomerResponse.data.customer.id;
-
-    db.updateFirebaseUser(uid, {stripeUid}, error => {
-      if (error) {
-        console.error('Error while trying to set Stripe UID on Firebase User. Error: ' + error);
-        this.setState({paymentError: error.message});
+        console.log('createStripeCustomerResponse: ' + JSON.stringify(createStripeCustomerResponse));
+      } catch (err) {
+        console.error('An error occurred while trying to create a new Stripe Customer.');
+        this.setState({paymentError: err.message});
         return;
-      } else {
-        console.log('Successfully updated Firebase User with Stripe UID');
       }
-    });
+
+      stripeUid = createStripeCustomerResponse.data.customer.id;
+
+      db.updateFirebaseUser(uid, {stripeUid}, error => {
+        if (error) {
+          console.error('Error while trying to set Stripe UID on Firebase User. Error: ' + error);
+          this.setState({paymentError: error.message});
+          return;
+        } else {
+          console.log('Successfully updated Firebase User with Stripe UID');
+        }
+      });
+    } else {
+      stripeUid = this.props.sessionStore.firebaseUser.stripeUid;
+    }
 
     // Subscribe to the Membership Plan in Stripe
     let subscribeToMembershipResponse: any;
 
     try {
       subscribeToMembershipResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/subscribeToPlan`, {
-        customerId: createStripeCustomerResponse.data.customer.id,
+        customerId: stripeUid,
         planId: 'plan_EL3YNV4Iha9VQR',
       });
 
@@ -157,6 +164,7 @@ class _PaymentForm extends React.Component<Props, State> {
     } catch (err) {
       console.error('An error occurred while attempting to subscribe to Stripe plan.');
       this.setState({paymentError: err.message});
+      return;
     }
 
     const membershipPeriodEnd = subscribeToMembershipResponse.data.response.current_period_end;
