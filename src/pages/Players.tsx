@@ -67,7 +67,7 @@ class Players extends React.Component<Props, State> {
 
       if (epochToLocalTime(user.membershipPeriodEnd) >= new Date()) {
         return (
-          <Col className="col-4" style={styles.playerCardCol}>
+          <Col xs={12} sm={6} xl={4} style={styles.playerCardCol}>
             <PlayerCard
               image={user.avatarUrl}
               first={user.first}

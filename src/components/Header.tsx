@@ -1,8 +1,9 @@
+import {AlignSelfProperty, VerticalAlignProperty} from 'csstype';
 import {inject, observer} from 'mobx-react';
-import {Fragment} from 'react';
 import * as React from 'react';
+import {Fragment} from 'react';
 import {Link, RouteProps, withRouter} from 'react-router-dom';
-import {Col, Container, Row} from 'reactstrap';
+import {Col, Collapse, Container, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import {Assets} from '../assets';
 import {HOME, LOGIN_REGISTER, PLAYERS, PROFILE} from '../constants/routes';
@@ -17,6 +18,8 @@ interface Props extends RouteProps, SessionStoreProps {}
 interface State {
   currentRoute: string;
   width: number;
+  height: number;
+  isOpen: boolean;
 }
 
 class Header extends React.Component<Props, State> {
@@ -28,6 +31,8 @@ class Header extends React.Component<Props, State> {
     this.state = {
       currentRoute: pathname,
       width: 0,
+      height: 0,
+      isOpen: false,
     };
   }
 
@@ -37,7 +42,7 @@ class Header extends React.Component<Props, State> {
   }
 
   updateWindowDimensions = () => {
-    this.setState({width: window.innerWidth});
+    this.setState({width: window.innerWidth, height: window.innerHeight});
   };
 
   componentWillUnmount() {
@@ -68,18 +73,21 @@ class Header extends React.Component<Props, State> {
     return this.state.currentRoute === PROFILE;
   };
 
+  toggle = () => {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  };
+
   navigationAuth = () => {
     return (
-      <Row>
+      <Fragment>
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={PLAYERS}>
             <CrisisButton color={Colors.primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
               PLAYERS
             </CrisisButton>
           </Link>
-        </Col>
-        <Col className="d-flex" style={styles.imageRow}>
-          <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
         </Col>
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={PROFILE}>
@@ -92,22 +100,19 @@ class Header extends React.Component<Props, State> {
             </CrisisButton>
           </Link>
         </Col>
-      </Row>
+      </Fragment>
     );
   };
 
   navigationNonAuth = () => {
     return (
-      <Row>
+      <Fragment>
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={PLAYERS}>
             <CrisisButton color={Colors.primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
               PLAYERS
             </CrisisButton>
           </Link>
-        </Col>
-        <Col className="d-flex" style={styles.imageRow}>
-          <img style={{...styles.crisisLogo, position: 'absolute'}} src={Assets.src.crisis_logo} />
         </Col>
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={LOGIN_REGISTER}>
@@ -120,7 +125,7 @@ class Header extends React.Component<Props, State> {
             </CrisisButton>
           </Link>
         </Col>
-      </Row>
+      </Fragment>
     );
   };
 
@@ -132,9 +137,14 @@ class Header extends React.Component<Props, State> {
 
   render() {
     return (
-      <div style={styles.container}>
+      <div className="d-flex justify-content-center align-items-center" style={{...styles.container, height: this.state.height / 2}}>
         <BootstrapSizeClassHelper width={this.state.width} />
-        <Container>{this.navigation()}</Container>
+        <Container>
+          <Row className="justify-content-center">
+            <img style={{height: this.state.height / 3}} src={Assets.src.crisis_logo} />
+          </Row>
+          <Row>{this.navigation()}</Row>
+        </Container>
       </div>
     );
   }
@@ -144,17 +154,11 @@ export const HeaderHeight = 200;
 
 const styles = {
   container: {
-    width: '100%',
-    height: '100%',
     background: `linear-gradient(to bottom, ${Colors.secondaryDark} 0%, ${Colors.primaryTransparent} 50%, ${Colors.secondaryDark} 100%)`,
   },
   imageRow: {
     justifyContent: 'center',
     height: HeaderHeight,
-  },
-  crisisLogo: {
-    height: '110%',
-    zIndex: 1000,
   },
   main: {
     bottom: 0,

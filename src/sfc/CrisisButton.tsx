@@ -16,7 +16,7 @@ const CrisisButton: SFC<Props> = props => {
   return (
     <Button outline color={'primary'} style={{...styles.dStyle, ...props.style}} onClick={props.onClick}>
       <h1
-        style={{...getFontTypeStyle(FontType.Header), fontSize: getFontSize(FontSize.L), ...styles.dTextStyle, ...props.textStyle}}
+        style={{...getFontTypeStyle(FontType.Header), fontSize: getFontSize(FontSize.M), ...styles.dTextStyle, ...props.textStyle}}
         children={props.children}
       />
     </Button>

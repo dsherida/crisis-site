@@ -11,16 +11,23 @@ interface Props {
 }
 
 const getBootstrapSizeClass = (width: number) => {
-  if (width < 768) {
-    return 'xs';
+  if (width < 576) {
+    console.log('sm');
+    return `xs (${width})`;
+  } else if (width >= 576 && width < 768) {
+    console.log('sm');
+    return `sm (${width})`;
   } else if (width >= 768 && width < 992) {
-    return 'sm';
+    console.log('md');
+    return `md (${width})`;
   } else if (width >= 992 && width < 1200) {
-    return 'md';
+    console.log('lg');
+    return `lg (${width})`;
   } else if (width >= 1200) {
-    return 'lg';
+    console.log('xl');
+    return `xl ${width}`;
   } else {
-    return 'unknown size class';
+    return `unknown (${width})`;
   }
 };
 
