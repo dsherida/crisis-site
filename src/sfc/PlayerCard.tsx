@@ -64,6 +64,7 @@ const transformPosition = (position: string) => {
 const PlayerCard: SFC<Props> = props => {
   return (
     <div
+      className="no-gutters"
       {...props}
       style={{
         ...styles.default,
@@ -73,12 +74,11 @@ const PlayerCard: SFC<Props> = props => {
         backgroundPosition: 'center',
       }}
     >
-      <div
+      <Col
         style={{
-          position: 'absolute',
-          height: PLAYER_CARD_HEIGHT,
-          width: PLAYER_CARD_HEIGHT,
-          opacity: 0.34,
+          width: '100%',
+          height: '100%',
+          opacity: 0.24,
           borderRadius: BORDER_RADIUS,
           background: `linear-gradient(to bottom, ${Colors.primary} 0%, ${Colors.secondary} 100%)`,
         }}
@@ -128,7 +128,7 @@ const styles = {
     borderWidth: '1px',
     borderColor: Colors.primaryDark,
     backgroundColor: Colors.black,
-    width: PLAYER_CARD_HEIGHT,
+    // width: PLAYER_CARD_HEIGHT,
     height: PLAYER_CARD_HEIGHT,
     borderRadius: BORDER_RADIUS,
   },
