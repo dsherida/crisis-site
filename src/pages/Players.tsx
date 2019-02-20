@@ -14,6 +14,7 @@ import {UserStoreProps} from '../stores/userStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import {epochToLocalTime} from '../utils/DateUtils';
+import {config} from '../firebase/firebase';
 
 interface State {
   width: number;
@@ -38,6 +39,8 @@ class Players extends React.Component<Props, State> {
 
   async componentDidMount() {
     const {userStore} = this.props;
+
+    console.log('config: ' + JSON.stringify(config));
 
     try {
       const snapshot = await db.onceGetUsers();
