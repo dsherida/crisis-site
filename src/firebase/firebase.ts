@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
+import {Config} from '../Config';
 
 const devConfig = {
   apiKey: 'AIzaSyCU59uBQaaxeCPVAbc-Vnhlzh_rlJ7jcHk',
@@ -21,10 +22,10 @@ const prodConfig = {
   messagingSenderId: '29531137490',
 };
 
-export const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
+export const firebaseConfig = Config.env === 'prod' ? prodConfig : devConfig;
 
 if (!firebase.apps.length) {
-  firebase.initializeApp(config);
+  firebase.initializeApp(firebaseConfig);
 }
 
 const db = firebase.database();
