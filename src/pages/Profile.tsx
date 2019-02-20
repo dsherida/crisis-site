@@ -272,21 +272,22 @@ class Profile extends React.Component<Props, State> {
           font={{type: FontType.Header, size: FontSize.XS}}
           style={{
             ...styles.header,
-            paddingLeft: '12px',
           }}
         >
           PLAYER CARD
         </CrisisText>
-        <Col>
-          <PlayerCard
-            image={this.state.playerImage}
-            first={this.state.first}
-            last={this.state.last}
-            number={this.state.playerNumber}
-            position={this.state.position}
-            division={this.state.division}
-          />
-        </Col>
+        <Row className="no-gutters">
+          <Col xs={12}>
+            <PlayerCard
+              image={this.state.playerImage}
+              first={this.state.first}
+              last={this.state.last}
+              number={this.state.playerNumber}
+              position={this.state.position}
+              division={this.state.division}
+            />
+          </Col>
+        </Row>
         <input
           type="file"
           ref={ref => {
@@ -660,8 +661,12 @@ class Profile extends React.Component<Props, State> {
       <div style={{...CommonStyle.container, ...styles.container, minHeight: this.state.height}}>
         <Container>
           <Row className="no-gutters">
-            <Col xs={12} md={{offset: 2, size: 8}} lg={{offset: 4, size: 6}} xl={{offset: 0, size: 4}} style={styles.profileColumn}>{this.renderMembershipForm()}</Col>
-            <Col xs={12} md={6} lg={6} xl={4} style={styles.profileColumn}>{this.renderPlayerCard()}</Col>
+            <Col xs={12} md={{offset: 2, size: 8}} lg={{offset: 4, size: 6}} xl={{offset: 0, size: 4}} style={styles.profileColumn}>
+              {this.renderMembershipForm()}
+            </Col>
+            <Col xs={12} md={6} lg={6} xl={4} style={styles.profileColumn}>
+              {this.renderPlayerCard()}
+            </Col>
             <Col xs={12} md={6} lg={6} xl={4} style={styles.profileColumn}>
               {this.renderPlayerInfoForm()}
               {this.renderUpdatePasswordForm()}
@@ -699,9 +704,7 @@ const styles = {
   error: {
     textAlign: 'center' as TextAlignProperty,
   },
-  profileColumn: {
-    paddingRight: Padding.H,
-  },
+  profileColumn: {},
   changeProfilePicButton: {
     flex: 1,
     alignSelf: 'center',

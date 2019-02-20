@@ -64,7 +64,6 @@ const transformPosition = (position: string) => {
 const PlayerCard: SFC<Props> = props => {
   return (
     <div
-      className="no-gutters"
       {...props}
       style={{
         ...styles.default,

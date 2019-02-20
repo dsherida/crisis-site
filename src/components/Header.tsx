@@ -19,6 +19,7 @@ interface State {
   currentRoute: string;
   width: number;
   height: number;
+  initialHeight: number;
   isOpen: boolean;
 }
 
@@ -32,12 +33,16 @@ class Header extends React.Component<Props, State> {
       currentRoute: pathname,
       width: 0,
       height: 0,
+      initialHeight: 0,
       isOpen: false,
     };
   }
 
   componentDidMount(): void {
     this.updateWindowDimensions();
+    this.setState({
+      initialHeight: window.innerHeight,
+    });
     window.addEventListener('resize', this.updateWindowDimensions);
   }
 
@@ -137,11 +142,11 @@ class Header extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{...styles.container, height: this.state.height / 2}}>
+      <div className="d-flex justify-content-center align-items-center" style={{...styles.container, height: this.state.initialHeight / 2}}>
         <BootstrapSizeClassHelper width={this.state.width} />
         <Container>
           <Row className="justify-content-center">
-            <img style={{height: this.state.height / 3}} src={Assets.src.crisis_logo} />
+            <img style={{height: this.state.initialHeight / 3}} src={Assets.src.crisis_logo} />
           </Row>
           <Row>{this.navigation()}</Row>
         </Container>
