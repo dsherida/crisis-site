@@ -660,9 +660,9 @@ class Profile extends React.Component<Props, State> {
       <div style={{...CommonStyle.container, ...styles.container, minHeight: this.state.height}}>
         <Container>
           <Row className="no-gutters">
-            <Col xs={12} md={{offset: 2, size: 8}} lg={{offset: 4, size: 6}} style={styles.profileColumn}>{this.renderMembershipForm()}</Col>
-            <Col xs={12} md={6} lg={6} style={styles.profileColumn}>{this.renderPlayerCard()}</Col>
-            <Col xs={12} md={6} lg={6} style={styles.profileColumn}>
+            <Col xs={12} md={{offset: 2, size: 8}} lg={{offset: 4, size: 6}} xl={{offset: 0, size: 4}} style={styles.profileColumn}>{this.renderMembershipForm()}</Col>
+            <Col xs={12} md={6} lg={6} xl={4} style={styles.profileColumn}>{this.renderPlayerCard()}</Col>
+            <Col xs={12} md={6} lg={6} xl={4} style={styles.profileColumn}>
               {this.renderPlayerInfoForm()}
               {this.renderUpdatePasswordForm()}
             </Col>

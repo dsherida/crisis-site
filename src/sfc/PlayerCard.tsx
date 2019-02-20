@@ -78,9 +78,9 @@ const PlayerCard: SFC<Props> = props => {
         style={{
           width: '100%',
           height: '100%',
-          opacity: 0.24,
+          opacity: 0.85,
           borderRadius: BORDER_RADIUS,
-          background: `linear-gradient(to bottom, ${Colors.primary} 0%, ${Colors.secondary} 100%)`,
+          background: `linear-gradient(to bottom, ${Colors.primaryLightTransparent} 67%, ${Colors.black} 100%)`,
         }}
       />
       <div
