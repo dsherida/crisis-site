@@ -1,11 +1,12 @@
 import {inject, observer} from 'mobx-react';
-import * as React from 'react';
 import {Fragment} from 'react';
+import * as React from 'react';
 import {Link, RouteProps, withRouter} from 'react-router-dom';
 import {Col, Container, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import {Assets} from '../assets';
 import {HOME, LOGIN_REGISTER, PLAYERS, PROFILE} from '../constants/routes';
+import BootstrapSizeClassHelper from '../sfc/BootstrapSizeClassHelper';
 import CrisisButton from '../sfc/CrisisButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {Colors} from '../utils/Constants';
@@ -15,6 +16,7 @@ interface Props extends RouteProps, SessionStoreProps {}
 
 interface State {
   currentRoute: string;
+  width: number;
 }
 
 class Header extends React.Component<Props, State> {
@@ -25,7 +27,21 @@ class Header extends React.Component<Props, State> {
 
     this.state = {
       currentRoute: pathname,
+      width: 0,
     };
+  }
+
+  componentDidMount(): void {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions = () => {
+    this.setState({width: window.innerWidth});
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -117,6 +133,7 @@ class Header extends React.Component<Props, State> {
   render() {
     return (
       <div style={styles.container}>
+        <BootstrapSizeClassHelper width={this.state.width} />
         <Container>{this.navigation()}</Container>
       </div>
     );
