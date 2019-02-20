@@ -342,11 +342,11 @@ class LoginRegister extends React.Component<Props, State> {
 
   render() {
     return (
-      <div style={{...CommonStyle.container, width: '100%', minHeight: this.state.height}}>
+      <div style={{...CommonStyle.container, minHeight: this.state.height}}>
         <Container style={styles.container}>
-          <Row className="no-gutters" style={styles.row}>
-            <Col style={styles.loginCol}>{this.state.forgotPassword ? this.renderForgotPassword() : this.renderLogin()}</Col>
-            <Col style={{...styles.registerCol, minHeight: this.state.height}}>{this.renderRegister()}</Col>
+          <Row style={styles.row}>
+            <Col xs={12} md={6} style={styles.loginCol}>{this.state.forgotPassword ? this.renderForgotPassword() : this.renderLogin()}</Col>
+            <Col xs={12} md={6} style={{...styles.registerCol, minHeight: this.state.height}}>{this.renderRegister()}</Col>
           </Row>
         </Container>
       </div>
@@ -367,7 +367,7 @@ const styles = {
     marginTop: Padding.H2,
   },
   description: {
-    color: Colors.beige,
+    color: Colors.primary,
   },
   loadingBtnContainer: {
     justifyContent: 'center',
@@ -375,13 +375,10 @@ const styles = {
   },
   loginCol: {
     paddingTop: Padding.V,
-    paddingRight: Padding.V,
+    paddingBottom: Padding.V,
   },
   registerCol: {
     paddingTop: Padding.V,
-    paddingLeft: Padding.V,
-    zIndex: 1,
-    background: `linear-gradient(to right, ${Colors.primaryLightTransparent} 0%, ${Colors.secondary} 100%)`,
     paddingBottom: Padding.V,
   },
   button: {
