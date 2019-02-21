@@ -388,6 +388,9 @@ class Profile extends React.Component<Props, State> {
           CONTACT INFO
         </CrisisText>
         <FloatingTextInput
+          autoComplete={'off'}
+          autoCapitalize={'off'}
+          autoCorrect={'off'}
           value={this.state.email}
           onChange={event => this.inputOnChange('email', event)}
           style={styles.inputGroup}

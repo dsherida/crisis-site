@@ -102,7 +102,15 @@ class LoginRegister extends React.Component<Props, State> {
         <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
           LOGIN
         </CrisisText>
-        <FloatingTextInput value={this.state.loginEmail} onChange={this.onChangeLoginEmail} style={styles.inputGroup} labelText="EMAIL" />
+        <FloatingTextInput
+          autoComplete={'off'}
+          autoCapitalize={'off'}
+          autoCorrect={'off'}
+          value={this.state.loginEmail}
+          onChange={this.onChangeLoginEmail}
+          style={styles.inputGroup}
+          labelText="EMAIL"
+        />
         <FloatingTextInput
           value={this.state.loginPassword}
           onChange={this.onChangeLoginPassword}
@@ -177,6 +185,9 @@ class LoginRegister extends React.Component<Props, State> {
           PASSWORD RESET
         </CrisisText>
         <FloatingTextInput
+          autoComplete={'off'}
+          autoCapitalize={'off'}
+          autoCorrect={'off'}
           value={this.state.forgotPasswordEmail}
           onChange={this.onChangeForgotPasswordEmail}
           style={styles.inputGroup}
@@ -253,7 +264,15 @@ class LoginRegister extends React.Component<Props, State> {
           <FloatingTextInput value={this.state.user.first} onChange={this.onChangeFirst} capitalize style={styles.inputGroup} labelText="FIRST*" />
           <FloatingTextInput value={this.state.user.last} onChange={this.onChangeLast} capitalize style={styles.inputGroup} labelText="LAST*" />
           <FloatingTextInput value={this.state.user.phone} onChange={this.onChangePhone} style={styles.inputGroup} labelText="PHONE NUMBER*" />
-          <FloatingTextInput value={this.state.user.email} onChange={this.onChangeEmail} style={styles.inputGroup} labelText="EMAIL*" />
+          <FloatingTextInput
+            autoComplete={'off'}
+            autoCapitalize={'off'}
+            autoCorrect={'off'}
+            value={this.state.user.email}
+            onChange={this.onChangeEmail}
+            style={styles.inputGroup}
+            labelText="EMAIL*"
+          />
           <FloatingTextInput
             value={this.state.user.password}
             onChange={this.onChangePassword}
@@ -345,8 +364,12 @@ class LoginRegister extends React.Component<Props, State> {
       <div style={{...CommonStyle.container, minHeight: this.state.height}}>
         <Container style={styles.container}>
           <Row style={styles.row}>
-            <Col xs={12} md={6} style={styles.loginCol}>{this.state.forgotPassword ? this.renderForgotPassword() : this.renderLogin()}</Col>
-            <Col xs={12} md={6} style={{...styles.registerCol, minHeight: this.state.height}}>{this.renderRegister()}</Col>
+            <Col xs={12} md={6} style={styles.loginCol}>
+              {this.state.forgotPassword ? this.renderForgotPassword() : this.renderLogin()}
+            </Col>
+            <Col xs={12} md={6} style={{...styles.registerCol, minHeight: this.state.height}}>
+              {this.renderRegister()}
+            </Col>
           </Row>
         </Container>
       </div>

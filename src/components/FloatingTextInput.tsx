@@ -13,6 +13,9 @@ interface Props {
   capitalize?: boolean;
   value: string;
   maxLength?: number;
+  autoComplete?: "on" | "off";
+  autoCorrect?: "on" | "off";
+  autoCapitalize?: "on" | "off";
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -41,6 +44,9 @@ export default class FloatingTextInput extends Component<Props, State> {
           </CrisisText>
         </Label>
         <input
+          autoComplete={this.props.autoComplete}
+          autoCorrect={this.props.autoCorrect}
+          autoCapitalize={this.props.autoCapitalize}
           maxLength={this.props.maxLength}
           type={this.props.secure ? 'password' : null}
           id={`${this.props.labelText}`}
