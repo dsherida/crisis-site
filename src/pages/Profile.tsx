@@ -5,7 +5,7 @@ import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
 import {injectStripe, ReactStripeElements} from 'react-stripe-elements';
-import {Button, Col, Container, Form, Row} from 'reactstrap';
+import {Button, Col, Container, Form, Modal, ModalBody, ModalFooter, ModalHeader, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import FloatingTextInput from '../components/FloatingTextInput';
 import {Checkout} from '../components/PaymentForm';
@@ -62,6 +62,10 @@ interface State {
   card: ICreditCard;
   updatingCard: boolean;
   canceledAt: number;
+  modalOpen: boolean;
+  modalTitle: string;
+  modalMessage: string;
+  onModalConfirm: () => void;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -99,6 +103,10 @@ class Profile extends React.Component<Props, State> {
       card: null,
       updatingCard: false,
       canceledAt: null,
+      modalOpen: false,
+      modalTitle: null,
+      modalMessage: null,
+      onModalConfirm: null,
     };
 
     db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
@@ -263,6 +271,32 @@ class Profile extends React.Component<Props, State> {
     } catch (e) {
       this.setState({updatePasswordLoading: false, updatePasswordError: e.message});
     }
+  };
+
+  toggleModal = (modalTitle?: string, modalMessage?: string, onConfirm?: () => void) => {
+    this.setState({
+      modalTitle,
+      modalMessage,
+      modalOpen: !this.state.modalOpen,
+      onModalConfirm: onConfirm,
+    });
+  };
+
+  renderModal = () => {
+    return (
+      <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
+        <ModalHeader toggle={this.toggleModal}>{this.state.modalTitle}</ModalHeader>
+        <ModalBody>{this.state.modalMessage}</ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={() => this.toggleModal()}>
+            Cancel
+          </Button>
+          <Button color="primary" onClick={this.state.onModalConfirm}>
+            Okay
+          </Button>{' '}
+        </ModalFooter>
+      </Modal>
+    );
   };
 
   renderPlayerCard = () => {
@@ -543,15 +577,26 @@ class Profile extends React.Component<Props, State> {
   signOutOnClick = async (event: ChangeEvent<any>) => {
     event.preventDefault();
 
-    if (window.confirm('Are you sure you wish to logout? All un-saved changes will be lost for eternity.')) {
+    this.toggleModal('Sign Out', 'Are you sure you want to sign out? All unsaved changes will be lost.', async () => {
       try {
         await auth.doSignOut();
         await this.props.sessionStore.clearSession();
+        this.toggleModal();
         this.props.history.push(LOGIN_REGISTER);
       } catch (e) {
         console.error(e.message);
       }
-    }
+    });
+
+    // if (window.confirm('Are you sure you wish to logout? All un-saved changes will be lost for eternity.')) {
+    //   try {
+    //     await auth.doSignOut();
+    //     await this.props.sessionStore.clearSession();
+    //     this.props.history.push(LOGIN_REGISTER);
+    //   } catch (e) {
+    //     console.error(e.message);
+    //   }
+    // }
   };
 
   updateCardInfo = () => {
@@ -676,6 +721,7 @@ class Profile extends React.Component<Props, State> {
             </Col>
           </Row>
         </Container>
+        {this.renderModal()}
       </div>
     );
   }
