@@ -310,7 +310,7 @@ class Profile extends React.Component<Props, State> {
         >
           PLAYER CARD
         </CrisisText>
-        <Row className="no-gutters">
+        <Row>
           <Col xs={12}>
             <PlayerCard
               image={this.state.playerImage}
@@ -708,7 +708,7 @@ class Profile extends React.Component<Props, State> {
     return (
       <div style={{...CommonStyle.container, ...styles.container, minHeight: this.state.height}}>
         <Container>
-          <Row className="no-gutters">
+          <Row>
             <Col xs={12} md={{offset: 2, size: 8}} lg={{offset: 4, size: 6}} xl={{offset: 0, size: 4}} style={styles.profileColumn}>
               {this.renderMembershipForm()}
             </Col>
