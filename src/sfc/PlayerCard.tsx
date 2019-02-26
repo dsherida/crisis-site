@@ -1,4 +1,4 @@
-import {AlignSelfProperty, BackgroundPositionProperty, BorderStyleProperty, PositionProperty, TextAlignProperty} from 'csstype';
+import {AlignSelfProperty, BackgroundPositionProperty, BorderStyleProperty, PositionProperty, ResizeProperty, TextAlignProperty} from 'csstype';
 import * as React from 'react';
 import {ReactNode, SFC} from 'react';
 import {Col, Row} from 'reactstrap';
@@ -61,22 +61,37 @@ const transformPosition = (position: string) => {
   }
 };
 
-const PlayerCard: SFC<Props> = props => {
+const PlayerCard: SFC<Props> = (props: Props) => {
   return (
     <div
       {...props}
       style={{
         ...styles.default,
-        backgroundImage: props.image ? `url(${props.image})` : `url(${Assets.src.avatar})`,
+        // backgroundImage: props.image ? `url(${props.image})` : `url(${Assets.src.avatar})`,
         backgroundRepeat: 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <Col
+      <img
+        src={props.image ? props.image : Assets.src.avatar}
         style={{
           width: '100%',
           height: '100%',
+          borderRadius: BORDER_RADIUS,
+          objectFit: 'cover',
+          // transform: `rotate(45deg)`,
+        }}
+      />
+      <div
+        style={{
+          marginLeft: 15,
+          marginRight: 15,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
           opacity: 0.85,
           borderRadius: BORDER_RADIUS,
           background: `linear-gradient(to bottom, ${Colors.primaryLightTransparent} 67%, ${Colors.black} 100%)`,
@@ -95,7 +110,7 @@ const PlayerCard: SFC<Props> = props => {
         <CursiveText style={styles.division} size={FontSize.XS}>
           {props.division ? transformDivision(props.division) : 'Unranked'}
         </CursiveText>
-        <Row className="no-gutters" style={styles.playerInfo}>
+        <Row style={styles.playerInfo}>
           <CursiveText size={FontSize.XL} style={styles.number}>
             {props.number ? props.number : '00'}
           </CursiveText>

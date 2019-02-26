@@ -1,10 +1,10 @@
 import {TextAlignProperty} from 'csstype';
+import findOrientation from 'exif-orientation';
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
 import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {injectStripe, ReactStripeElements} from 'react-stripe-elements';
 import {Button, Col, Container, Form, Modal, ModalBody, ModalFooter, ModalHeader, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import FloatingTextInput from '../components/FloatingTextInput';
@@ -27,7 +27,6 @@ import {Colors, Padding} from '../utils/Constants';
 import {epochToLocalTime} from '../utils/DateUtils';
 import {BorderRadius} from '../utils/StyleUtils';
 import {notEmptyOrNull} from '../utils/Utils';
-import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
 
 interface Props extends RouteComponentProps, SessionStoreProps {}
 
@@ -201,9 +200,20 @@ class Profile extends React.Component<Props, State> {
     );
   };
 
+  handlePlayerCardImageLoad = async (file: File) => {
+    console.log('handlePlayerCardImageLoad');
+    findOrientation(file, (err: any, orientation: any) => {
+      if (!err) {
+        console.log('orientation: ' + JSON.stringify(orientation)); // displays {scale: {x: 1, y: 1}, rotation: 90}
+      }
+    });
+  };
+
   onInputChange = async () => {
     if (this.state.uploadInput.files[0] !== undefined) {
       console.log('uploadInput: ' + this.state.uploadInput.files[0]);
+
+      this.handlePlayerCardImageLoad(this.state.uploadInput.files[0]);
 
       await this.setState({
         updatePlayerImageLoading: true,
