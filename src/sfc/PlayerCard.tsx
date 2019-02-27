@@ -115,7 +115,7 @@ const PlayerCard: SFC<Props> = (props: Props) => {
         <CursiveText style={styles.division} size={FontSize.XS}>
           {props.division ? transformDivision(props.division) : 'Unranked'}
         </CursiveText>
-        <Row style={styles.playerInfo}>
+        <Row className="no-gutters" style={styles.playerInfo}>
           <CursiveText size={FontSize.XL} style={styles.number}>
             {props.number ? props.number : '00'}
           </CursiveText>

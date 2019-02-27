@@ -20,6 +20,7 @@ interface State {
   width: number;
   height: number;
   initialHeight: number;
+  initialWidth: number;
   isOpen: boolean;
 }
 
@@ -34,6 +35,7 @@ class Header extends React.Component<Props, State> {
       width: 0,
       height: 0,
       initialHeight: 0,
+      initialWidth: 0,
       isOpen: false,
     };
   }
@@ -42,6 +44,7 @@ class Header extends React.Component<Props, State> {
     this.updateWindowDimensions();
     this.setState({
       initialHeight: window.innerHeight,
+      initialWidth: window.innerWidth,
     });
     window.addEventListener('resize', this.updateWindowDimensions);
   }
@@ -146,7 +149,7 @@ class Header extends React.Component<Props, State> {
         <BootstrapSizeClassHelper width={this.state.width} />
         <Container>
           <Row className="justify-content-center">
-            <img style={{height: this.state.initialHeight / 3}} src={Assets.src.crisis_logo} />
+            <img style={{height: this.state.initialHeight / 4, maxWidth: this.state.width, objectFit: 'cover',}} src={Assets.src.crisis_logo} />
           </Row>
           <Row>{this.navigation()}</Row>
         </Container>
