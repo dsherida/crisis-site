@@ -69,6 +69,7 @@ class Players extends React.Component<Props, State> {
         return (
           <Col xs={12} sm={6} xl={4} style={styles.playerCardCol}>
             <PlayerCard
+              imageOrientation={user.avatarOrientation}
               image={user.avatarUrl}
               first={user.first}
               last={user.last}

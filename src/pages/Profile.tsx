@@ -15,7 +15,7 @@ import {db} from '../firebase';
 import * as auth from '../firebase/auth';
 import {storage} from '../firebase/firebase';
 import {getPlayerImageUrl} from '../firebase/storage';
-import {ICreditCard, IUser} from '../models/User';
+import {ExifOrientation, ICreditCard, IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
 import MembershipStatus from '../sfc/MembershipStatus';
@@ -38,6 +38,7 @@ interface State {
   updatePasswordLoading: boolean;
   updatePasswordError: string;
   playerImage: string;
+  playerImageOrientation: ExifOrientation;
   updatePlayerImageLoading: boolean;
   updatePlayerImageError: string;
   first: string;
@@ -79,6 +80,7 @@ class Profile extends React.Component<Props, State> {
       updatePasswordError: '',
       updatePasswordLoading: false,
       playerImage: '',
+      playerImageOrientation: null,
       updatePlayerImageLoading: false,
       updatePlayerImageError: '',
       first: '',
@@ -129,6 +131,7 @@ class Profile extends React.Component<Props, State> {
           active: periodEnd >= new Date(),
           periodEnd,
           canceledAt: user.canceledAt,
+          playerImageOrientation: user.avatarOrientation,
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -161,6 +164,7 @@ class Profile extends React.Component<Props, State> {
           periodEnd,
           card: firebaseUser.card,
           canceledAt: firebaseUser.canceledAt,
+          playerImageOrientation: firebaseUser.avatarOrientation,
         },
         () => {
           if (!notEmptyOrNull(this.state.playerImage)) {
@@ -207,6 +211,7 @@ class Profile extends React.Component<Props, State> {
         console.log('orientation: ' + JSON.stringify(orientation)); // displays {scale: {x: 1, y: 1}, rotation: 90}
       }
 
+      this.setState({playerImageOrientation: orientation});
       this.props.sessionStore.setPlayerImageOrientation(orientation);
     });
   };
@@ -325,6 +330,7 @@ class Profile extends React.Component<Props, State> {
         <Row>
           <Col xs={12}>
             <PlayerCard
+              imageOrientation={this.state.playerImageOrientation}
               image={this.state.playerImage}
               first={this.state.first}
               last={this.state.last}

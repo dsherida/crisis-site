@@ -6,9 +6,12 @@ import {Assets} from '../assets';
 import {Colors, Padding} from '../utils/Constants';
 import {BorderRadius, crisisGlow} from '../utils/StyleUtils';
 import CrisisText, {CursiveText, FontSize, FontType} from './CrisisText';
+import {ExifOrientation} from '../models/User';
+import {BrowserView, isBrowser} from 'react-device-detect';
 
 interface Props {
   children?: ReactNode;
+  imageOrientation?: ExifOrientation;
   image?: string;
   first?: string;
   last?: string;
@@ -62,6 +65,8 @@ const transformPosition = (position: string) => {
 };
 
 const PlayerCard: SFC<Props> = (props: Props) => {
+  console.log('props.imageOrientation: ' + JSON.stringify(props.imageOrientation));
+
   return (
     <div
       {...props}
@@ -80,7 +85,7 @@ const PlayerCard: SFC<Props> = (props: Props) => {
           height: '100%',
           borderRadius: BORDER_RADIUS,
           objectFit: 'cover',
-          // transform: `rotate(45deg)`,
+          transform: isBrowser ? `rotate(${props.imageOrientation ? props.imageOrientation.rotate : 0}deg)` : null,
         }}
       />
       <div
