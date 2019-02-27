@@ -301,8 +301,8 @@ class Profile extends React.Component<Props, State> {
 
   renderModal = () => {
     return (
-      <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
-        <ModalHeader toggle={this.toggleModal}>{this.state.modalTitle}</ModalHeader>
+      <Modal isOpen={this.state.modalOpen}>
+        <ModalHeader>{this.state.modalTitle}</ModalHeader>
         <ModalBody>{this.state.modalMessage}</ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={() => this.toggleModal()}>
@@ -512,7 +512,10 @@ class Profile extends React.Component<Props, State> {
       return true;
     }
 
-    alert('Position must be one of the following values: \n' + POSITIONS.join('\n'));
+    this.toggleModal('Invalid Position!', 'Position must be one of the following values:\n' + POSITIONS.join('\n'), async () => {
+      this.toggleModal();
+    });
+    // alert('Position must be one of the following values: \n' + POSITIONS.join('\n'));
     return false;
   };
 
@@ -521,28 +524,43 @@ class Profile extends React.Component<Props, State> {
       return true;
     }
 
-    alert('Division must be one of the following values: \n' + DIVISIONS.join('\n'));
+    this.toggleModal('Invalid Division!', 'Division must be one of the following values:\n' + DIVISIONS.join('\n'), async () => {
+      this.toggleModal();
+    });
+    // alert('Division must be one of the following values: \n' + DIVISIONS.join('\n'));
     return false;
   };
 
   validateInputs = () => {
     if (!notEmptyOrNull(this.state.first)) {
-      alert('Firstname cannot be blank!');
+      this.toggleModal('Missing Field!', 'Firstname cannot be blank!', async () => {
+        this.toggleModal();
+      });
+      // alert('Firstname cannot be blank!');
       return false;
     }
 
     if (!notEmptyOrNull(this.state.last)) {
-      alert('Lastname cannot be blank!');
+      this.toggleModal('Missing Field!', 'Lastname cannot be blank!', async () => {
+        this.toggleModal();
+      });
+      // alert('Lastname cannot be blank!');
       return false;
     }
 
     if (!notEmptyOrNull(this.state.email)) {
-      alert('Email cannot be blank!');
+      this.toggleModal('Missing Field!', 'Email cannot be blank!', async () => {
+        this.toggleModal();
+      });
+      // alert('Email cannot be blank!');
       return false;
     }
 
     if (!notEmptyOrNull(this.state.phone)) {
-      alert('Phone number cannot be blank!');
+      this.toggleModal('Missing Field!', 'Phone number cannot be blank!', async () => {
+        this.toggleModal();
+      });
+      // alert('Phone number cannot be blank!');
       return false;
     }
 
@@ -581,15 +599,23 @@ class Profile extends React.Component<Props, State> {
           saveError: e.message,
         });
       } else {
-        alert('Changes were saved successfully!');
+        this.toggleModal('Changes Saved', 'Your changes were saved successfully!', async () => {
+          this.toggleModal();
+        });
+        // alert('Changes were saved successfully!');
       }
     });
   };
 
   cancelOnClick = async (event: ChangeEvent<any>) => {
-    if (window.confirm('Are you sure you wish to cancel? All un-saved changes will be lost for eternity.')) {
+    this.toggleModal('Cancel?', 'Are you sure you wish to cancel? All un-saved changes will be lost for eternity.', async () => {
+      this.toggleModal();
       window.location.reload();
-    }
+    });
+
+    // if (window.confirm('Are you sure you wish to cancel? All un-saved changes will be lost for eternity.')) {
+    //   window.location.reload();
+    // }
   };
 
   signOutOnClick = async (event: ChangeEvent<any>) => {
@@ -599,11 +625,11 @@ class Profile extends React.Component<Props, State> {
       try {
         await auth.doSignOut();
         await this.props.sessionStore.clearSession();
-        this.toggleModal();
         this.props.history.push(LOGIN_REGISTER);
       } catch (e) {
         console.error(e.message);
       }
+      this.toggleModal();
     });
 
     // if (window.confirm('Are you sure you wish to logout? All un-saved changes will be lost for eternity.')) {
@@ -657,29 +683,59 @@ class Profile extends React.Component<Props, State> {
   };
 
   cancelMembership = async () => {
-    if (
-      window.confirm(
-        'Are you sure you wish to PAUSE your membership? You will still be billed at the end of the current membership period, but after that all future payments will be canceled.'
-      )
-    ) {
-      try {
-        await this.props.sessionStore.cancelSubscription();
-      } catch (err) {
-        console.error('Cancel Membership Error: ' + err.message);
-        alert('Whoops! Something went wrong while trying to cancel your membership. Please try again in a few moments...');
+    this.toggleModal(
+      'Pause Membership?',
+      'Are you sure you wish to PAUSE your membership? You will still be billed at the end of the current membership period, but after that all future payments will be canceled.',
+      async () => {
+        this.toggleModal();
+        try {
+          await this.props.sessionStore.cancelSubscription();
+        } catch (err) {
+          console.error('Cancel Membership Error: ' + err.message);
+          this.toggleModal('Whoops!', 'Something went wrong while trying to cancel your membership. Please try again in a few moments...', async () => {
+            this.toggleModal();
+          });
+          // alert('Whoops! Something went wrong while trying to cancel your membership. Please try again in a few moments...');
+        }
       }
-    }
+    );
+
+    // if (
+    //   window.confirm(
+    //     'Are you sure you wish to PAUSE your membership? You will still be billed at the end of the current membership period, but after that all future payments will be canceled.'
+    //   )
+    // ) {
+    //   try {
+    //     await this.props.sessionStore.cancelSubscription();
+    //   } catch (err) {
+    //     console.error('Cancel Membership Error: ' + err.message);
+    //     alert('Whoops! Something went wrong while trying to cancel your membership. Please try again in a few moments...');
+    //   }
+    // }
   };
 
   resumeMembership = async () => {
-    if (window.confirm('RESUME membership? Payments will resume at the end of your normal membership period.')) {
+    this.toggleModal('Resume Membership?', 'Payments will resume at the end of your normal membership period.', async () => {
+      this.toggleModal();
       try {
         await this.props.sessionStore.resumeSubscription();
       } catch (err) {
         console.error('Resume Membership Error: ' + err.message);
-        alert('Whoops! Something went wrong while trying to resume your membership. Please try again in a few moments...');
+        this.toggleModal('Whoops!', 'Something went wrong while trying to resume your membership. Please try again in a few moments...', async () => {
+          this.toggleModal();
+        });
+        // alert('Whoops! Something went wrong while trying to resume your membership. Please try again in a few moments...');
       }
-    }
+    });
+
+    // if (window.confirm('RESUME membership? Payments will resume at the end of your normal membership period.')) {
+    //   try {
+    //     await this.props.sessionStore.resumeSubscription();
+    //   } catch (err) {
+    //     console.error('Resume Membership Error: ' + err.message);
+    //     alert('Whoops! Something went wrong while trying to resume your membership. Please try again in a few moments...');
+    //   }
+    // }
   };
 
   renderMembershipForm = () => {
@@ -739,7 +795,7 @@ class Profile extends React.Component<Props, State> {
             </Col>
           </Row>
         </Container>
-        {this.renderModal()}
+        {this.state.modalOpen ? this.renderModal() : null}
       </div>
     );
   }

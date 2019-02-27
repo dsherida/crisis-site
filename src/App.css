@@ -44,3 +44,7 @@
   font-family: 'Brush_Script';
   src: local('Brush_Script'), url(./fonts/Brush_Script.ttf);
 }
+
+.modal-content {
+  font-family: 'Quicksand_Bold', sans-serif;
+}
