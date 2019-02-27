@@ -76,6 +76,7 @@ const PlayerCard: SFC<Props> = (props: Props) => {
         backgroundRepeat: 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        overflow: 'hidden',
       }}
     >
       <img
