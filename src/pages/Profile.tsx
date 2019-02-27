@@ -206,6 +206,8 @@ class Profile extends React.Component<Props, State> {
       if (!err) {
         console.log('orientation: ' + JSON.stringify(orientation)); // displays {scale: {x: 1, y: 1}, rotation: 90}
       }
+
+      this.props.sessionStore.setPlayerImageOrientation(orientation);
     });
   };
 

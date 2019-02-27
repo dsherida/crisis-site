@@ -4,7 +4,7 @@ import {action, observable, runInAction} from 'mobx';
 import {ReactStripeElements} from 'react-stripe-elements';
 import CrisisApi from '../CrisisApi';
 import {db} from '../firebase';
-import {IUser} from '../models/User';
+import {ExifOrientation, IUser} from '../models/User';
 import StripeProps = ReactStripeElements.StripeProps;
 import PatchedTokenResponse = ReactStripeElements.PatchedTokenResponse;
 import DataModelUtils from '../utils/DataModelUtils';
@@ -50,6 +50,19 @@ class SessionStore {
         this.membershipStatusLoading = false;
       });
     }, timeout);
+  };
+
+  @action
+  setPlayerImageOrientation = (avatarOrientation: ExifOrientation) => {
+    this.firebaseUser.avatarOrientation = avatarOrientation;
+
+    db.updateFirebaseUser(this.authUser.uid, {avatarOrientation}, error => {
+      if (error) {
+        console.error('Error while trying to write avatarOrientation to Firebase User');
+      } else {
+        console.log('Successfully saved the avatarOrientation to Firebase User.');
+      }
+    });
   };
 
   @action

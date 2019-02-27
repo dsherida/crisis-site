@@ -1,3 +1,5 @@
+export type ExifOrientation = {scale: {x: number; y: number}; rotate: number};
+
 export interface IUser {
   id?: string;
   first?: string;
@@ -9,6 +11,7 @@ export interface IUser {
   position?: string;
   division?: string;
   avatarUrl?: string;
+  avatarOrientation?: ExifOrientation;
   stripeToken?: string;
   stripeUid?: string;
   membershipPeriodEnd?: number;
