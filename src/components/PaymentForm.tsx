@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {TextAlignProperty} from 'csstype';
 import {inject} from 'mobx-react';
 import * as React from 'react';
@@ -15,6 +14,7 @@ import DataModelUtils from '../utils/DataModelUtils';
 import InjectedStripeProps = ReactStripeElements.InjectedStripeProps;
 import {BorderRadius} from '../utils/StyleUtils';
 import {notEmptyOrNull} from '../utils/Utils';
+import CrisisApi from '../CrisisApi';
 
 interface Props extends InjectedStripeProps, SessionStoreProps {
   updatingCard: boolean;
@@ -124,10 +124,7 @@ class _PaymentForm extends React.Component<Props, State> {
 
     if (!notEmptyOrNull(this.props.sessionStore.firebaseUser.stripeUid)) {
       try {
-        createStripeCustomerResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/createCustomer`, {
-          email,
-          token: stripeToken,
-        });
+        createStripeCustomerResponse = await CrisisApi.createStripeCustomer(email, stripeToken);
 
         console.log('createStripeCustomerResponse: ' + JSON.stringify(createStripeCustomerResponse));
       } catch (err) {
@@ -155,10 +152,7 @@ class _PaymentForm extends React.Component<Props, State> {
     let subscribeToMembershipResponse: any;
 
     try {
-      subscribeToMembershipResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/subscribeToPlan`, {
-        customerId: stripeUid,
-        planId: 'plan_EL3YNV4Iha9VQR',
-      });
+      subscribeToMembershipResponse = await CrisisApi.subscribeToMembership(stripeUid);
 
       console.log('subscribeToMembershipResponse: ' + JSON.stringify(subscribeToMembershipResponse));
     } catch (err) {

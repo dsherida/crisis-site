@@ -4,8 +4,7 @@ export class Config {
   static env: 'dev' | 'prod' = 'dev';
 
   static get stripeKey() {
-    // TODO: replace the prod key with actual
-    return this.env === 'dev' ? 'pk_test_dOmSREy1W5bl5BsweYvpF4LS' : 'pk_test_dOmSREy1W5bl5BsweYvpF4LS';
+    return this.env === 'dev' ? 'pk_test_dOmSREy1W5bl5BsweYvpF4LS' : 'pk_live_OtVVrSjxlJW8be81f6kWlQXk';
   }
 
   static start() {}
