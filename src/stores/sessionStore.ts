@@ -106,10 +106,7 @@ class SessionStore {
     // Update the Stripe Customer Token
     let updateCustomerCardResponse: any;
     try {
-      updateCustomerCardResponse = await axios.post(`https://us-central1-crisis-site.cloudfunctions.net/updateCustomerCard`, {
-        customerId: this.firebaseUser.stripeUid,
-        token: stripeToken,
-      });
+      updateCustomerCardResponse = await CrisisApi.updateCustomerCard(this.firebaseUser.stripeUid, stripeToken);
 
       console.log('updateCustomerCardResponse: ' + JSON.stringify(updateCustomerCardResponse));
 
