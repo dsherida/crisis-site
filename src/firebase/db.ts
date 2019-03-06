@@ -13,13 +13,14 @@ export const doCreateUser = (id: string, user: IUser) =>
 
 export const onceGetUsers = () => db.ref('users').once('value');
 
-export const getFirebaseUser = (id: string, callback: (a: firebase.database.DataSnapshot | null, b?: string) => any) =>
-  db
+export const getFirebaseUser = (id: string, callback: (a: firebase.database.DataSnapshot | null, b?: string) => any) => {
+  return db
     .ref('users')
     .orderByChild('id')
     .equalTo(id)
     .limitToFirst(1)
     .on('child_added', callback);
+};
 
 export const updateFirebaseUser = (id: string, value: IUser, callback: (a: Error | null) => any) =>
   db

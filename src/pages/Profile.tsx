@@ -110,36 +110,40 @@ class Profile extends React.Component<Props, State> {
       onModalConfirm: null,
     };
 
-    db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
-      const user: IUser = snapshot.val() as IUser;
+    try {
+      db.getFirebaseUser(this.props.sessionStore.authUser.uid, (snapshot) => {
+        const user: IUser = snapshot.val() as IUser;
 
-      console.log('user: ' + JSON.stringify(user));
+        this.props.sessionStore.setFirebaseUser(user);
 
-      this.props.sessionStore.setFirebaseUser(user);
+        const periodEnd = epochToLocalTime(user.membershipPeriodEnd);
 
-      const periodEnd = epochToLocalTime(user.membershipPeriodEnd);
-
-      this.setState(
-        {
-          first: user.first,
-          last: user.last,
-          phone: user.phone,
-          playerNumber: user.playerNumber,
-          position: user.position,
-          division: user.division,
-          playerImage: user.avatarUrl,
-          active: periodEnd >= new Date(),
-          periodEnd,
-          canceledAt: user.canceledAt,
-          playerImageOrientation: user.avatarOrientation,
-        },
-        () => {
-          if (!notEmptyOrNull(this.state.playerImage)) {
-            this.getPlayerImage();
+        this.setState(
+          {
+            first: user.first,
+            last: user.last,
+            phone: user.phone,
+            playerNumber: user.playerNumber,
+            position: user.position,
+            division: user.division,
+            playerImage: user.avatarUrl,
+            active: periodEnd >= new Date(),
+            periodEnd,
+            canceledAt: user.canceledAt,
+            playerImageOrientation: user.avatarOrientation,
+          },
+          () => {
+            if (!notEmptyOrNull(this.state.playerImage)) {
+              this.getPlayerImage();
+            }
           }
-        }
-      );
-    });
+        );
+
+        console.log('finished getting firebase user');
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   componentDidMount() {

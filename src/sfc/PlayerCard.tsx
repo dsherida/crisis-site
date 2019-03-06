@@ -65,8 +65,6 @@ const transformPosition = (position: string) => {
 };
 
 const PlayerCard: SFC<Props> = (props: Props) => {
-  console.log('props.imageOrientation: ' + JSON.stringify(props.imageOrientation));
-
   return (
     <div
       {...props}
