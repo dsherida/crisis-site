@@ -138,8 +138,6 @@ class Profile extends React.Component<Props, State> {
             }
           }
         );
-
-        console.log('finished getting firebase user');
       });
     } catch (err) {
       console.error(err);
@@ -200,7 +198,6 @@ class Profile extends React.Component<Props, State> {
   }
 
   getPlayerImage = () => {
-    console.log('getPlayerImage');
     getPlayerImageUrl(this.props.sessionStore.authUser.uid, downloadUrl =>
       this.setState({
         playerImage: downloadUrl,
@@ -209,7 +206,6 @@ class Profile extends React.Component<Props, State> {
   };
 
   handlePlayerCardImageLoad = async (file: File) => {
-    console.log('handlePlayerCardImageLoad');
     findOrientation(file, (err: any, orientation: any) => {
       if (!err) {
         console.log('orientation: ' + JSON.stringify(orientation)); // displays {scale: {x: 1, y: 1}, rotation: 90}
@@ -222,8 +218,6 @@ class Profile extends React.Component<Props, State> {
 
   onInputChange = async () => {
     if (this.state.uploadInput.files[0] !== undefined) {
-      console.log('uploadInput: ' + this.state.uploadInput.files[0]);
-
       this.handlePlayerCardImageLoad(this.state.uploadInput.files[0]);
 
       await this.setState({
@@ -238,7 +232,6 @@ class Profile extends React.Component<Props, State> {
           .put(this.state.uploadInput.files[0]);
 
         const downloadUrl = await snapshot.ref.getDownloadURL();
-        console.log('downloadUrl: ' + downloadUrl);
         this.setState({
           playerImage: downloadUrl,
         });
@@ -594,8 +587,6 @@ class Profile extends React.Component<Props, State> {
       phone: this.state.phone,
     };
     this.setState({updatedUser});
-
-    console.log('updatedUser: ' + JSON.stringify(updatedUser));
 
     db.updateFirebaseUser(this.props.sessionStore.authUser.uid, updatedUser, e => {
       if (e) {

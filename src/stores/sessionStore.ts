@@ -74,7 +74,6 @@ class SessionStore {
         name: `${this.firebaseUser.first} ${this.firebaseUser.last}`,
         currency: 'usd',
       });
-      console.log('createTokenResponse: ' + JSON.stringify(createTokenResponse, null, 2));
     } catch (err) {
       console.log('An error occurred while attempting to create a Stripe Token. Error: ' + err.message);
       return Promise.reject(err.message);
@@ -107,9 +106,6 @@ class SessionStore {
     let updateCustomerCardResponse: any;
     try {
       updateCustomerCardResponse = await CrisisApi.updateCustomerCard(this.firebaseUser.stripeUid, stripeToken);
-
-      console.log('updateCustomerCardResponse: ' + JSON.stringify(updateCustomerCardResponse));
-
       return Promise.resolve(updateCustomerCardResponse);
     } catch (err) {
       console.error('An error occurred while attempting to update the Customer Token on Stripe');
@@ -123,8 +119,6 @@ class SessionStore {
 
     try {
       const cancelSubscriptionResponse = await CrisisApi.cancelSubscription(this.firebaseUser.subscriptionId);
-
-      console.log('cancelSubscriptionResponse: ' + JSON.stringify(cancelSubscriptionResponse));
 
       const canceledAt = cancelSubscriptionResponse.data.response.canceled_at;
 

@@ -40,11 +40,8 @@ class Players extends React.Component<Props, State> {
   async componentDidMount() {
     const {userStore} = this.props;
 
-    console.log('firebaseConfig: ' + JSON.stringify(firebaseConfig));
-
     try {
       const snapshot = await db.onceGetUsers();
-      console.log('players: ' + JSON.stringify(snapshot.val()));
       userStore.setUsers(snapshot.val());
     } catch (e) {
       console.error(e.message);

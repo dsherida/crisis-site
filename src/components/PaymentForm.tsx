@@ -35,10 +35,6 @@ class _PaymentForm extends React.Component<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<{}>, snapshot?: any): void {
-    console.log('firebaseUser: ' + JSON.stringify(this.props.sessionStore.firebaseUser));
-  }
-
   updateCard = async (event: ChangeEvent<any>) => {
     event.preventDefault();
 
@@ -57,8 +53,6 @@ class _PaymentForm extends React.Component<Props, State> {
           paymentError: 'Something went wrong while attempting to update your card info. Please double-check your card info and try again...',
         });
       }
-
-      console.log('updateCustomerStripeTokenResponse: ' + JSON.stringify(updateCustomerStripeTokenResponse));
     } catch (err) {
       this.setState({paymentError: err.message});
     }
@@ -87,7 +81,6 @@ class _PaymentForm extends React.Component<Props, State> {
         name: `${first} ${last}`,
         currency: 'usd',
       });
-      console.log('createTokenResponse: ' + JSON.stringify(createTokenResponse, null, 2));
     } catch (err) {
       console.log('An error occurred while attempting to create a Stripe Token. Error: ' + err.message);
       this.setState({paymentError: err.message});
@@ -125,8 +118,6 @@ class _PaymentForm extends React.Component<Props, State> {
     if (!notEmptyOrNull(this.props.sessionStore.firebaseUser.stripeUid)) {
       try {
         createStripeCustomerResponse = await CrisisApi.createStripeCustomer(email, stripeToken);
-
-        console.log('createStripeCustomerResponse: ' + JSON.stringify(createStripeCustomerResponse));
       } catch (err) {
         console.error('An error occurred while trying to create a new Stripe Customer.');
         this.setState({paymentError: err.message});
@@ -153,8 +144,6 @@ class _PaymentForm extends React.Component<Props, State> {
 
     try {
       subscribeToMembershipResponse = await CrisisApi.subscribeToMembership(stripeUid);
-
-      console.log('subscribeToMembershipResponse: ' + JSON.stringify(subscribeToMembershipResponse));
     } catch (err) {
       console.error('An error occurred while attempting to subscribe to Stripe plan.');
       this.setState({paymentError: err.message});

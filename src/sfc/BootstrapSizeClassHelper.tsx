@@ -12,19 +12,14 @@ interface Props {
 
 const getBootstrapSizeClass = (width: number) => {
   if (width < 576) {
-    console.log('sm');
     return `xs (${width})`;
   } else if (width >= 576 && width < 768) {
-    console.log('sm');
     return `sm (${width})`;
   } else if (width >= 768 && width < 992) {
-    console.log('md');
     return `md (${width})`;
   } else if (width >= 992 && width < 1200) {
-    console.log('lg');
     return `lg (${width})`;
   } else if (width >= 1200) {
-    console.log('xl');
     return `xl ${width}`;
   } else {
     return `unknown (${width})`;
