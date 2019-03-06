@@ -8,6 +8,7 @@ import {HOME, LOGIN_REGISTER, PLAYERS, PROFILE} from './constants/routes';
 import LoginRegister from './pages/LoginRegister';
 import Players from './pages/Players';
 import Profile from './pages/Profile';
+import Footer from './components/Footer';
 
 const Main = () => (
   <StripeProvider apiKey={Config.stripeKey}>
@@ -19,6 +20,7 @@ const Main = () => (
         <Route exact path={LOGIN_REGISTER} component={LoginRegister} />
         <Route exact path={PROFILE} component={Profile} />
       </Switch>
+      <Footer />
     </main>
   </StripeProvider>
 );

@@ -755,6 +755,12 @@ class Profile extends React.Component<Props, State> {
           onClick={this.state.active ? (this.props.sessionStore.firebaseUser.canceledAt ? this.resumeMembership : this.cancelMembership) : null}
           canceledAt={this.props.sessionStore.firebaseUser ? this.props.sessionStore.firebaseUser.canceledAt : null}
         />
+        <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.paragraph}>
+          In order to receive exclusive access to Crisis Paintball sponsorship deals (up to 35% off Virtue/Bunker Kings, discounts on paint and entry, etc...), you must have an active membership.
+        </CrisisText>
+        <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.paragraph}>
+          Membership can be purchased here for $9.99 automatically billed at the end of each month. Cancel anytime.
+        </CrisisText>
         {this.props.sessionStore.membershipStatusLoading ? (
           <div className="d-flex" style={styles.loadingBtnContainer}>
             <ReactLoading type="balls" color={Colors.primary} />
@@ -807,6 +813,10 @@ const styles = {
   header: {
     color: Colors.gray,
     marginTop: Padding.V,
+  },
+  paragraph: {
+    color: Colors.gray,
+    marginTop: Padding.V2,
   },
   loadingBtnContainer: {
     justifyContent: 'center',
