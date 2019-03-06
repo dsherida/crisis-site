@@ -2,6 +2,7 @@
   "name": "react-ts-base",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://crisispaintball.com",
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/react-stripe-elements": "^1.1.10",
