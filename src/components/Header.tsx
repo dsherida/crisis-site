@@ -145,7 +145,7 @@ class Header extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{...styles.container, height: this.state.initialHeight / 2}}>
+      <div className="d-flex justify-content-center align-items-center" style={{...styles.container, height: this.state.initialHeight / 3}}>
         {/*<BootstrapSizeClassHelper width={this.state.width} />*/}
         <Container>
           <Row className="justify-content-center">
