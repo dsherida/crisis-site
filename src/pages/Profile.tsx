@@ -5,11 +5,26 @@ import * as React from 'react';
 import {ChangeEvent, ComponentClass, Fragment} from 'react';
 import ReactLoading from 'react-loading';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Button, Col, Container, Form, Modal, ModalBody, ModalFooter, ModalHeader, Row} from 'reactstrap';
+import {
+  Button,
+  Col,
+  Container,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Form,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from 'reactstrap';
 import {compose} from 'recompose';
 import FloatingTextInput from '../components/FloatingTextInput';
 import {Checkout} from '../components/PaymentForm';
 import withAuthorization from '../components/withAuthorization';
+import POSITIONS from '../constants/positions';
 import {HOME, LOGIN_REGISTER} from '../constants/routes';
 import {db} from '../firebase';
 import * as auth from '../firebase/auth';
@@ -19,7 +34,7 @@ import {ExifOrientation, ICreditCard, IUser} from '../models/User';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import LinkButton from '../sfc/LinkButton';
 import MembershipStatus from '../sfc/MembershipStatus';
-import PlayerCard, {DIVISIONS, POSITIONS} from '../sfc/PlayerCard';
+import PlayerCard, {DIVISIONS} from '../sfc/PlayerCard';
 import StrokeButton from '../sfc/StrokeButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
 import {CommonStyle} from '../utils/CommonStyle';
@@ -66,6 +81,8 @@ interface State {
   modalTitle: string;
   modalMessage: string;
   onModalConfirm: () => void;
+  dropdownOpen: boolean;
+  divisionDropdownOpen: boolean;
 }
 
 class Profile extends React.Component<Props, State> {
@@ -108,10 +125,12 @@ class Profile extends React.Component<Props, State> {
       modalTitle: null,
       modalMessage: null,
       onModalConfirm: null,
+      dropdownOpen: false,
+      divisionDropdownOpen: false,
     };
 
     try {
-      db.getFirebaseUser(this.props.sessionStore.authUser.uid, (snapshot) => {
+      db.getFirebaseUser(this.props.sessionStore.authUser.uid, snapshot => {
         const user: IUser = snapshot.val() as IUser;
 
         this.props.sessionStore.setFirebaseUser(user);
@@ -143,6 +162,18 @@ class Profile extends React.Component<Props, State> {
       console.error(err);
     }
   }
+
+  togglePositionDropdown = () => {
+    this.setState((prevState: State) => ({
+      dropdownOpen: !prevState.dropdownOpen,
+    }));
+  };
+
+  toggleDivisionDropdown = () => {
+    this.setState((prevState: State) => ({
+      divisionDropdownOpen: !prevState.divisionDropdownOpen,
+    }));
+  };
 
   componentDidMount() {
     this.updateDimensions();
@@ -272,6 +303,10 @@ class Profile extends React.Component<Props, State> {
     }
 
     this.setState(this.byPropKey(propName, event.target.value));
+  };
+
+  dropdownOnChange = (propName: string, value: string) => {
+    this.setState(this.byPropKey(propName, value));
   };
 
   updatePasswordOnClick = async (event: ChangeEvent<any>) => {
@@ -416,23 +451,44 @@ class Profile extends React.Component<Props, State> {
           labelText="PLAYER NUMBER"
           maxLength={3}
         />
-        <FloatingTextInput
+        <Row className="no-gutters">
+          <Dropdown isOpen={this.state.dropdownOpen} toggle={this.togglePositionDropdown} setActiveFromChild>
+            <DropdownToggle color={this.state.position ? 'primary' : 'secondary'} caret>{this.state.position || 'Choose your position'}</DropdownToggle>
+            <DropdownMenu>
+              {POSITIONS.map((position: string) => (
+                <DropdownItem active={this.state.position === position} onClick={() => this.dropdownOnChange('position', position)}>
+                  {position}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          <Dropdown style={{marginLeft: Padding.H2}} isOpen={this.state.divisionDropdownOpen} toggle={this.toggleDivisionDropdown} setActiveFromChild>
+            <DropdownToggle color={this.state.position ? 'primary' : 'secondary'} caret>{this.state.division.toLocaleUpperCase() || 'Choose your division'}</DropdownToggle>
+            <DropdownMenu>
+              {DIVISIONS.map((division: string) => (
+                <DropdownItem active={this.state.division === division} onClick={() => this.dropdownOnChange('division', division)}>
+                  {division.toLocaleUpperCase()}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+        </Row>
+        {/*<FloatingTextInput
           value={this.state.position}
           onChange={event => this.inputOnChange('position', event)}
           style={styles.inputGroup}
           capitalize
           labelText="POSITION"
           maxLength={12}
-        />
-        <FloatingTextInput
+        />*/}
+        {/*<FloatingTextInput
           value={this.state.division}
           onChange={event => this.inputOnChange('division', event)}
           style={styles.inputGroup}
           capitalize
           labelText="DIVISION"
           maxLength={12}
-        />
-
+        />*/}
         <CrisisText font={{type: FontType.Header, size: FontSize.XS}} style={styles.header}>
           CONTACT INFO
         </CrisisText>
@@ -687,9 +743,13 @@ class Profile extends React.Component<Props, State> {
           await this.props.sessionStore.cancelSubscription();
         } catch (err) {
           console.error('Cancel Membership Error: ' + err.message);
-          this.toggleModal('Whoops!', 'Something went wrong while trying to cancel your membership. Please try again in a few moments...', async () => {
-            this.toggleModal();
-          });
+          this.toggleModal(
+            'Whoops!',
+            'Something went wrong while trying to cancel your membership. Please try again in a few moments...',
+            async () => {
+              this.toggleModal();
+            }
+          );
           // alert('Whoops! Something went wrong while trying to cancel your membership. Please try again in a few moments...');
         }
       }
@@ -756,7 +816,8 @@ class Profile extends React.Component<Props, State> {
           canceledAt={this.props.sessionStore.firebaseUser ? this.props.sessionStore.firebaseUser.canceledAt : null}
         />
         <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.paragraph}>
-          In order to receive exclusive access to Crisis Paintball sponsorship deals (up to 35% off Virtue/Bunker Kings, discounts on paint and entry, etc...), you must have an active membership.
+          In order to receive exclusive access to Crisis Paintball sponsorship deals (up to 35% off Virtue/Bunker Kings, discounts on paint and entry,
+          etc...), you must have an active membership.
         </CrisisText>
         <CrisisText font={{type: FontType.Paragraph, size: FontSize.XS}} style={styles.paragraph}>
           Membership can be purchased here for $9.99 automatically billed at the end of each month. Cancel anytime.
@@ -844,7 +905,7 @@ const styles = {
     color: Colors.gray,
   },
   cardContainer: {
-    backgroundColor: Colors.beige,
+    backgroundColor: Colors.white,
     borderRadius: BorderRadius.M,
     paddingTop: Padding.H2,
     paddingBottom: Padding.H2,

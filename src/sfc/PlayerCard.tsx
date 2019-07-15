@@ -1,4 +1,11 @@
-import {AlignSelfProperty, BackgroundPositionProperty, BorderStyleProperty, PositionProperty, ResizeProperty, TextAlignProperty} from 'csstype';
+import {
+  AlignSelfProperty,
+  BackgroundPositionProperty,
+  BorderStyleProperty,
+  PositionProperty,
+  ResizeProperty,
+  TextAlignProperty,
+} from 'csstype';
 import * as React from 'react';
 import {ReactNode, SFC} from 'react';
 import {Col, Row} from 'reactstrap';
@@ -8,6 +15,7 @@ import {BorderRadius, crisisGlow} from '../utils/StyleUtils';
 import CrisisText, {CursiveText, FontSize, FontType} from './CrisisText';
 import {ExifOrientation} from '../models/User';
 import {BrowserView, isBrowser} from 'react-device-detect';
+import POSITIONS from '../constants/positions';
 
 interface Props {
   children?: ReactNode;
@@ -20,30 +28,29 @@ interface Props {
   division?: string;
 }
 
-export const DIVISIONS = ['Unranked', 'D5', 'D4', 'D3', 'D2', 'D1', 'Semi-Pro', 'Pro'];
+export const DIVISIONS_SHORT = ['Unranked', 'D5', 'D4', 'D3', 'D2', 'D1', 'Semi-Pro', 'Pro'];
+export const DIVISIONS = ['Unranked', 'Division 5', 'Division 4', 'Division 3', 'Division 2', 'Division 1', 'Semi-Pro', 'Pro'];
 
 const transformDivision = (division: string) => {
   switch (division.toLowerCase()) {
     default:
-      return division;
-    case DIVISIONS[1].toLowerCase():
+      return division.toLocaleUpperCase();
+    case DIVISIONS_SHORT[1].toLowerCase():
       return DIVISIONS[1];
-    case DIVISIONS[2].toLowerCase():
+    case DIVISIONS_SHORT[2].toLowerCase():
       return DIVISIONS[2];
-    case DIVISIONS[3].toLowerCase():
+    case DIVISIONS_SHORT[3].toLowerCase():
       return DIVISIONS[3];
-    case DIVISIONS[4].toLowerCase():
+    case DIVISIONS_SHORT[4].toLowerCase():
       return DIVISIONS[4];
-    case DIVISIONS[5].toLowerCase():
+    case DIVISIONS_SHORT[5].toLowerCase():
       return DIVISIONS[5];
-    case DIVISIONS[6].toLowerCase():
+    case DIVISIONS_SHORT[6].toLowerCase():
       return DIVISIONS[6];
-    case DIVISIONS[7].toLowerCase():
+    case DIVISIONS_SHORT[7].toLowerCase():
       return DIVISIONS[7];
   }
 };
-
-export const POSITIONS = ['All-Around', 'Snake Front', 'Snake Fill', 'Dorito Front', 'Dorito Fill', 'Home', 'Middle'];
 
 const transformPosition = (position: string) => {
   switch (position.toLowerCase()) {
@@ -111,14 +118,14 @@ const PlayerCard: SFC<Props> = (props: Props) => {
           paddingLeft: Padding.H2,
         }}
       >
-        <CursiveText style={styles.division} size={FontSize.XS}>
-          {props.division ? transformDivision(props.division) : 'Unranked'}
-        </CursiveText>
+        <CrisisText style={styles.division} font={{type: FontType.Paragraph, size: FontSize.XS}}>
+          {props.division ? transformDivision(props.division).toLocaleUpperCase() : 'UNRANKED'}
+        </CrisisText>
         <Row className="no-gutters" style={styles.playerInfo}>
           <CursiveText size={FontSize.XL} style={styles.number}>
             {props.number ? props.number : '00'}
           </CursiveText>
-          <div style={{width: '2px', height: '80px', backgroundColor: Colors.primary, marginLeft: Padding.H2}} />
+          <div style={{width: '2px', height: '80px', backgroundColor: Colors.primary, marginLeft: Padding.H2}}/>
           <Col style={styles.namewrapper}>
             <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.name}>
               {props.first ? props.first : 'XXX'}
@@ -163,7 +170,7 @@ const styles = {
     marginTop: -15,
   },
   position: {
-    marginTop: -10,
+    marginTop: -5,
     color: Colors.white,
   },
   division: {
@@ -174,6 +181,8 @@ const styles = {
     borderRadius: BorderRadius.S,
     width: '35%',
     textAlign: 'center' as TextAlignProperty,
+    paddingTop: (Padding.H2 / 3) + 2,
+    paddingBottom: Padding.H2 / 3,
   },
   spacer: {
     height: 'auto',
