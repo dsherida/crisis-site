@@ -129,7 +129,7 @@ class Header extends React.Component<Props, State> {
               textStyle={this.isLoginRegisterRoute() ? styles.activeLink : styles.navLink}
               onClick={this.loginRegisterOnClick}
             >
-              LOGIN/REGISTER
+              LOG IN/REGISTER
             </CrisisButton>
           </Link>
         </Col>

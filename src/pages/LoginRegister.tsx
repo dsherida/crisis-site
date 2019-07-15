@@ -100,7 +100,7 @@ class LoginRegister extends React.Component<Props, State> {
       <Form onSubmit={(e: ChangeEvent<any>) => this.loginOnClick(e)}>
         <CrisisText font={{type: FontType.Paragraph, size: FontSize.S}}>Returning members.</CrisisText>
         <CrisisText font={{type: FontType.Header, size: FontSize.S}} style={styles.header}>
-          LOGIN
+          LOG IN
         </CrisisText>
         <FloatingTextInput
           autoComplete={'off'}
@@ -135,7 +135,7 @@ class LoginRegister extends React.Component<Props, State> {
               onClick={(e: ChangeEvent<any>) => this.loginOnClick(e)}
               disabled={loginDisabled}
             >
-              LOGIN
+              LOG IN
             </Button>
           )}
         </div>
