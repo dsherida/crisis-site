@@ -10,7 +10,7 @@ import {HOME, LOGIN_REGISTER, PLAYERS, PROFILE} from '../constants/routes';
 import BootstrapSizeClassHelper from '../sfc/BootstrapSizeClassHelper';
 import CrisisButton from '../sfc/CrisisButton';
 import {SessionStoreName, SessionStoreProps} from '../stores/sessionStore';
-import {Colors} from '../utils/Constants';
+import {Colors, Padding} from '../utils/Constants';
 import {crisisGlow} from '../utils/StyleUtils';
 
 interface Props extends RouteProps, SessionStoreProps {}
@@ -145,7 +145,7 @@ class Header extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{...styles.container, height: this.state.initialHeight / 3}}>
+      <div className="d-flex justify-content-center align-items-center" style={{...styles.container}}>
         {/*<BootstrapSizeClassHelper width={this.state.width} />*/}
         <Container>
           <Row className="justify-content-center">
@@ -163,6 +163,8 @@ export const HeaderHeight = 200;
 const styles = {
   container: {
     background: `linear-gradient(to bottom, ${Colors.secondaryDark} 0%, ${Colors.primaryTransparent} 50%, ${Colors.secondaryDark} 100%)`,
+    paddingBottom: Padding.H,
+    paddingTop: Padding.H2,
   },
   imageRow: {
     justifyContent: 'center',

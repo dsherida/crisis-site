@@ -94,7 +94,7 @@ class Players extends React.Component<Props, State> {
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            height: this.state.height / 2,
+            height: this.state.height,
             borderTop: '2px solid white',
             borderBottom: '2px solid white',
           }}
