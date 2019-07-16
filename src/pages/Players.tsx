@@ -146,7 +146,7 @@ class Players extends React.Component<Props, State> {
           </a>
         </Row>
         <Container>
-          <Row>{!!users && this.renderPlayers()}</Row>
+          <Row className="d-flex justify-content-center">{!!users && this.renderPlayers()}</Row>
         </Container>
       </div>
     );
