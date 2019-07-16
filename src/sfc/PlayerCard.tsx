@@ -162,9 +162,11 @@ const styles = {
   },
   number: {
     color: Colors.primary,
+    textShadow: '2px 2px #000000',
   },
   name: {
     color: Colors.beige,
+    textShadow: '0px 0px 7px #000000',
   },
   last: {
     marginTop: -15,

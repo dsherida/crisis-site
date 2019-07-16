@@ -1,20 +1,18 @@
 import {inject, observer} from 'mobx-react';
 import * as React from 'react';
-import {Fragment, ReactNode} from 'react';
 import {RouteComponentProps, withRouter} from 'react-router';
-import {Col, Container, Row} from 'reactstrap';
+import {Button, Col, Container, Row} from 'reactstrap';
 import {compose} from 'recompose';
 import {Assets} from '../assets';
 import {HeaderHeight} from '../components/Header';
 import {db} from '../firebase/index';
-import {IUser} from '../models/User';
+import CrisisButton from '../sfc/CrisisButton';
 import CrisisText, {FontSize, FontType} from '../sfc/CrisisText';
 import PlayerCard from '../sfc/PlayerCard';
 import {UserStoreProps} from '../stores/userStore';
 import {CommonStyle} from '../utils/CommonStyle';
 import {Colors, Padding} from '../utils/Constants';
 import {epochToLocalTime} from '../utils/DateUtils';
-import {firebaseConfig} from '../firebase/firebase';
 
 interface State {
   width: number;
@@ -87,6 +85,43 @@ class Players extends React.Component<Props, State> {
 
     return (
       <div style={{...CommonStyle.container, ...styles.container, minHeight: this.state.height}}>
+        <div
+          className="d-flex flex-column"
+          style={{
+            backgroundImage: `url(${Assets.src.hero})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: this.state.height / 2,
+            borderTop: '2px solid white',
+            borderBottom: '2px solid white',
+          }}
+        >
+          <CrisisText
+            font={{size: FontSize.L, type: FontType.Header}}
+            style={{color: Colors.white, textAlign: 'center', textShadow: '0px 0px 26px #000000', width: '67%', opacity: 0.95}}
+          >
+            IF YOU DON'T PRACTICE, YOU DON'T DESERVE TO WIN
+          </CrisisText>
+          <CrisisText
+            font={{size: FontSize.XS, type: FontType.Paragraph}}
+            style={{color: Colors.white, textAlign: 'center', textShadow: '0px 0px 4px #000000', width: '67%'}}
+          >
+            Now hosting tryouts for Division 4 and Division 5 speedball players!
+          </CrisisText>
+          <Button onClick={() => (window.location.href = `mailto:copperstatecrisis@gmail.com?subject=New Inquiry from CrisisPaintball.com`)} color="primary" style={{marginTop: Padding.H}}>
+            SEND US A MESSAGE
+          </Button>
+        </div>
+        <Row className="d-flex" style={{padding: Padding.V2, backgroundColor: Colors.white, justifyContent: 'space-around', borderTop: `8px solid ${Colors.primary}`, borderBottom: `8px solid ${Colors.primary}` }}>
+          <img src={Assets.src.sponsors.virtue} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          <img src={Assets.src.sponsors.bunkerkings} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          <img src={Assets.src.sponsors.eclipse} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          <img src={Assets.src.sponsors.stylesupply} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          <img src={Assets.src.sponsors.mesapaintball} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+        </Row>
         <Container>
           <Row>{!!users && this.renderPlayers()}</Row>
         </Container>
@@ -94,6 +129,8 @@ class Players extends React.Component<Props, State> {
     );
   }
 }
+
+const SPONSOR_SIZE = 125;
 
 const styles = {
   container: {
