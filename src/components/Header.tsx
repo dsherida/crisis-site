@@ -118,7 +118,7 @@ class Header extends React.Component<Props, State> {
         <Col className="d-flex justify-content-center align-items-center">
           <Link to={PLAYERS}>
             <CrisisButton color={Colors.primary} textStyle={this.isPlayersRoute() ? styles.activeLink : styles.navLink} onClick={this.playersOnClick}>
-              PLAYERS
+              TEAM ROSTER
             </CrisisButton>
           </Link>
         </Col>
