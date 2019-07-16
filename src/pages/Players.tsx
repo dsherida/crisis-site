@@ -120,7 +120,7 @@ class Players extends React.Component<Props, State> {
           </Button>
         </div>
         <Row
-          className="d-flex"
+          className="d-flex no-gutters"
           style={{
             padding: Padding.V2,
             backgroundColor: Colors.white,
