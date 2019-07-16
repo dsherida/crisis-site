@@ -111,16 +111,39 @@ class Players extends React.Component<Props, State> {
           >
             Now hosting tryouts for Division 4 and Division 5 speedball players!
           </CrisisText>
-          <Button onClick={() => (window.location.href = `mailto:copperstatecrisis@gmail.com?subject=New Inquiry from CrisisPaintball.com`)} color="primary" style={{marginTop: Padding.H}}>
+          <Button
+            onClick={() => (window.location.href = `mailto:copperstatecrisis@gmail.com?subject=New Inquiry from CrisisPaintball.com`)}
+            color="primary"
+            style={{marginTop: Padding.H}}
+          >
             SEND US A MESSAGE
           </Button>
         </div>
-        <Row className="d-flex" style={{padding: Padding.V2, backgroundColor: Colors.white, justifyContent: 'space-around', borderTop: `8px solid ${Colors.primary}`, borderBottom: `8px solid ${Colors.primary}` }}>
-          <img src={Assets.src.sponsors.virtue} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
-          <img src={Assets.src.sponsors.bunkerkings} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
-          <img src={Assets.src.sponsors.eclipse} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
-          <img src={Assets.src.sponsors.stylesupply} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
-          <img src={Assets.src.sponsors.mesapaintball} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+        <Row
+          className="d-flex"
+          style={{
+            padding: Padding.V2,
+            backgroundColor: Colors.white,
+            justifyContent: 'space-around',
+            borderTop: `8px solid ${Colors.primary}`,
+            borderBottom: `8px solid ${Colors.primary}`,
+          }}
+        >
+          <a href="https://virtuepb.com/" target="_blank">
+            <img src={Assets.src.sponsors.virtue} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          </a>
+          <a href="https://www.bunkerkings.com/" target="_blank">
+            <img src={Assets.src.sponsors.bunkerkings} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          </a>
+          <a href="https://planeteclipse.com/" target="_blank">
+            <img src={Assets.src.sponsors.eclipse} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          </a>
+          <a href="http://www.style-supply.de/" target="_blank">
+            <img src={Assets.src.sponsors.stylesupply} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          </a>
+          <a href="https://axctactical.com" target="_blank">
+            <img src={Assets.src.sponsors.mesapaintball} height={SPONSOR_SIZE} width={SPONSOR_SIZE} />
+          </a>
         </Row>
         <Container>
           <Row>{!!users && this.renderPlayers()}</Row>
